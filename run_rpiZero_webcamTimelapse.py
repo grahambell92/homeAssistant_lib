@@ -22,7 +22,7 @@ daysCycle = itertools.cycle(range(2))
 imageCycler = itertools.count(250)
 
 dayCount = next(daysCycle)
-archiveFolder = '~/webcamImages/day{0}/'.format(dayCount)
+archiveFolder = '/home/pi/webcamImages/day{0}/'.format(dayCount)
 
 
 if os.path.exists(archiveFolder):
@@ -33,7 +33,7 @@ else:
 
 while True:
     nowDay = datetime.datetime.now().day
-    archiveFolder = '~/webcamImages/day{0}/'.format(dayCount)
+    archiveFolder = '/home/pi/webcamImages/day{0}/'.format(dayCount)
 
     if nowDay != currentDay:
             currentDay = nowDay
@@ -44,7 +44,7 @@ while True:
                     shutil.rmtree(archiveFolder)
 
     # Take an image for the current image
-    currentImagePath = '~/webcamImages/currentImage.jpg' # '~/webcamImages/currentImage$
+    currentImagePath = '/home/pi/webcamImages/currentImage.jpg' # '~/webcamImages/currentImage$
     fireCamera(filePath=currentImagePath)
 
     # Move that current image to archive
