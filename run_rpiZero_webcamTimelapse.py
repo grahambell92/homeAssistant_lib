@@ -24,9 +24,12 @@ imageCycler = itertools.count(250)
 dayCount = next(daysCycle)
 archiveFolder = '~/webcamImages/day{0}/'.format(dayCount)
 
+
 if os.path.exists(archiveFolder):
     print('Existing archive directory, deleting.')
     shutil.rmtree(archiveFolder)
+else:
+    os.mkdir(archiveFolder)
 
 while True:
     nowDay = datetime.datetime.now().day
