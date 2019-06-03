@@ -21,9 +21,9 @@ client.connect(brokerIP)
 time.sleep(2)
 print("publishing ")
 while True:
-    client.publish("BrightnessTest","High")#publish
+    client.publish("brightnessTopic","High") #publish
     time.sleep(1)
-    client.publish("BrightnessTest","Low")#publish
+    client.publish("brightnessTopic","Low") #publish
     time.sleep(1)
 
 
