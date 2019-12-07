@@ -84,7 +84,7 @@ while True:
         print('Copied to HA local folder:{}'.format(wwwFolder))
 
     # Sleep delay for next image
-    sleepDuration = 120
+    sleepDuration = 10
     print('Sleeping for {} seconds.'.format(sleepDuration))
     time.sleep(sleepDuration)
     print('')
