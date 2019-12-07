@@ -8,7 +8,7 @@
 # Ensure no tmux scripts/sessions are running
 tmux kill-server
 # start the main home assistant sever
-tmux new-session -d -s homeAssistant './startHomeAssistant.sh' &
+tmux new-session -d -s homeAssistant './startHomeAssistant.sh' & #
 # start the mqtt publisher (local)
 tmux new-session -d -s mqtt 'python3 example_publisher.py' &
 
