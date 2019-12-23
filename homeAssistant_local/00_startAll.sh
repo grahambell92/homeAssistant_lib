@@ -1,9 +1,9 @@
 
-chmod 775 ./00_startTmuxHomeAssistant.sh
+chmod 775 ./00_startMe.sh
 ./00_startMe.sh
 
 # Ensure no tmux scripts/sessions are running
-tmux kill-server
+#tmux kill-server
 
 # AS1231333
 ## start the rpi_zero satellite
