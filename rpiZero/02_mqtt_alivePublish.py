@@ -1,5 +1,6 @@
 import time
 import paho.mqtt.client as paho
+import datetime
 
 def on_message(client, userdata, message):
     time.sleep(1)
@@ -21,7 +22,7 @@ client.connect(brokerIP)
 time.sleep(2)
 print("publishing ")
 while True:
-    import datetime
+
     now = datetime.datetime.now()
     msg = 'Online as of: ' + str(now)
     client.publish("rpiSatTopic", msg)
