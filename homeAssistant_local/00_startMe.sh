@@ -12,3 +12,4 @@ chmod 775 ./homeAssistant_local/00_startTmuxHomeAssistant.sh
 tmux new-session -d -s homeAssistant './00_startTmuxHomeAssistant.sh' & #
 # start the mqtt publisher (local)
 tmux new-session -d -s mqtt 'python3 ./03_example_publisher.py' &
+# AS1231
