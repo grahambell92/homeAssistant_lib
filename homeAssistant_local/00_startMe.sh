@@ -6,7 +6,7 @@
 # start puller script to pull images from satellite
 
 # Ensure no tmux scripts/sessions are running
-tmux kill-server0231
+tmux kill-server
 chmod 775 ./00_startTmuxHomeAssistant.sh
 chmod 775 ./01_startHomeAssistant.sh
 echo hereeee
