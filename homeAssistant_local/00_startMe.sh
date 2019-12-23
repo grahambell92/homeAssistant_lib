@@ -8,6 +8,7 @@
 # Ensure no tmux scripts/sessions are running
 tmux kill-server
 chmod 775 ./00_startTmuxHomeAssistant.sh
+chmod 775 ./01_startHomeAssistant.sh
 # start the main home assistant sever
 tmux new-session -d -s homeAssistant './00_startTmuxHomeAssistant.sh' & #
 # start the mqtt publisher (local)
