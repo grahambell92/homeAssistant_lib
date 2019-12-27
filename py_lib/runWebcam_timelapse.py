@@ -117,7 +117,6 @@ class webcam_timelapse():
 
 if __name__ == '__main__':
         webcam = webcam_timelapse()
-        webcam.buildTimelapse()
         exit(0)
 
 
