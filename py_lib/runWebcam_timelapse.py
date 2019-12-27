@@ -41,9 +41,12 @@ class webcam_timelapse():
                 print(currentGifPath) 
                 gifimages = []
                 for fileName in fileNames:
-                        gifimages.append(imageio.imread(fileName))
+                        try:
+                                gifimages.append(imageio.imread(fileName))
+                        except:
+                                print('Unable to read:', fileName)
                 imageio.mimsave(currentGifPath, gifimages)
-                print('Saving current gif')
+                print('Saving current gif:', currentGifPath)
                 exit(0)
 
         def start(self):
