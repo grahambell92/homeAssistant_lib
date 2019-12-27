@@ -27,13 +27,13 @@ class webcam_timelapse():
         def scpImage(self):
                 pass
 
-        def buildTimelapse(self):
+        def buildTimelapse(self, imgNum):
                 # Make a gif of the most recent images
 
-                lowImgNum = self.imgNum - 60
+                lowImgNum = imgNum - 60
                 if lowImgNum < 0:
                         lowImgNum = 0
-                fileNames = [self.archiveFolder + 'image{0}.jpg'.format(i) for i in range(lowImgNum, self.imgNum)]
+                fileNames = [self.archiveFolder + 'image{0}.jpg'.format(i) for i in range(lowImgNum, imgNum)]
 
                 # currentGifPath = '/home/homeassistant/webcamImages/currentSeq.gif'
                 currentGifPath = self.archiveFolder + 'currentSeq.gif'  # '/home/homeassistant/webcamImages/currentSeq$
@@ -74,9 +74,9 @@ class webcam_timelapse():
                         fireCamera(filePath=currentImagePath)
 
                         # Move that current image to archive
-                        self.imgNum = next(imageCycler)
+                        imgNum = next(imageCycler)
 
-                        archiveImage = 'image{0}.jpg'.format(self.imgNum)
+                        archiveImage = 'image{0}.jpg'.format(imgNum)
                         archivePath = self.archiveFolder + archiveImage
                         # shutil.copy(currentImagePath, archiveFolder)
                         # Create the directory if it doesnt exist
