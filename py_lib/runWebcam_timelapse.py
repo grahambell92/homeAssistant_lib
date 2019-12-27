@@ -30,10 +30,10 @@ class webcam_timelapse():
         def buildTimelapse(self):
                 # Make a gif of the most recent images
 
-                lowImgNum = imgNum - 60
+                lowImgNum = self.imgNum - 60
                 if lowImgNum < 0:
                         lowImgNum = 0
-                fileNames = [self.archiveFolder + 'image{0}.jpg'.format(i) for i in range(lowImgNum, imgNum)]
+                fileNames = [self.archiveFolder + 'image{0}.jpg'.format(i) for i in range(lowImgNum, self.imgNum)]
 
                 # currentGifPath = '/home/homeassistant/webcamImages/currentSeq.gif'
                 currentGifPath = self.archiveFolder + 'currentSeq.gif'  # '/home/homeassistant/webcamImages/currentSeq$
@@ -74,17 +74,19 @@ class webcam_timelapse():
                         fireCamera(filePath=currentImagePath)
 
                         # Move that current image to archive
-                        imgNum = next(imageCycler)
+                        self.imgNum = next(imageCycler)
 
-                        archiveImage = 'image{0}.jpg'.format(imgNum)
-                        archivePath = archiveFolder + archiveImage
+                        archiveImage = 'image{0}.jpg'.format(self.imgNum)
+                        archivePath = self.archiveFolder + archiveImage
                         # shutil.copy(currentImagePath, archiveFolder)
                         # Create the directory if it doesnt exist
-                        os.makedirs(archiveFolder, exist_ok=True)
+                        os.makedirs(self.archiveFolder, exist_ok=True)
                         shutil.copy(currentImagePath, archivePath)
                         print('Archived image:{}'.format(archivePath))
 
                         # Make a gif of the most recent images
+                        self.buildTimelapse()
+                        exit(0)
                         if False:
                                 lowImgNum = imgNum - 60
                                 if lowImgNum < 0:
