@@ -85,7 +85,7 @@ class webcam_timelapse():
                         print('Archived image:{}'.format(archivePath))
 
                         # Make a gif of the most recent images
-                        self.buildTimelapse()
+                        self.buildTimelapse(imgNum=imgNum)
                         exit(0)
                         if False:
                                 lowImgNum = imgNum - 60
