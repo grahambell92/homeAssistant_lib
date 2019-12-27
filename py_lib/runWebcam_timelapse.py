@@ -17,6 +17,7 @@ class webcam_timelapse():
                 dayCount = next(daysCycle)
                 dayFolder = 'day{0}/'.format(dayCount)
                 self.archiveFolder = self.archiveBaseFolder + dayFolder
+                #print('hereere')
 
         def fireCamera(self, filePath):
             print('Firing camera...')
@@ -37,7 +38,7 @@ class webcam_timelapse():
 
                 # currentGifPath = '/home/homeassistant/webcamImages/currentSeq.gif'
                 currentGifPath = self.archiveFolder + 'currentSeq.gif'  # '/home/homeassistant/webcamImages/currentSeq$
-
+                print(currentGifPath) 
                 gifimages = []
                 for fileName in fileNames:
                         gifimages.append(imageio.imread(fileName))
@@ -70,8 +71,8 @@ class webcam_timelapse():
                                         shutil.rmtree(archiveFolder)
 
                         # Take an image for the current image
-                        currentImagePath = '/home/homeassistant/webcamImages/currentImage.jpg'  # '~/webcamImages/currentImage$
-                        fireCamera(filePath=currentImagePath)
+                        currentImagePath = self.archiveBaseFolder + 'currentImage.jpg'  # '~/webcamImages/currentImage$
+                        self.fireCamera(filePath=currentImagePath)
 
                         # Move that current image to archive
                         imgNum = next(imageCycler)
@@ -117,6 +118,7 @@ class webcam_timelapse():
 
 if __name__ == '__main__':
         webcam = webcam_timelapse()
+        webcam.start()
         exit(0)
 
 
