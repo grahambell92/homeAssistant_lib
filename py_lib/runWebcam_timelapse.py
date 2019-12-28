@@ -49,12 +49,11 @@ class webcam_timelapse():
                 print('Saving current gif:', currentGifPath)
                 exit(0)
 
-        def start(self):
-
+        def rpiZero(self):
                 currentDay = datetime.datetime.now().day
-                daysCycle = itertools.cycle(range(3))
-                imageCycler = itertools.count(250)
-                dayCount = next(daysCycle)
+                self.daysCycle = itertools.cycle(range(3))
+                self.imageCycler = itertools.count(250)
+                dayCount = next(self.daysCycle)
                 dayFolder = 'day{0}/'.format(dayCount)
                 self.archiveFolder = self.archiveBaseFolder + dayFolder
 
@@ -63,61 +62,46 @@ class webcam_timelapse():
                         shutil.rmtree(self.archiveFolder)
 
                 while True:
-                        nowDay = datetime.datetime.now().day
+                        self.timelapse(sleepDuration=5)
 
-                        if nowDay != currentDay:
-                                currentDay = nowDay
-                                imageCycler = itertools.count()
-                                dayCount = next(daysCycle)
-                                if os.path.exists(archiveFolder):
-                                        print('Existing archive directory, deleting.')
-                                        shutil.rmtree(archiveFolder)
+        def timelapse(self, sleepDuration=120, currentDay=currentDay):
 
-                        # Take an image for the current image
-                        currentImagePath = self.archiveBaseFolder + 'currentImage.jpg'  # '~/webcamImages/currentImage$
-                        self.fireCamera(filePath=currentImagePath)
+                nowDay = datetime.datetime.now().day
 
-                        # Move that current image to archive
-                        imgNum = next(imageCycler)
+                if nowDay != currentDay:
+                        currentDay = nowDay
+                        self.imageCycler = itertools.count()
+                        dayCount = next(self.daysCycle)
+                        if os.path.exists(archiveFolder):
+                                print('Existing archive directory, deleting.')
+                                shutil.rmtree(archiveFolder)
 
-                        archiveImage = 'image{0}.jpg'.format(imgNum)
-                        archivePath = self.archiveFolder + archiveImage
-                        # shutil.copy(currentImagePath, archiveFolder)
-                        # Create the directory if it doesnt exist
-                        os.makedirs(self.archiveFolder, exist_ok=True)
-                        shutil.copy(currentImagePath, archivePath)
-                        print('Archived image:{}'.format(archivePath))
+                # Take an image for the current image
+                currentImagePath = self.archiveBaseFolder + 'currentImage.jpg'  # '~/webcamImages/currentImage$
+                self.fireCamera(filePath=currentImagePath)
 
-                        # Make a gif of the most recent images
-                        self.buildTimelapse(imgNum=imgNum)
-                        exit(0)
-                        if False:
-                                lowImgNum = imgNum - 60
-                                if lowImgNum < 0:
-                                        lowImgNum = 0
-                                fileNames = [archiveFolder + 'image{0}.jpg'.format(i) for i in range(lowImgNum, imgNum)]
+                # Move that current image to archive
+                imgNum = next(self.imageCycler)
 
-                                currentGifPath = '/home/homeassistant/webcamImag	es/currentSeq.gif'
-                                currentGifPath = archiveFolder + 'currentSeq.gif'  # '/home/homeassistant/webcamImages/currentSeq$
+                archiveImage = 'image{0}.jpg'.format(imgNum)
+                archivePath = self.archiveFolder + archiveImage
+                # shutil.copy(currentImagePath, archiveFolder)
+                # Create the directory if it doesnt exist
+                os.makedirs(self.archiveFolder, exist_ok=True)
+                shutil.copy(currentImagePath, archivePath)
+                print('Archived image:{}'.format(archivePath))
 
-                                gifimages = []
-                                for fileName in fileNames:
-                                        gifimages.append(imageio.imread(fileName))
-                                imageio.mimsave(currentGifPath, gifimages)
-                                print('Saving current gif')
-                                exit(0)
+                # Copy to the www folder for the HomeAssistant Server
+                wwwFolder = '/home/homeassistant/.homeassistant/www/'
+                os.makedirs(wwwFolder, exist_ok=True)
+                shutil.copy(currentImagePath, wwwFolder)
+                print('Copied to HA local folder:{}'.format(wwwFolder))
 
-                        # Copy to the www folder for the HomeAssistant Server
-                        wwwFolder = '/home/homeassistant/.homeassistant/www/'
-                        os.makedirs(wwwFolder, exist_ok=True)
-                        shutil.copy(currentImagePath, wwwFolder)
-                        print('Copied to HA local folder:{}'.format(wwwFolder))
-
-                        # Sleep delay for next image
-                        sleepDuration = 120
-                        print('Sleeping for {} seconds.'.format(sleepDuration))
-                        time.sleep(sleepDuration)
-                        print('')
+                # Sleep delay for next image
+                # sleepDuration = 120
+                print('Sleeping for {} seconds.'.format(sleepDuration))
+                time.sleep(sleepDuration)
+                print('')
 
 if __name__ == '__main__':
         webcam = webcam_timelapse()

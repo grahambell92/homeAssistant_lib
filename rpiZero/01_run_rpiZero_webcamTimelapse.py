@@ -94,4 +94,5 @@ if False:
 import sys
 sys.path.append("../py_lib/")
 from runWebcam_timelapse import webcam_timelapse
-print('complete.')
+
+webcam = webcam_timelapse.rpiZero()
