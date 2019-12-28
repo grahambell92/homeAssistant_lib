@@ -28,6 +28,14 @@ class webcam_timelapse():
         def scpImage(self):
                 pass
 
+        def copyToHAServer(self, currentImagePath):
+
+                # Copy to the www folder for the HomeAssistant Server
+                wwwFolder = '/home/homeassistant/.homeassistant/www/'
+                os.makedirs(wwwFolder, exist_ok=True)
+                shutil.copy(currentImagePath, wwwFolder)
+                print('Copied to HA local folder:{}'.format(wwwFolder))
+
         def buildTimelapse(self, imgNum):
                 # Make a gif of the most recent images
 
@@ -36,7 +44,7 @@ class webcam_timelapse():
                         lowImgNum = 0
                 fileNames = [self.archiveFolder + 'image{0}.jpg'.format(i) for i in range(lowImgNum, imgNum)]
 
-                # currentGifPath = '/home/homeassistant/webcamImages/currentSeq.gif'
+
                 currentGifPath = self.archiveFolder + 'currentSeq.gif'  # '/home/homeassistant/webcamImages/currentSeq$
                 print(currentGifPath) 
                 gifimages = []
@@ -64,7 +72,7 @@ class webcam_timelapse():
                 while True:
                         self.timelapse(sleepDuration=5, currentDay=currentDay)
 
-        def timelapse(self, currentDay, sleepDuration=120):
+        def timelapse(self, currentDay, sleepDuration=120, copyToHAServer=False):
 
                 nowDay = datetime.datetime.now().day
 
@@ -91,11 +99,8 @@ class webcam_timelapse():
                 shutil.copy(currentImagePath, archivePath)
                 print('Archived image:{}'.format(archivePath))
 
-                # Copy to the www folder for the HomeAssistant Server
-                wwwFolder = '/home/homeassistant/.homeassistant/www/'
-                os.makedirs(wwwFolder, exist_ok=True)
-                shutil.copy(currentImagePath, wwwFolder)
-                print('Copied to HA local folder:{}'.format(wwwFolder))
+                if copyToHAServer is True:
+                        self.copyToHAServer(currentImagePath=currentImagePath)
 
                 # Sleep delay for next image
                 # sleepDuration = 120
