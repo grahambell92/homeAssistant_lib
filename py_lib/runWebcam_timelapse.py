@@ -62,7 +62,7 @@ class webcam_timelapse():
                         shutil.rmtree(self.archiveFolder)
 
                 while True:
-                        self.timelapse(sleepDuration=5)
+                        self.timelapse(sleepDuration=5, currentDay=currentDay)
 
         def timelapse(self, sleepDuration=120, currentDay=currentDay):
 
