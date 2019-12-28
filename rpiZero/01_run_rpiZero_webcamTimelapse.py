@@ -95,4 +95,5 @@ import sys
 sys.path.append("../py_lib/")
 from runWebcam_timelapse import webcam_timelapse
 
-webcam = webcam_timelapse.rpiZero()
+webcam = webcam_timelapse(archiveBaseFolder='/home/pi/webcamImages/')
+webcam.rpiZero()
