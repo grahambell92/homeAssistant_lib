@@ -28,13 +28,22 @@ class webcam_timelapse():
         def scpImage(self):
                 pass
 
-        def copyToHAServer(self, currentImagePath):
+        def copyToHAServer(self, currentImagePath, ):
+                sshPass = 'sshpass -p "BlackWolf04"'
+                # shouldn't need the pass because of ssh key installed.
+                print('Trying to copy img to HA Server...')
+                command = 'scp pi@10.0.0.20: ~/webcamImages/currentImage.jpg /home/homeassistant/.homeassistant/www/rpi_zero.jpg'
+                correct = subprocess.run(command, shell=True)
+                print('Done.')
+
+        def copyTowwwFolder(self, currentImagePath):
 
                 # Copy to the www folder for the HomeAssistant Server
                 wwwFolder = '/home/homeassistant/.homeassistant/www/'
                 os.makedirs(wwwFolder, exist_ok=True)
                 shutil.copy(currentImagePath, wwwFolder)
                 print('Copied to HA local folder:{}'.format(wwwFolder))
+
 
         def buildTimelapse(self, imgNum):
                 # Make a gif of the most recent images
@@ -70,7 +79,7 @@ class webcam_timelapse():
                         shutil.rmtree(self.archiveFolder)
 
                 while True:
-                        self.timelapse(sleepDuration=5, currentDay=currentDay)
+                        self.timelapse(sleepDuration=5, currentDay=currentDay, copyToHAServer=True)
 
         def timelapse(self, currentDay, sleepDuration=120, copyToHAServer=False):
 
@@ -100,7 +109,9 @@ class webcam_timelapse():
                 print('Archived image:{}'.format(archivePath))
 
                 if copyToHAServer is True:
+                        # self.copyToHAServer(currentImagePath=currentImagePath)
                         self.copyToHAServer(currentImagePath=currentImagePath)
+
 
                 # Sleep delay for next image
                 # sleepDuration = 120
