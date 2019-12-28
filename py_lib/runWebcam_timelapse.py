@@ -22,6 +22,8 @@ class webcam_timelapse():
         def fireCamera(self, filePath):
             print('Firing camera...')
             # correct = subprocess.run(['fswebcam', '-r 640x480', '--quiet', filePath])
+            print(filePath)
+            exit(0)
             correct = subprocess.run('fswebcam -r 640x480 --quiet --jpeg 50 {}'.format(filePath), shell=True)
             print('Done.')
 
@@ -95,6 +97,7 @@ class webcam_timelapse():
 
                 # Take an image for the current image
                 currentImagePath = self.archiveBaseFolder + 'currentImage.jpg'  # '~/webcamImages/currentImage$
+                print(currentImagePath)
                 self.fireCamera(filePath=currentImagePath)
 
                 # Move that current image to archive
