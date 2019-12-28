@@ -32,7 +32,7 @@ class webcam_timelapse():
                 sshPass = 'sshpass -p "BlackWolf04"'
                 # shouldn't need the pass because of ssh key installed.
                 print('Trying to copy img to HA Server...')
-                command = 'scp pi@10.0.0.20: ~/webcamImages/currentImage.jpg /home/homeassistant/.homeassistant/www/rpi_zero.jpg'
+                command = 'scp ~/webcamImages/currentImage.jpg homeassistant@10.0.0.19:/home/homeassistant/.homeassistant/www/rpi_zero.jpg'
                 correct = subprocess.run(command, shell=True)
                 print('Done.')
 
