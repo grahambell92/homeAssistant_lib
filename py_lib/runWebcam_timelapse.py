@@ -64,7 +64,7 @@ class webcam_timelapse():
                 while True:
                         self.timelapse(sleepDuration=5, currentDay=currentDay)
 
-        def timelapse(self, sleepDuration=120, currentDay=currentDay):
+        def timelapse(self, currentDay, sleepDuration=120):
 
                 nowDay = datetime.datetime.now().day
 
