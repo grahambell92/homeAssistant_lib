@@ -45,10 +45,10 @@ class webcam_timelapse():
                 print('Copied to HA local folder:{}'.format(wwwFolder))
 
 
-        def buildTimelapse(self, imgNum):
+        def buildTimelapse(self, imgNum, numImgs=10):
                 # Make a gif of the most recent images
 
-                lowImgNum = imgNum - 60
+                lowImgNum = imgNum - 10
                 if lowImgNum < 0:
                         lowImgNum = 0
                 fileNames = [self.archiveFolder + 'image{0}.jpg'.format(i) for i in range(lowImgNum, imgNum)]
@@ -64,22 +64,24 @@ class webcam_timelapse():
                                 print('Unable to read:', fileName)
                 imageio.mimsave(currentGifPath, gifimages)
                 print('Saving current gif:', currentGifPath)
-                exit(0)
+
 
         def rpiZero(self):
                 currentDay = datetime.datetime.now().day
                 self.daysCycle = itertools.cycle(range(3))
-                self.imageCycler = itertools.count(250)
+                self.imageCycler = itertools.count(1)
                 dayCount = next(self.daysCycle)
                 dayFolder = 'day{0}/'.format(dayCount)
                 self.archiveFolder = self.archiveBaseFolder + dayFolder
+                sleepDuration = 10
 
                 if os.path.exists(self.archiveFolder):
                         print('Existing archive directory, deleting.')
                         shutil.rmtree(self.archiveFolder)
 
                 while True:
-                        self.timelapse(sleepDuration=30, currentDay=currentDay, copyToHAServer=True)
+                        self.timelapse(sleepDuration=sleepDuration, currentDay=currentDay, copyToHAServer=True)
+                        self.buildTimelapse(imgNum=self.imgNum)
 
         def timelapse(self, currentDay, sleepDuration=120, copyToHAServer=False):
 
@@ -98,9 +100,9 @@ class webcam_timelapse():
                 self.fireCamera(filePath=currentImagePath)
 
                 # Move that current image to archive
-                imgNum = next(self.imageCycler)
+                self.imgNum = next(self.imageCycler)
 
-                archiveImage = 'image{0}.jpg'.format(imgNum)
+                archiveImage = 'image{0}.jpg'.format(self.imgNum)
                 archivePath = self.archiveFolder + archiveImage
                 # shutil.copy(currentImagePath, archiveFolder)
                 # Create the directory if it doesnt exist
@@ -118,6 +120,7 @@ class webcam_timelapse():
                 print('Sleeping for {} seconds.'.format(sleepDuration))
                 time.sleep(sleepDuration)
                 print('')
+                return currentImagePath
 
 if __name__ == '__main__':
         webcam = webcam_timelapse()
