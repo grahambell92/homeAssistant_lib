@@ -12,5 +12,4 @@ chmod 775 ./01_startHomeAssistant.sh
 # start the main home assistant sever
 tmux new-session -d -s homeAssistant './01_startHomeAssistant.sh'
 # start the mqtt publisher (local)
-tmux new-session -d -s mqtt 'python3 ./03_example_publisher.py'
-# AS1231333
+tmux new-session -d -s mqtt 'python3 ./00_serialToMqttTest.py'
