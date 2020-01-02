@@ -51,7 +51,7 @@ class webcam_timelapse():
                 lowImgNum = imgNum - 10
                 if lowImgNum < 0:
                         lowImgNum = 0
-                fileNames = [self.archiveFolder + 'image{0}.jpg'.format(i) for i in range(lowImgNum, imgNum)]
+                fileNames = [self.archiveFolder + 'image{0}.jpg'.format(i) for i in range(lowImgNum, imgNum+1)]
 
 
                 currentGifPath = self.archiveFolder + 'currentSeq.gif'  # '/home/homeassistant/webcamImages/currentSeq$
@@ -77,7 +77,7 @@ class webcam_timelapse():
                 dayCount = next(self.daysCycle)
                 dayFolder = 'day{0}/'.format(dayCount)
                 self.archiveFolder = self.archiveBaseFolder + dayFolder
-                sleepDuration = 10
+                sleepDuration = 5
 
                 if os.path.exists(self.archiveFolder):
                         print('Existing archive directory, deleting.')
