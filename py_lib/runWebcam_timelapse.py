@@ -28,11 +28,14 @@ class webcam_timelapse():
         def scpImage(self):
                 pass
 
-        def copyToHAServer(self, currentImagePath, outputFile='rpi_zero.jpg'):
+        def copyToHAServer(self, inputFilePath, outputFilePath='rpi_zero.jpg'):
                 sshPass = 'sshpass -p "BlackWolf04"'
-                # shouldn't need the pass because of ssh key installed.
+                # shouldn't need the passwd because of ssh key installed.
                 print('Trying to copy img to HA Server...')
-                command = 'scp ~/webcamImages/currentImage.jpg homeassistant@10.0.0.19:/home/homeassistant/.homeassistant/www/'
+                # inputFilePath = '~/webcamImages/currentImage.jpg'
+                # outputFilePath = 'homeassistant@10.0.0.19:/home/homeassistant/.homeassistant/www/'
+                # command = 'scp ~/webcamImages/currentImage.jpg homeassistant@10.0.0.19:/home/homeassistant/.homeassistant/www/'
+                command = ' '.join('scp', inputFilePath, outputFilePath) #scp' + inputFilePath + outputFilePath
                 correct = subprocess.run(command, shell=True)
                 print('Done.')
 
@@ -67,7 +70,8 @@ class webcam_timelapse():
 
                         imageio.mimsave(currentGifPath, gifimages)
                         print('Saving current gif:', currentGifPath)
-                        self.copyToHAServer(currentImagePath=currentGifPath, outputFile='rpi_timelapse.gif')
+                        outputFilePath = 'homeassistant@10.0.0.19:/home/homeassistant/.homeassistant/www/rpi_timelapse.gif'
+                        self.copyToHAServer(inputFilePath=currentGifPath, outputFilePath=outputFilePath)
                 else:
                         print('No images for timelase gif. Exiting.')
 
@@ -117,15 +121,16 @@ class webcam_timelapse():
 
                 if copyToHAServer is True:
                         # self.copyToHAServer(currentImagePath=currentImagePath)
-                        self.copyToHAServer(currentImagePath=currentImagePath)
+                        inputFilePath = '~/webcamImages/currentImage.jpg'
+                        outputFilePath = 'homeassistant@10.0.0.19:/home/homeassistant/.homeassistant/www/rpi_zero.jpg'
+                        self.copyToHAServer(inputFilePath=currentImagePath, outputFilePath=outputFilePath)
 
 
                 # Sleep delay for next image
-                # sleepDuration = 120
                 print('Sleeping for {} seconds.'.format(sleepDuration))
                 time.sleep(sleepDuration)
                 print('')
-                return currentImagePath
+                return
 
 if __name__ == '__main__':
         webcam = webcam_timelapse()
