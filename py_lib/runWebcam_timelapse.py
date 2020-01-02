@@ -28,11 +28,11 @@ class webcam_timelapse():
         def scpImage(self):
                 pass
 
-        def copyToHAServer(self, currentImagePath, ):
+        def copyToHAServer(self, currentImagePath, outputFile='rpi_zero.jpg'):
                 sshPass = 'sshpass -p "BlackWolf04"'
                 # shouldn't need the pass because of ssh key installed.
                 print('Trying to copy img to HA Server...')
-                command = 'scp ~/webcamImages/currentImage.jpg homeassistant@10.0.0.19:/home/homeassistant/.homeassistant/www/rpi_zero.jpg'
+                command = 'scp ~/webcamImages/currentImage.jpg homeassistant@10.0.0.19:/home/homeassistant/.homeassistant/www/'
                 correct = subprocess.run(command, shell=True)
                 print('Done.')
 
@@ -67,7 +67,7 @@ class webcam_timelapse():
 
                         imageio.mimsave(currentGifPath, gifimages)
                         print('Saving current gif:', currentGifPath)
-                        self.copyTowwwFolder(currentImagePath=currentGifPath)
+                        self.copyToHAServer(currentImagePath=currentGifPath, outputFile='rpi_timelapse.gif')
                 else:
                         print('No images for timelase gif. Exiting.')
 
