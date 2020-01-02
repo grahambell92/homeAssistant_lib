@@ -60,6 +60,7 @@ class webcam_timelapse():
                 for fileName in fileNames:
                         try:
                                 gifimages.append(imageio.imread(fileName))
+                                print('Appended:', fileName)
                         except:
                                 print('Unable to read:', fileName)
                 if len(gifimages) > 0:
