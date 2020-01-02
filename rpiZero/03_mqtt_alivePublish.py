@@ -14,7 +14,9 @@ client.connect(brokerIP)
 print("publishing ")
 while True:
     now = datetime.datetime.now()
-    msg = 'Online as of: ' + str(now)
+    # dd/mm/YY H:M:S
+    dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+    msg = dt_string
     client.publish("rpiSatTopic", msg)
     time.sleep(5)
 
