@@ -105,7 +105,7 @@ class webcam_timelapse():
                 client.connect(brokerIP)
                 client.publish("rpiMotionTopic", float(imgEntropy))
                 print('')
-                print('Motion value:', movementValue)
+                print('Motion value:', imgEntropy)
                 print('')
 
 
