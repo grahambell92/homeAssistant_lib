@@ -117,7 +117,7 @@ class webcam_timelapse():
                 # Subtract image2 from image1
 
                 buffer3 = buffer1 - buffer2
-                movementValue = np.sum(buffer3)/(buffer1.shape()[0]*buffer1.shape()[1])
+                movementValue = np.sum(buffer3)/(buffer1.size)
 
                 client = paho.Client("client-003")
                 brokerIP = "10.0.0.19"
