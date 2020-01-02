@@ -5,7 +5,7 @@
 import sys
 sys.path.append("../py_lib/")
 from runWebcam_timelapse import webcam_timelapse
-from 01_rpiZeroParams import rpiParams
+from 01_rpiZeroParams import rpiSettings
 
 import time
 from glob import glob
