@@ -67,6 +67,7 @@ class webcam_timelapse():
 
                         imageio.mimsave(currentGifPath, gifimages)
                         print('Saving current gif:', currentGifPath)
+                        self.copyTowwwFolder(currentImagePath=currentGifPath)
                 else:
                         print('No images for timelase gif. Exiting.')
 
