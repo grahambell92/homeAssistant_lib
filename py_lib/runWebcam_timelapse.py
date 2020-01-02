@@ -111,9 +111,9 @@ class webcam_timelapse():
                 prevImg_blur = prevImg.filter(ImageFilter.BLUR)
 
                 buffer1 = np.asarray(currentImg_blur)
-
+                print('sum of img1', np.sum(buffer1))
                 buffer2 = np.asarray(prevImg_blur)
-
+                print('sum of img2', np.sum(buffer2))
                 # Subtract image2 from image1
 
                 buffer3 = buffer1 - buffer2
