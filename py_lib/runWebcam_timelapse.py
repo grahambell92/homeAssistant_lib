@@ -106,8 +106,6 @@ class webcam_timelapse():
                 # Read image
                 currentImg = Image.open(currentImgPath)
                 prevImg = Image.open(prevImgPath)
-                print('curr:', currentImgPath)
-                print('prev:', prevImgPath)
 
                 currentImg_blur = currentImg.filter(ImageFilter.BLUR)
                 prevImg_blur = prevImg.filter(ImageFilter.BLUR)
@@ -119,7 +117,7 @@ class webcam_timelapse():
                 # Subtract image2 from image1
 
                 buffer3 = buffer1 - buffer2
-                movementValue = np.sum(buffer3)
+                movementValue = np.sum(buffer3)/(buffer1.shape()[0]*buffer1.shape()[1])
 
                 client = paho.Client("client-003")
                 brokerIP = "10.0.0.19"
