@@ -1,1 +1,0 @@
-tmux new-session -d -s webcam 'python3 01_run_rpiZero_webcamTimelapse.py'

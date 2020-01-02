@@ -10,17 +10,14 @@ import imageio
 from PIL import Image, ImageFilter
 import numpy as np
 import paho.mqtt.client as paho
+import glob
 
 class webcam_timelapse():
         def __init__(self, archiveBaseFolder='/home/pi/webcamImages/',):
                 self.archiveBaseFolder = archiveBaseFolder
-                currentDay = datetime.datetime.now().day
-                daysCycle = itertools.cycle(range(3))
-                imageCycler = itertools.count(250)
-                dayCount = next(daysCycle)
-                dayFolder = 'day{0}/'.format(dayCount)
-                self.archiveFolder = self.archiveBaseFolder + dayFolder
-                #print('hereere')
+                self.archiveFolder = self.archiveBaseFolder + 'rollingImages/'
+                self.currentImagePath = self.archiveBaseFolder + 'currentImage.jpg'
+                self.currentGifPath = self.archiveBaseFolder + 'currentSeq.gif'
 
         def fireCamera(self, filePath):
             print('Firing camera...')
@@ -28,17 +25,13 @@ class webcam_timelapse():
             correct = subprocess.run('fswebcam -r 640x480 --quiet --jpeg 50 {}'.format(filePath), shell=True)
             print('Done.')
 
-        def scpImage(self):
-                pass
-
-        def copyToHAServer(self, inputFilePath, outputFilePath='rpi_zero.jpg'):
-                sshPass = 'sshpass -p "BlackWolf04"'
+        def scpToRemote(self, inputFilePath, outputFilePath):
                 # shouldn't need the passwd because of ssh key installed.
-                print('Trying to copy img to HA Server...')
+                print('Trying to copy img to remote...')
                 # inputFilePath = '~/webcamImages/currentImage.jpg'
                 # outputFilePath = 'homeassistant@10.0.0.19:/home/homeassistant/.homeassistant/www/'
                 # command = 'scp ~/webcamImages/currentImage.jpg homeassistant@10.0.0.19:/home/homeassistant/.homeassistant/www/'
-                command = ' '.join(['scp', inputFilePath, outputFilePath]) #scp' + inputFilePath + outputFilePath
+                command = ' '.join(['scp', inputFilePath, outputFilePath])
                 correct = subprocess.run(command, shell=True)
                 print('Done.')
 
@@ -51,54 +44,30 @@ class webcam_timelapse():
                 print('Copied to HA local folder:{}'.format(wwwFolder))
 
 
-        def buildTimelapse(self, imgNum, numImgs=10):
+        def buildTimelapseGif(self, numImgs=10, remoteCopyLocation=None, fps=None,):
                 # Make a gif of the most recent images
+                imgPaths = glob.glob(self.archiveFolder + '*.jpg')
+                imgPaths.sort(key=os.path.getmtime)
 
-                lowImgNum = imgNum - 10
-                if lowImgNum < 0:
-                        lowImgNum = 0
-                fileNames = [self.archiveFolder + 'image{0}.jpg'.format(i) for i in range(lowImgNum, imgNum+1)]
-
-
-                currentGifPath = self.archiveFolder + 'currentSeq.gif'  # '/home/homeassistant/webcamImages/currentSeq$
-                print(currentGifPath) 
                 gifimages = []
-                for fileName in fileNames:
+                for index, imgPath in enumerate(imgPaths[:numImgs]):
                         try:
-                                gifimages.append(imageio.imread(fileName))
-                                print('Appended:', fileName)
+                                gifimages.append(imageio.imread(imgPath))
+                                print('#', index, 'Appended:', imgPath)
                         except:
-                                print('Unable to read:', fileName)
+                                print('#', index, 'Unable to read:', imgPath)
                 if len(gifimages) > 0:
+                        imageio.mimsave(self.currentGifPath, gifimages, fps=fps, subrectangles=True)
+                        print('Saving current gif:', self.currentGifPath)
 
-                        imageio.mimsave(currentGifPath, gifimages)
-                        print('Saving current gif:', currentGifPath)
-                        outputFilePath = 'homeassistant@10.0.0.19:/home/homeassistant/.homeassistant/www/rpi_timelapse.gif'
-                        self.copyToHAServer(inputFilePath=currentGifPath, outputFilePath=outputFilePath)
+                        # Move the image via secure copy (scp) to the home assistant www folder on the main rpi.
+                        if remoteCopyLocation is not None:
+                                print('Copying to remote HA www folder...')
+                                self.scpToRemote(inputFilePath=self.currentImagePath, outputFilePath=remoteCopyLocation)
+                                print('Done.')
+
                 else:
-                        print('No images for timelase gif. Exiting.')
-
-        def rpiZero(self):
-                currentDay = datetime.datetime.now().day
-                self.daysCycle = itertools.cycle(range(3))
-                self.imageCycler = itertools.count(1)
-                dayCount = next(self.daysCycle)
-                dayFolder = 'day{0}/'.format(dayCount)
-                self.archiveFolder = self.archiveBaseFolder + dayFolder
-                sleepDuration = 5
-                prevImgPath = None
-
-                if os.path.exists(self.archiveFolder):
-                        print('Existing archive directory, deleting.')
-                        shutil.rmtree(self.archiveFolder)
-
-                while True:
-                        currentImgPath = self.timelapse(sleepDuration=sleepDuration, currentDay=currentDay, copyToHAServer=True)
-                        self.buildTimelapse(imgNum=self.imgNum)
-
-                        if prevImgPath is not None:
-                                self.motionCheck(currentImgPath=currentImgPath, prevImgPath=prevImgPath)
-                        prevImgPath = currentImgPath
+                        print('No images for timelapse gif. Exiting.')
 
 
         def motionCheck(self, currentImgPath, prevImgPath):
@@ -129,45 +98,27 @@ class webcam_timelapse():
                 print('')
 
 
-        def timelapse(self, currentDay, sleepDuration=120, copyToHAServer=False):
-
-                nowDay = datetime.datetime.now().day
-
-                if nowDay != currentDay:
-                        currentDay = nowDay
-                        self.imageCycler = itertools.count()
-                        dayCount = next(self.daysCycle)
-                        if os.path.exists(archiveFolder):
-                                print('Existing archive directory, deleting.')
-                                shutil.rmtree(archiveFolder)
-
+        def takeAndArchive(self, imgArchiveNum, sleepDuration=120, remoteCopyLocation=None):
                 # Take an image for the current image
-                currentImagePath = self.archiveBaseFolder + 'currentImage.jpg'  # '~/webcamImages/currentImage$
-                self.fireCamera(filePath=currentImagePath)
+                self.fireCamera(filePath=self.currentImagePath)
 
-                # Move that current image to archive
-                self.imgNum = next(self.imageCycler)
-
-                archiveImage = 'image{0}.jpg'.format(self.imgNum)
-                archivePath = self.archiveFolder + archiveImage
-                # shutil.copy(currentImagePath, archiveFolder)
+                # Archive the image
+                archiveImage = 'image{0}.jpg'.format(imgArchiveNum)
+                self.currentArchivePath = self.archiveFolder + archiveImage
                 # Create the directory if it doesnt exist
                 os.makedirs(self.archiveFolder, exist_ok=True)
-                shutil.copy(currentImagePath, archivePath)
-                print('Archived image:{}'.format(archivePath))
+                shutil.copy(self.currentImagePath, self.currentArchivePath)
+                print('Archived image:{}'.format(self.currentArchivePath))
 
-                if copyToHAServer is True:
-                        # self.copyToHAServer(currentImagePath=currentImagePath)
-                        inputFilePath = '~/webcamImages/currentImage.jpg'
-                        outputFilePath = 'homeassistant@10.0.0.19:/home/homeassistant/.homeassistant/www/rpi_zero.jpg'
-                        self.copyToHAServer(inputFilePath=currentImagePath, outputFilePath=outputFilePath)
-
+                # Move the image via secure copy (scp) to the home assistant www folder on the main rpi.
+                if remoteCopyLocation is not None:
+                        self.scpToRemote(inputFilePath=self.currentImagePath, outputFilePath=remoteCopyLocation)
 
                 # Sleep delay for next image
                 print('Sleeping for {} seconds.'.format(sleepDuration))
                 time.sleep(sleepDuration)
                 print('')
-                return archivePath
+                return
 
 if __name__ == '__main__':
         webcam = webcam_timelapse()
