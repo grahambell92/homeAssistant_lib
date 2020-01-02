@@ -78,7 +78,7 @@ class webcam_timelapse():
                 samples_probability = [float(h) / histogram_length for h in histogram]
                 return -sum([p * math.log(p, 2) for p in samples_probability if p != 0])
 
-        def motionCheck(self, currentImgPath, prevImgPath):
+        def motionCheck(self, currentImgPath, prevImgPath, remoteCopyPath=None):
 
                 # Read image
                 currentImg = Image.open(currentImgPath)
@@ -87,19 +87,6 @@ class webcam_timelapse():
                 imgDiff = ImageChops.difference(currentImg, prevImg)
                 imgEntropy = self.image_entropy(img=imgDiff)
 
-                if False:
-                        currentImg_blur = currentImg.filter(ImageFilter.BLUR)
-                        prevImg_blur = prevImg.filter(ImageFilter.BLUR)
-
-                        buffer1 = np.asarray(currentImg_blur)
-                        print('sum of img1', np.sum(buffer1))
-                        buffer2 = np.asarray(prevImg_blur)
-                        print('sum of img2', np.sum(buffer2))
-                        # Subtract image2 from image1
-
-                        buffer3 = buffer1 - buffer2
-                        movementValue = np.sum(buffer3)/(buffer1.size)
-
                 client = paho.Client("client-003")
                 brokerIP = "10.0.0.19"
                 client.connect(brokerIP)
@@ -107,6 +94,10 @@ class webcam_timelapse():
                 print('')
                 print('Motion value:', imgEntropy)
                 print('')
+
+                if imgEntropy > 5.5 and remoteCopyPath is not None:
+                        print('Motion detected! Copying to remote.')
+                        self.scpToRemote(currentImgPath, outputFilePath=remoteCopyPath)
 
 
         def takeAndArchive(self, imgArchiveNum, sleepDuration=120, remoteCopyLocation=None):

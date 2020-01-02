@@ -26,5 +26,7 @@ while True:
     for i in range(5):
         shutil.copy(webcam.currentImagePath, motionComparionImg)
         webcam.fireCamera(filePath=webcam.currentImagePath)
-        webcam.motionCheck(currentImgPath=webcam.currentImagePath, prevImgPath=motionComparionImg)
+        webcam.motionCheck(currentImgPath=webcam.currentImagePath,
+                           prevImgPath=motionComparionImg,
+                           remoteCopyPath=rpiSettings['haLiveImgMotionPath'])
         time.sleep(5)
