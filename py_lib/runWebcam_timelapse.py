@@ -169,7 +169,7 @@ class webcam_timelapse():
                 print('Sleeping for {} seconds.'.format(sleepDuration))
                 time.sleep(sleepDuration)
                 print('')
-                return currentImagePath
+                return archivePath
 
 if __name__ == '__main__':
         webcam = webcam_timelapse()
