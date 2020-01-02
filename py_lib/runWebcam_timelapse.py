@@ -123,7 +123,7 @@ class webcam_timelapse():
                 brokerIP = "10.0.0.19"
                 client.connect(brokerIP)
                 now = datetime.datetime.now()
-                client.publish("rpiMotionTopic", movementValue)
+                client.publish("rpiMotionTopic", float(movementValue))
                 print('')
                 print('Motion value:', movementValue)
                 print('')
