@@ -94,7 +94,7 @@ class webcam_timelapse():
 
                 while True:
                         currentImgPath = self.timelapse(sleepDuration=sleepDuration, currentDay=currentDay, copyToHAServer=True)
-                        # self.buildTimelapse(imgNum=self.imgNum)
+                        self.buildTimelapse(imgNum=self.imgNum)
 
                         if prevImgPath is not None:
                                 self.motionCheck(currentImgPath=currentImgPath, prevImgPath=prevImgPath)
