@@ -19,5 +19,5 @@ while True:
     webcam.buildTimelapseGif(numImgs=rpiSettings['GifFrames'],
                              remoteCopyLocation=rpiSettings['haLiveGifPath'],
                              fps=rpiSettings['gifFPS'])
-
+    print('Sleeping for', rpiSettings['buildGifEvery'], 'seconds')
     time.sleep(rpiSettings['buildGifEvery'])
