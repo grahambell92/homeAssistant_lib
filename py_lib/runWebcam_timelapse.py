@@ -62,9 +62,12 @@ class webcam_timelapse():
                                 gifimages.append(imageio.imread(fileName))
                         except:
                                 print('Unable to read:', fileName)
-                imageio.mimsave(currentGifPath, gifimages)
-                print('Saving current gif:', currentGifPath)
+                if len(gifimages) > 0:
 
+                        imageio.mimsave(currentGifPath, gifimages)
+                        print('Saving current gif:', currentGifPath)
+                else:
+                        print('No images for timelase gif. Exiting.')
 
         def rpiZero(self):
                 currentDay = datetime.datetime.now().day
