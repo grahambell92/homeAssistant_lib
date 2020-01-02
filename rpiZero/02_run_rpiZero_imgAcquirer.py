@@ -21,8 +21,8 @@ if os.path.exists(webcam.archiveFolder):
 
 while True:
     imgNum = next(imageCountCycler)
-    webcam.takeAndArchive(imgArchiveNum=imgNum, sleepDuration=0.0 , remoteCopyLocation=rpiSettings['haLiveImgPath'])
+    webcam.takeAndArchive(imgArchiveNum=imgNum, sleepDuration=5, remoteCopyLocation=rpiSettings['haLiveImgPath'])
     for i in range(5):
+        webcam.fireCamera(filePath=webcam.currentImagePath)
         webcam.motionCheck(currentImgPath=webcam.currentImagePath, prevImgPath=webcam.currentArchivePath)
         time.sleep(5)
-        webcam.fireCamera(filePath=webcam.currentImagePath)
