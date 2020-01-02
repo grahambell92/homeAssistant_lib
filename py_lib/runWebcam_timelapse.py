@@ -106,6 +106,8 @@ class webcam_timelapse():
                 # Read image
                 currentImg = Image.open(currentImgPath)
                 prevImg = Image.open(prevImgPath)
+                print('curr:', currentImgPath)
+                print('prev:', prevImgPath)
 
                 currentImg_blur = currentImg.filter(ImageFilter.BLUR)
                 prevImg_blur = prevImg.filter(ImageFilter.BLUR)
