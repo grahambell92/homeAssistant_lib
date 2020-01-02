@@ -9,7 +9,7 @@ sys.path.append("../py_lib/")
 from runWebcam_timelapse import webcam_timelapse
 import os
 import shutil
-from 01_rpiZeroParams import rpiSettings
+from rpiZeroParams import rpiSettings
 import time
 
 webcam = webcam_timelapse(archiveBaseFolder=rpiSettings['archiveBaseFolder'])
