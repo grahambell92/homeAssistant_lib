@@ -8,8 +8,8 @@ rpiSettings = {
 
     # Gif timelapse building properties.
     'buildGifEvery': 120, # Seconds
-    'GifFrames': 10,
-    'gifFPS': 4, # Frames per second.
+    'GifFrames': 15,
+    'gifFPS': 3, # Frames per second.
 
 }
 
