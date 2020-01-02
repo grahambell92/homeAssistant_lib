@@ -7,6 +7,9 @@ import os
 import shutil
 import time
 import imageio
+from PIL import Image, ImageFilter
+import numpy as np
+import paho.mqtt.client as paho
 
 class webcam_timelapse():
         def __init__(self, archiveBaseFolder='/home/pi/webcamImages/',):
@@ -82,15 +85,49 @@ class webcam_timelapse():
                 dayCount = next(self.daysCycle)
                 dayFolder = 'day{0}/'.format(dayCount)
                 self.archiveFolder = self.archiveBaseFolder + dayFolder
-                sleepDuration = 30
+                sleepDuration = 5
+                prevImgPath = None
 
                 if os.path.exists(self.archiveFolder):
                         print('Existing archive directory, deleting.')
                         shutil.rmtree(self.archiveFolder)
 
                 while True:
-                        self.timelapse(sleepDuration=sleepDuration, currentDay=currentDay, copyToHAServer=True)
-                        self.buildTimelapse(imgNum=self.imgNum)
+                        currentImgPath = self.timelapse(sleepDuration=sleepDuration, currentDay=currentDay, copyToHAServer=True)
+                        # self.buildTimelapse(imgNum=self.imgNum)
+
+                        if prevImgPath is not None:
+                                self.motionCheck(currentImgPath=currentImgPath, prevImgPath=prevImgPath)
+                        prevImgPath = currentImgPath
+
+
+        def motionCheck(self, currentImgPath, prevImgPath):
+
+                # Read image
+                currentImg = Image.open(currentImgPath)
+                prevImg = Image.open(prevImgPath)
+
+                currentImg_blur = currentImg.filter(ImageFilter.BLUR)
+                prevImg_blur = prevImg.filter(ImageFilter.BLUR)
+
+                buffer1 = np.asarray(currentImg_blur)
+
+                buffer2 = np.asarray(prevImg_blur)
+
+                # Subtract image2 from image1
+
+                buffer3 = buffer1 - buffer2
+                movementValue = np.sum(buffer3)
+
+                client = paho.Client("client-003")
+                brokerIP = "10.0.0.19"
+                client.connect(brokerIP)
+                now = datetime.datetime.now()
+                client.publish("rpiMotionTopic", movementValue)
+                print('')
+                print('Motion value:', movementValue)
+                print('')
+
 
         def timelapse(self, currentDay, sleepDuration=120, copyToHAServer=False):
 
@@ -130,7 +167,7 @@ class webcam_timelapse():
                 print('Sleeping for {} seconds.'.format(sleepDuration))
                 time.sleep(sleepDuration)
                 print('')
-                return
+                return currentImagePath
 
 if __name__ == '__main__':
         webcam = webcam_timelapse()
