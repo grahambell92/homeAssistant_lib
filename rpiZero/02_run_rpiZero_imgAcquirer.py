@@ -14,6 +14,7 @@ import time
 
 webcam = webcam_timelapse(archiveBaseFolder=rpiSettings['archiveBaseFolder'])
 imageCountCycler = itertools.cycle(range(500))
+motionComparionImg = webcam.archiveBaseFolder + 'motionPrev.jpg'
 
 if os.path.exists(webcam.archiveFolder):
     print('Existing archive directory, deleting.')
@@ -23,6 +24,7 @@ while True:
     imgNum = next(imageCountCycler)
     webcam.takeAndArchive(imgArchiveNum=imgNum, sleepDuration=5, remoteCopyLocation=rpiSettings['haLiveImgPath'])
     for i in range(5):
+        shutil.copy(webcam.currentImagePath, motionComparionImg)
         webcam.fireCamera(filePath=webcam.currentImagePath)
-        webcam.motionCheck(currentImgPath=webcam.currentImagePath, prevImgPath=webcam.currentArchivePath)
+        webcam.motionCheck(currentImgPath=webcam.currentImagePath, prevImgPath=motionComparionImg)
         time.sleep(5)
