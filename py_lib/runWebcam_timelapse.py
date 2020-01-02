@@ -82,7 +82,7 @@ class webcam_timelapse():
                 dayCount = next(self.daysCycle)
                 dayFolder = 'day{0}/'.format(dayCount)
                 self.archiveFolder = self.archiveBaseFolder + dayFolder
-                sleepDuration = 5
+                sleepDuration = 30
 
                 if os.path.exists(self.archiveFolder):
                         print('Existing archive directory, deleting.')
