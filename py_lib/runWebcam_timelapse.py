@@ -63,7 +63,7 @@ class webcam_timelapse():
                         # Move the image via secure copy (scp) to the home assistant www folder on the main rpi.
                         if remoteCopyLocation is not None:
                                 print('Copying to remote HA www folder...')
-                                self.scpToRemote(inputFilePath=self.currentImagePath, outputFilePath=remoteCopyLocation)
+                                self.scpToRemote(inputFilePath=self.currentGifPath, outputFilePath=remoteCopyLocation)
                                 print('Done.')
 
                 else:

@@ -16,6 +16,8 @@ webcam = webcam_timelapse(archiveBaseFolder=rpiSettings['archiveBaseFolder'])
 
 while True:
     # Get the list of most recent images.
-    webcam.buildTimelapseGif(numImgs=rpiSettings['GifFrames'], remoteCopyLocation=rpiSettings['haLiveGifPath'], fps=rpiSettings['gifFPS'])
+    webcam.buildTimelapseGif(numImgs=rpiSettings['GifFrames'],
+                             remoteCopyLocation=rpiSettings['haLiveGifPath'],
+                             fps=rpiSettings['gifFPS'])
 
     time.sleep(rpiSettings['buildGifEvery'])
