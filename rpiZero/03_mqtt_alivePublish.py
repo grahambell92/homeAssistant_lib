@@ -11,7 +11,16 @@ client = paho.Client("client-001")
 
 client.on_message = on_message
 client.connect(brokerIP)
-print("publishing ")
+import Adafruit_GPIO.SPI as SPI
+import Adafruit_MCP3008
+
+# Hardware SPI configuration:
+SPI_PORT   = 0
+SPI_DEVICE = 0
+mcp = Adafruit_MCP3008.MCP3008(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
+
+
+
 while True:
     now = datetime.datetime.now()
     # dd/mm/YY H:M:S
@@ -19,6 +28,12 @@ while True:
     msg = dt_string
     client.publish("rpiSatTopic", msg)
     time.sleep(5)
+
+    if True:
+
+        battVolt = mcp.read_adc(0)
+        print('Battery voltage')
+        client.publish("rpiZeroVoltageTopic", battVolt)
 
 client.disconnect() #disconnect
 # client.loop_stop() #stop loop
