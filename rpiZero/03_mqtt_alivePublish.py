@@ -6,7 +6,7 @@ def on_message(client, userdata, message):
     time.sleep(1)
     print("Received message:", str(message.payload.decode("utf-8")))
 
-brokerIP = "10.0.0.19"
+brokerIP = "192.168.0.55" #"10.0.0.19"
 client = paho.Client("client-001")
 
 client.on_message = on_message
@@ -34,6 +34,7 @@ while True:
         battVolt = mcp.read_adc(0)
         print('Battery voltage')
         client.publish("rpiZeroVoltageTopic", battVolt)
+
 
 client.disconnect() #disconnect
 # client.loop_stop() #stop loop

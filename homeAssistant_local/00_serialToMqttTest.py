@@ -15,7 +15,7 @@ ser = serial.Serial(
 time.sleep(1)
 ser.flushInput();  # clean input buffer
 
-brokerIP = "10.0.0.19"
+brokerIP = "192.168.0.55" #"10.0.0.19"
 client = paho.Client("client-002")
 client.connect(brokerIP)
 
