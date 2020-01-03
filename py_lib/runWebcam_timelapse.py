@@ -88,7 +88,7 @@ class webcam_timelapse():
                 imgEntropy = self.image_entropy(img=imgDiff)
 
                 client = paho.Client("client-003")
-                brokerIP = "10.0.0.19"
+                brokerIP = "192.168.0.55" #"10.0.0.19"
                 client.connect(brokerIP)
                 client.publish("rpiZero0_motion", '{:.2f}'.format(imgEntropy))
                 print('')

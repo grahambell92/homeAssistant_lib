@@ -8,7 +8,6 @@ from runWebcam_timelapse import webcam_timelapse
 from rpiZeroParams import rpiSettings
 
 import time
-from glob import glob
 
 webcam = webcam_timelapse(archiveBaseFolder=rpiSettings['archiveBaseFolder'])
 
