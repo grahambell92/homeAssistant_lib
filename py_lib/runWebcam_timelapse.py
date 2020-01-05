@@ -81,7 +81,7 @@ class webcam_timelapse():
                         # use this input from:
                         # https://superuser.com/questions/556029/how-do-i-convert-a-video-to-gif-using-ffmpeg-with-reasonable-quality
                         # ffmpeg -i input.mp4 -vf "fps=3:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" output.gif
-                        gifCommand = ['ffmpeg', '-i', inputFileCommand,
+                        gifCommand = ['ffmpeg', '-y', '-i', inputFileCommand,
                                       '-vf',
                                       '"fps=3:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse"',
                                       self.currentGifPath
