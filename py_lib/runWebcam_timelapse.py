@@ -83,7 +83,7 @@ class webcam_timelapse():
                         # https://superuser.com/questions/556029/how-do-i-convert-a-video-to-gif-using-ffmpeg-with-reasonable-quality
                         # ffmpeg -i input.mp4 -vf "fps=3:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" output.gif
                         # ffmpeg -y -i /home/pi/webcamImages/rollingImages/image0.jpg -filter_complex "[0:v] split [a][b];[a] palettegen [p];[b][p] paletteuse" FancyStickAround.gif
-                        gifCommand = ['ffmpeg', '-y', '-r 3' '-i', inputFileCommand,
+                        gifCommand = ['ffmpeg', '-y', '-r 3', '-i', inputFileCommand,
                                       '-filter_complex "[0:v] split [a][b];[a] palettegen [p];[b][p] paletteuse"',
                                       self.currentGifPath
                                       ]
