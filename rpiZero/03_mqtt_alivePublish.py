@@ -31,7 +31,8 @@ while True:
 
     if True:
 
-        battVolt = mcp.read_adc(0)
+        battRead = mcp.read_adc(0)
+        battVolt = 0.009821428 * battRead + 0.2558928
         print('Battery voltage')
         client.publish("rpiZeroVoltageTopic", battVolt)
 
