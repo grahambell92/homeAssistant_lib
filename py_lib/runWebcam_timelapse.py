@@ -61,7 +61,7 @@ class webcam_timelapse():
                 if len(gifimages) > 0:
                         # Build the input file list
 
-                        inputFileCommand = ' -i '.join(imgPaths[:1])
+                        inputFileCommand = '-i ' + ' -i '.join(imgPaths[:1])
                         # Build the pallet
 
                         # palletCommand = [
@@ -81,9 +81,9 @@ class webcam_timelapse():
                         # use this input from:
                         # https://superuser.com/questions/556029/how-do-i-convert-a-video-to-gif-using-ffmpeg-with-reasonable-quality
                         # ffmpeg -i input.mp4 -vf "fps=3:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" output.gif
+                        # ffmpeg -y -i /home/pi/webcamImages/rollingImages/image0.jpg -filter_complex "[0:v] split [a][b];[a] palettegen [p];[b][p] paletteuse" FancyStickAround.gif
                         gifCommand = ['ffmpeg', '-y', '-i', inputFileCommand,
-                                      '-vf',
-                                      '"fps=3:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse"',
+                                      '-filter_complex "[0:v] split [a][b];[a] palettegen [p];[b][p] paletteuse"',
                                       self.currentGifPath
                                       ]
                         gifCommand = " ".join(gifCommand)
