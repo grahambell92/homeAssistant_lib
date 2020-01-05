@@ -60,7 +60,7 @@ class webcam_timelapse():
 
                 if len(gifimages) > 0:
                         # Build the input file list
-                        inputFileCommand = '-i' + ' -i '.join(gifimages)
+                        inputFileCommand = ' -i '.join(gifimages)
                         # Build the pallet
 
                         # palletCommand = [
@@ -80,7 +80,7 @@ class webcam_timelapse():
                         # use this input from:
                         # https://superuser.com/questions/556029/how-do-i-convert-a-video-to-gif-using-ffmpeg-with-reasonable-quality
                         # ffmpeg -i input.mp4 -vf "fps=3:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" output.gif
-                        gifCommand = ['ffmpeg'] + inputFileCommand + [
+                        gifCommand = ['ffmpeg', '-i'] + inputFileCommand + [
                                 '-vf',
                                 '"fps=3:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse"',
                                 self.currentGifPath
