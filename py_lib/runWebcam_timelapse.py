@@ -62,7 +62,7 @@ class webcam_timelapse():
                 if len(imgPaths) > 0:
                         # Build the input file list
 
-                        inputFileCommand = ' -i '.join(imgPaths[-numImgs:])
+                        inputFileCommand = ' -i '.join(imgPaths[:3])
                         # Build the pallet
 
                         # palletCommand = [
@@ -88,6 +88,8 @@ class webcam_timelapse():
                                       self.currentGifPath
                                       ]
                         gifCommand = " ".join(gifCommand)
+                        print(gifCommand)
+                        exit(0)
                         correct = subprocess.run(gifCommand, shell=True)
 
                         # Move the image via secure copy (scp) to the home assistant www folder on the main rpi.
