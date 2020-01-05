@@ -87,14 +87,16 @@ class webcam_timelapse():
                 if len(gifimages) > 0:
                         imageio.mimsave(self.currentGifPath, gifimages, fps=fps, subrectangles=True)
                         print('Saving current gif:', self.currentGifPath)
+
                         # Compress gif using ffmpeg.
-                        gifCommand = ['ffmpeg', '-y', '-i', self.currentGifPath,
-                                      '-filter_complex "[0:v] split [a][b];[a] palettegen [p];[b][p] paletteuse"',
-                                      self.currentGifPath
-                                      ]
-                        gifCommand = " ".join(gifCommand)
-                        print(gifCommand)
-                        correct = subprocess.run(gifCommand, shell=True)
+                        if False:
+                                gifCommand = ['ffmpeg', '-y', '-i', self.currentGifPath,
+                                              '-filter_complex "[0:v] split [a][b];[a] palettegen [p];[b][p] paletteuse"',
+                                              self.currentGifPath
+                                              ]
+                                gifCommand = " ".join(gifCommand)
+                                print(gifCommand)
+                                correct = subprocess.run(gifCommand, shell=True)
 
                         # Move the image via secure copy (scp) to the home assistant www folder on the main rpi.
                         if remoteCopyLocation is not None:
