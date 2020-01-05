@@ -34,7 +34,7 @@ while True:
         battRead = mcp.read_adc(0)
         battVolt = 0.009821428 * battRead + 0.2558928
         print('Battery voltage')
-        client.publish("rpiZeroVoltageTopic", battVolt)
+        client.publish("rpiZeroVoltageTopic", '{:.3f}'.format(battVolt))
 
 
 client.disconnect() #disconnect
