@@ -27,7 +27,7 @@ while True:
     dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
     msg = dt_string
     client.publish("rpiSatTopic", msg)
-    time.sleep(5)
+    time.sleep(30)
 
     if True:
 
