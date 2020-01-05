@@ -59,7 +59,7 @@ class webcam_timelapse():
                                 except:
                                         print('#', index, 'Unable to read:', imgPath)
 
-                if len(gifimages) > 0:
+                if len(imgPaths) > 0:
                         # Build the input file list
 
                         inputFileCommand = ' -i '.join(imgPaths[-numImgs:])
