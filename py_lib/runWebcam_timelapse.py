@@ -57,15 +57,55 @@ class webcam_timelapse():
                                 print('#', index, 'Appended:', imgPath)
                         except:
                                 print('#', index, 'Unable to read:', imgPath)
+
                 if len(gifimages) > 0:
-                        imageio.mimsave(self.currentGifPath, gifimages, fps=fps, subrectangles=True)
-                        print('Saving current gif:', self.currentGifPath)
+                        # Build the input file list
+                        inputFileCommand = '-i' + ' -i '.join(gifimages)
+                        # Build the pallet
+
+                        # palletCommand = [
+                        #         "ffmpeg"
+                        #         ] + [
+                        #         inputFileCommand
+                        #         ] + [
+                        #         '-vf',
+                        #         'palettegen',
+                        #         'palette.png'
+                        # ]
+                        # correct = subprocess.run(palletCommand, shell=True)
+                        #ffmpeg - i target.png - vf palettegen palette.png
+
+                        # Build the gif from that pallet.
+                        # ffmpeg -ss 30 -t 3 -i input.mp4 -vf "fps=10,scale=320:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" -loop 0 output.gif
+                        # use this input from:
+                        # https://superuser.com/questions/556029/how-do-i-convert-a-video-to-gif-using-ffmpeg-with-reasonable-quality
+                        # ffmpeg -i input.mp4 -vf "fps=3:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" output.gif
+                        gifCommand = ['ffmpeg'] + inputFileCommand + [
+                                '-vf',
+                                '"fps=3:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse"',
+                                self.currentGifPath
+                        ]
+                        correct = subprocess.run(palletCommand, shell=True)
+                        print('timelapse done!')
+                        exit(0)
 
                         # Move the image via secure copy (scp) to the home assistant www folder on the main rpi.
                         if remoteCopyLocation is not None:
                                 print('Copying to remote HA www folder...')
                                 self.scpToRemote(inputFilePath=self.currentGifPath, outputFilePath=remoteCopyLocation)
                                 print('Done.')
+
+
+                if False:
+                        if len(gifimages) > 0:
+                                imageio.mimsave(self.currentGifPath, gifimages, fps=fps, subrectangles=True)
+                                print('Saving current gif:', self.currentGifPath)
+
+                                # Move the image via secure copy (scp) to the home assistant www folder on the main rpi.
+                                if remoteCopyLocation is not None:
+                                        print('Copying to remote HA www folder...')
+                                        self.scpToRemote(inputFilePath=self.currentGifPath, outputFilePath=remoteCopyLocation)
+                                        print('Done.')
 
                 else:
                         print('No images for timelapse gif. Exiting.')
