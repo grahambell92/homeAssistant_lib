@@ -86,7 +86,7 @@ class webcam_timelapse():
                                 '"fps=3:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse"',
                                 self.currentGifPath
                         ]
-                        correct = subprocess.run(palletCommand, shell=True)
+                        correct = subprocess.run(gifCommand, shell=True)
                         print('timelapse done!')
                         exit(0)
 
