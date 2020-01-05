@@ -61,7 +61,7 @@ class webcam_timelapse():
                 if len(gifimages) > 0:
                         # Build the input file list
 
-                        inputFileCommand = ' -i '.join(imgPaths[-numImgs:])
+                        inputFileCommand = ' -i '.join(imgPaths[:1])
                         # Build the pallet
 
                         # palletCommand = [
@@ -87,6 +87,9 @@ class webcam_timelapse():
                                 '-o',
                                 self.currentGifPath
                         ]
+                        print('')
+                        print(gifCommand)
+                        print('')
                         correct = subprocess.run(gifCommand, shell=True)
                         print('timelapse done!')
                         exit(0)
