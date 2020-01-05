@@ -50,18 +50,19 @@ class webcam_timelapse():
                 imgPaths = glob.glob(self.archiveFolder + '*.jpg')
                 imgPaths.sort(key=os.path.getmtime)
 
-                gifimages = []
-                for index, imgPath in enumerate(imgPaths[-numImgs:]):
-                        try:
-                                gifimages.append(imageio.imread(imgPath))
-                                print('#', index, 'Appended:', imgPath)
-                        except:
-                                print('#', index, 'Unable to read:', imgPath)
+                if False:
+                        gifimages = []
+                        for index, imgPath in enumerate(imgPaths[-numImgs:]):
+                                try:
+                                        gifimages.append(imageio.imread(imgPath))
+                                        print('#', index, 'Appended:', imgPath)
+                                except:
+                                        print('#', index, 'Unable to read:', imgPath)
 
                 if len(gifimages) > 0:
                         # Build the input file list
 
-                        inputFileCommand = ' -i '.join(imgPaths[:3])
+                        inputFileCommand = ' -i '.join(imgPaths[-numImgs:])
                         # Build the pallet
 
                         # palletCommand = [
@@ -87,12 +88,7 @@ class webcam_timelapse():
                                       self.currentGifPath
                                       ]
                         gifCommand = " ".join(gifCommand)
-                        print('')
-                        print(gifCommand)
-                        print('')
                         correct = subprocess.run(gifCommand, shell=True)
-                        print('timelapse done!')
-                        exit(0)
 
                         # Move the image via secure copy (scp) to the home assistant www folder on the main rpi.
                         if remoteCopyLocation is not None:
