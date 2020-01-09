@@ -9,9 +9,9 @@ rpiSettings = {
     'haLiveGifPath': 'homeassistant@' + haIP + ':/home/homeassistant/.homeassistant/www/rpi_timelapse.gif',
 
     # Gif timelapse building properties.
-    'buildGifEvery': 120, # Seconds
-    'GifFrames': 15,
-    'gifFPS': 3, # Frames per second.
+    'buildGifEvery': 180, # Seconds
+    'GifFrames': 8,
+    'gifFPS': 2, # Frames per second.
 
 }
 
