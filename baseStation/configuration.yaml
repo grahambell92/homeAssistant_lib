@@ -23,17 +23,17 @@ camera:
   # Remote camera 0 - currentImage
   - platform: local_file
     name: remoteCam0_currentImage
-    file_path: /local/image.jpg
+    file_path: /local/remoteCam0_currentImage.jpg
 
   # Remote camera 0 - last motion
   - platform: local_file
     name: remoteCam0_lastMotion
-    file_path: /local/image.jpg
+    file_path: /local/remoteCam0_lastMotion.jpg
 
   # Remote camera 0 - timelapse
   - platform: local_file
     name: remoteCam0_timelapse
-    file_path: /local/image.jpg
+    file_path: /local/remoteCam0_timelapse.gif
 
 weather:
   - platform: bom
