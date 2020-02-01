@@ -1,5 +1,5 @@
 
-cd /home/pi/homeAssistant_lib/rpiZero/
+cd /home/pi/homeAssistant_lib/remoteCamera/
 
 # Disable the hdmi output to conserve power.
 /opt/vc/bin/tvservice -o
