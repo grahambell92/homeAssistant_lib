@@ -9,10 +9,10 @@ sys.path.append("../py_lib/")
 from runWebcam_timelapse import webcam_timelapse
 import os
 import shutil
-from rpiZeroParams import rpiSettings
+from rpiZeroParams import remoteCam0_settings as remoteCam_settings
 import time
 
-webcam = webcam_timelapse(archiveBaseFolder=rpiSettings['archiveBaseFolder'])
+webcam = webcam_timelapse(archiveBaseFolder=remoteCam_settings['archiveBaseFolder'])
 imageCountCycler = itertools.cycle(range(500))
 motionComparionImg = webcam.archiveBaseFolder + 'motionPrev.jpg'
 
@@ -22,11 +22,11 @@ if os.path.exists(webcam.archiveFolder):
 
 while True:
     imgNum = next(imageCountCycler)
-    webcam.takeAndArchive(imgArchiveNum=imgNum, sleepDuration=5, remoteCopyLocation=rpiSettings['haLiveImgPath'])
+    webcam.takeAndArchive(imgArchiveNum=imgNum, sleepDuration=5, remoteCopyLocation=remoteCam_settings['haLiveImgPath'])
     for i in range(5):
         shutil.copy(webcam.currentImagePath, motionComparionImg)
         webcam.fireCamera(filePath=webcam.currentImagePath)
         webcam.motionCheck(currentImgPath=webcam.currentImagePath,
                            prevImgPath=motionComparionImg,
-                           remoteCopyPath=rpiSettings['haLiveImgMotionPath'])
+                           remoteCopyPath=remoteCam_settings['haLiveImgMotionPath'])
         time.sleep(5)

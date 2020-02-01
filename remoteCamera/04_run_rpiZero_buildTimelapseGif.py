@@ -5,17 +5,18 @@
 import sys
 sys.path.append("../py_lib/")
 from runWebcam_timelapse import webcam_timelapse
-from rpiZeroParams import remoteCam0_settings
+from rpiZeroParams import remoteCam0_settings as remoteCam_settings
+
 import time
 
-webcam = webcam_timelapse(archiveBaseFolder=remoteCam0_settings['archiveBaseFolder'])
+webcam = webcam_timelapse(archiveBaseFolder=remoteCam_settings['archiveBaseFolder'])
 
 # Get largest img in archive folder
 
 while True:
     # Get the list of most recent images.
-    webcam.buildTimelapseGif(numImgs=remoteCam0_settings['GifFrames'],
-                             remoteCopyLocation=remoteCam0_settings['haLiveGifPath'],
-                             fps=remoteCam0_settings['gifFPS'])
-    print('Sleeping for', remoteCam0_settings['buildGifEvery'], 'seconds')
-    time.sleep(remoteCam0_settings['buildGifEvery'])
+    webcam.buildTimelapseGif(numImgs=remoteCam_settings['GifFrames'],
+                             remoteCopyLocation=remoteCam_settings['haLiveGifPath'],
+                             fps=remoteCam_settings['gifFPS'])
+    print('Sleeping for', remoteCam_settings['buildGifEvery'], 'seconds')
+    time.sleep(remoteCam_settings['buildGifEvery'])
