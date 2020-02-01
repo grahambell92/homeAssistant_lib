@@ -124,13 +124,16 @@ class webcam_timelapse():
                 imgDiff = ImageChops.difference(currentImg, prevImg)
                 imgEntropy = self.image_entropy(img=imgDiff)
 
-                client = paho.Client("client-003")
-                brokerIP = "192.168.0.55" #"10.0.0.19"
-                client.connect(brokerIP)
-                client.publish("rpiZero0_motion", '{:.2f}'.format(imgEntropy))
-                print('')
-                print('Motion value:', imgEntropy)
-                print('')
+                try:
+                        client = paho.Client("client-003")
+                        brokerIP = "192.168.0.55" #"10.0.0.19"
+                        client.connect(brokerIP)
+                        client.publish("rpiZero0_motion", '{:.2f}'.format(imgEntropy))
+                        print('')
+                        print('Motion value:', imgEntropy)
+                        print('')
+                except:
+                        print('MQTT publish failed. Passing over.')
 
                 if imgEntropy > 5.5 and remoteCopyPath is not None:
                         print('Motion detected! Copying to remote.')
