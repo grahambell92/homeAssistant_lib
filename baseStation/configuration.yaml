@@ -44,6 +44,9 @@ weather:
 mqtt:
     broker: 192.168.0.55
 
+# enable the recorder integration (optional)
+recorder:
+
 # Sensors
 sensor:
   # Remote camera 0
@@ -112,3 +115,14 @@ sensor:
       - weather # weather text summary
       - wind_dir # wind direction
       - wind_spd_kmh # wind speed in km/hr
+
+
+  # For calculating weather stats
+  - platform: statistics
+    entity_id: sensor.bom_viewbank_rain_today
+    max_age:
+      hours: 30
+  - platform: statistics
+    entity_id: sensor.bom_redesdale_rain_today
+    max_age:
+      hours: 30
