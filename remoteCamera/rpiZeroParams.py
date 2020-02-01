@@ -1,12 +1,14 @@
 # Dictates the parameters for this camera system
 
 haIP = "192.168.0.55" # "10.0.0.19"
-rpiSettings = {
-    'archiveBaseFolder': '/home/pi/webcamImages/',
+haFolder = '/home/pi/homeassistant/'
+haUser = 'pi'
 
-    'haLiveImgPath': 'homeassistant@' + haIP + ':/home/homeassistant/.homeassistant/www/rpi_zero.jpg',
-    'haLiveImgMotionPath': 'homeassistant@' + haIP + ':/home/homeassistant/.homeassistant/www/rpi_zero_motion.jpg',
-    'haLiveGifPath': 'homeassistant@' + haIP + ':/home/homeassistant/.homeassistant/www/rpi_timelapse.gif',
+remoteCam0_settings = {
+    'archiveBaseFolder': '/home/pi/webcamImages/',
+    'haLiveImgPath': haUser + '@' + haIP + ':' + haFolder + 'www/remoteCam0_currentImage.jpg',
+    'haLiveImgMotionPath': haUser + '@' + haIP + ':' + haFolder + 'www/remoteCam0_lastMotion.jpg',
+    'haLiveGifPath': haUser + '@' + haIP + ':' + haFolder + 'www/remoteCam0_timelapse.gif',
 
     # Gif timelapse building properties.
     'buildGifEvery': 180, # Seconds
