@@ -48,18 +48,17 @@ mqtt:
 sensor:
   # Remote camera 0
   - platform: mqtt
-    name: 'Last Ping'
+    name: 'remoteCamera0/lastPing'
     state_topic: "remoteCamera0/lastPing"
-    unit_of_measurement: "%"
 
 
   - platform: mqtt
-    name: 'Motion'
+    name: 'remoteCamera0/motionValue'
     state_topic: "remoteCamera0/motionValue"
     unit_of_measurement: "%"
 
   - platform: mqtt
-    name: 'Voltage'
+    name: 'remoteCamera0/battVoltage'
     state_topic: "remoteCamera0/battVoltage"
     unit_of_measurement: "V"
 
@@ -69,6 +68,6 @@ sensor:
 
   # Remote sensor 0
   - platform: mqtt
-    name: 'Remote Sensor 0 Value'
+    name: 'remoteSensor0/motionValue'
     state_topic: "remoteSensor0/motionValue"
     unit_of_measurement: "%"
