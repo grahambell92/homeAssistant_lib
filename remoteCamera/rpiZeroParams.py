@@ -15,5 +15,16 @@ remoteCam0_settings = {
     'GifFrames': 8,
     'gifFPS': 2, # Frames per second.
 
+    # Motion MQTT reporting properties.
+    'mqttBrokerIP': haIP,
+    'motionThreshold': 6.0, # Just a threshold.
+    'mqttMotionClient': "remoteCamera0_motion",
+    'mqttMotionPublishTopic': "remoteCamera0/motionValue",
+
+    # MQTT Alive reporting properties.
+    'mqttAliveClient': "remoteCamera0_lastPing",
+    'mqttAlivePublishTopic': "remoteCamera0/lastPing",
+    'mqttBattVoltPublishTopic': "remoteCamera0/battVoltage",
+
 }
 

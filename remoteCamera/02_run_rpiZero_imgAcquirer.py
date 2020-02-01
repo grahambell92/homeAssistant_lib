@@ -28,5 +28,9 @@ while True:
         webcam.fireCamera(filePath=webcam.currentImagePath)
         webcam.motionCheck(currentImgPath=webcam.currentImagePath,
                            prevImgPath=motionComparionImg,
-                           remoteCopyPath=remoteCam_settings['haLiveImgMotionPath'])
+                           remoteCopyPath=remoteCam_settings['haLiveImgMotionPath'],
+                           mqttBrokerIP=remoteCam_settings['haIP'],
+                           motionThreshold=remoteCam_settings['motionThreshold'],
+                           mqttMotionPublishTopic=remoteCam_settings['mqttMotionPublishTopic'],
+                           mqttMotionClient=remoteCam_settings['mqttMotionClient'])
         time.sleep(5)

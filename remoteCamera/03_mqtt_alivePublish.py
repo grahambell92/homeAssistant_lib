@@ -1,13 +1,16 @@
 import time
 import paho.mqtt.client as paho
 import datetime
+from rpiZeroParams import remoteCam0_settings as remoteCam_settings
+
+
 
 def on_message(client, userdata, message):
     time.sleep(1)
     print("Received message:", str(message.payload.decode("utf-8")))
 
-brokerIP = "192.168.0.55" #"10.0.0.19"
-client = paho.Client("client-001")
+brokerIP = remoteCam_settings['mqttBrokerIP'] # "192.168.0.55" #"10.0.0.19"
+client = paho.Client(remoteCam_settings["mqttAliveClient"])
 
 client.on_message = on_message
 client.connect(brokerIP)
@@ -22,19 +25,22 @@ mcp = Adafruit_MCP3008.MCP3008(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
 
 
 while True:
-    now = datetime.datetime.now()
-    # dd/mm/YY H:M:S
-    dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
-    msg = dt_string
-    client.publish("rpiSatTopic", msg)
-    time.sleep(30)
+    try:
+        now = datetime.datetime.now()
+        # dd/mm/YY H:M:S
+        dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+        msg = dt_string
+        client.publish(remoteCam_settings["mqttAlivePublishTopic"], msg)
+        time.sleep(30)
 
-    if True:
+        if True:
 
-        battRead = mcp.read_adc(0)
-        battVolt = 0.009821428 * battRead + 0.2558928
-        print('Battery voltage')
-        client.publish("rpiZeroVoltageTopic", '{:.3f}'.format(battVolt))
+            battRead = mcp.read_adc(0)
+            battVolt = 0.009821428 * battRead + 0.2558928
+            print('Battery voltage')
+            client.publish(remoteCam_settings["mqttBattVoltPublishTopic"], '{:.3f}'.format(battVolt))
+    except:
+        print('Failed to post MQTT message to', brokerIP)
 
 
 client.disconnect() #disconnect

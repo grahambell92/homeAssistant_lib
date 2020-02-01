@@ -115,7 +115,11 @@ class webcam_timelapse():
                 samples_probability = [float(h) / histogram_length for h in histogram]
                 return -sum([p * math.log(p, 2) for p in samples_probability if p != 0])
 
-        def motionCheck(self, currentImgPath, prevImgPath, remoteCopyPath=None):
+        def motionCheck(self, currentImgPath, prevImgPath, remoteCopyPath=None,
+                        mqttBrokerIP="192.168.0.55",
+                        motionThreshold=5.5,
+                        mqttMotionPublishTopic='motion',
+                        mqttMotionClient='runWebcam_timelapse.py'):
 
                 # Read image
                 currentImg = Image.open(currentImgPath)
@@ -125,17 +129,16 @@ class webcam_timelapse():
                 imgEntropy = self.image_entropy(img=imgDiff)
 
                 try:
-                        client = paho.Client("client-003")
-                        brokerIP = "192.168.0.55" #"10.0.0.19"
-                        client.connect(brokerIP)
-                        client.publish("rpiZero0_motion", '{:.2f}'.format(imgEntropy))
+                        client = paho.Client(mqttMotionClient)
+                        client.connect(mqttBrokerIP)
+                        client.publish(mqttMotionPublishTopic, '{:.2f}'.format(imgEntropy))
                         print('')
                         print('Motion value:', imgEntropy)
                         print('')
                 except:
                         print('MQTT publish failed. Passing over.')
 
-                if imgEntropy > 5.5 and remoteCopyPath is not None:
+                if imgEntropy > motionThreshold and remoteCopyPath is not None:
                         print('Motion detected! Copying to remote.')
                         self.scpToRemote(currentImgPath, outputFilePath=remoteCopyPath)
 
