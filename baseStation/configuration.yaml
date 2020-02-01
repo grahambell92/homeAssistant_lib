@@ -23,7 +23,7 @@ camera:
   # Remote camera 0 - currentImage
   - platform: local_file
     name: remoteCam0_currentImage
-    file_path: /local/remoteCam0_currentImage.jpg
+    file_path: /home/pi/homeassistant/www/remoteCam0_currentImage.jpg
 
   # Remote camera 0 - last motion
   - platform: local_file
