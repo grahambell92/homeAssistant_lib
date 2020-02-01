@@ -38,7 +38,7 @@ weather:
     station: IDV60901.95874
 
   - platform: bom
-    name: Reedsdale
+    name: Redesdale
     station: IDV60801.94859
 
 mqtt:
@@ -71,3 +71,44 @@ sensor:
     name: 'remoteSensor0/motionValue'
     state_topic: "remoteSensor0/motionValue"
     unit_of_measurement: "%"
+
+
+  - platform: bom
+    station: IDV60901.95874
+    name: Viewbank
+    monitored_conditions:
+      - apparent_t # the feels like temperature
+      - cloud # cloud cover
+      - cloud_base_m
+      - cloud_oktas # oktas of cloud cover
+      - cloud_type # Types of clouds
+      - gust_kmh
+      - air_temp # Actual airtemp
+      - dewpt # dew point
+      - press # pressure in mbar
+      - press_tend # pressure trend ??
+      - rain_trace # amount of rain today in mm
+      - rel_hum # relative humidity in %
+      - weather # weather text summary
+      - wind_dir # wind direction
+      - wind_spd_kmh # wind speed in km/hr
+
+  - platform: bom
+    name: Redesdale
+    station: IDV60801.94859
+    monitored_conditions:
+      - apparent_t # the feels like temperature
+      - cloud # cloud cover
+      - cloud_base_m
+      - cloud_oktas # oktas of cloud cover
+      - cloud_type # Types of clouds
+      - gust_kmh
+      - air_temp # Actual airtemp
+      - dewpt # dew point
+      - press # pressure in mbar
+      - press_tend # pressure trend ??
+      - rain_trace # amount of rain today in mm
+      - rel_hum # relative humidity in %
+      - weather # weather text summary
+      - wind_dir # wind direction
+      - wind_spd_kmh # wind speed in km/hr
