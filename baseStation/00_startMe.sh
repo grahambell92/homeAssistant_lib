@@ -9,7 +9,12 @@
 tmux kill-server
 chmod 775 ./00_startTmuxHomeAssistant.sh
 chmod 775 ./01_startHomeAssistant.sh
-# start the main home assistant sever
+
+
+# Turn off the HDMI port.
+/opt/vc/bin/tvservice -o
+
+### Start the main home assistant sever
 
 # Start the tmux version
 tmux new-session -d -s homeAssistant './01_startHomeAssistant.sh'
