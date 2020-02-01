@@ -10,6 +10,9 @@ tmux kill-server
 chmod 775 ./00_startTmuxHomeAssistant.sh
 chmod 775 ./01_startHomeAssistant.sh
 # start the main home assistant sever
+
+# Start the tmux version
 tmux new-session -d -s homeAssistant './01_startHomeAssistant.sh'
+
 # start the mqtt publisher (local)
 tmux new-session -d -s mqtt 'python3 ./00_serialToMqttTest.py'
