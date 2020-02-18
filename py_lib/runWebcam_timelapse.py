@@ -25,7 +25,7 @@ class webcam_timelapse():
             # correct = subprocess.run(['fswebcam', '-r 640x480', '--quiet', filePath])
             # correct = subprocess.run('fswebcam -r 640x480 --quiet --jpeg 50 {}'.format(filePath), shell=True)
             # Use the rasperry pi noIR camera instead
-            correct = subprocess.run('raspistill -o {0} -q 10 -t 1500'.format(filePath), shell=True)
+            correct = subprocess.run('raspistill -o {0} -q 3 -t 1500'.format(filePath), shell=True)
             print('Done.')
 
         def scpToRemote(self, inputFilePath, outputFilePath):
@@ -89,6 +89,11 @@ class webcam_timelapse():
                 if len(gifimages) > 0:
                         imageio.mimsave(self.currentGifPath, gifimages, fps=fps, subrectangles=True)
                         print('Saving current gif:', self.currentGifPath)
+
+                        # Compress using gifsicle
+                        if True:
+                            gifCommand = ['gifsicle -i {0} --optimize=3 --colors 64 -o {0}'.format(self.currentGifPath)]
+                            correct = subprocess.run(gifCommand, shell=True)
 
                         # Compress gif using ffmpeg.
                         if False:
