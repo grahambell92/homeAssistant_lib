@@ -23,7 +23,9 @@ class webcam_timelapse():
         def fireCamera(self, filePath):
             print('Firing camera...')
             # correct = subprocess.run(['fswebcam', '-r 640x480', '--quiet', filePath])
-            correct = subprocess.run('fswebcam -r 640x480 --quiet --jpeg 50 {}'.format(filePath), shell=True)
+            # correct = subprocess.run('fswebcam -r 640x480 --quiet --jpeg 50 {}'.format(filePath), shell=True)
+            # Use the rasperry pi noIR camera instead
+            correct = subprocess.run('raspistill -o {0} -q 10 -t 1500'.format(filePath), shell=True)
             print('Done.')
 
         def scpToRemote(self, inputFilePath, outputFilePath):
