@@ -17,11 +17,21 @@ client.connect(brokerIP)
 import Adafruit_GPIO.SPI as SPI
 import Adafruit_MCP3008
 
-# Hardware SPI configuration:
-SPI_PORT   = 0
-SPI_DEVICE = 0
-mcp = Adafruit_MCP3008.MCP3008(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
+if False:
+    # Hardware SPI configuration:
+    SPI_PORT   = 0
+    SPI_DEVICE = 0
+    mcp = Adafruit_MCP3008.MCP3008(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
 
+if True:
+    # Software SPI configuration.
+    # Using GPIO pin numbers for spi connections.
+
+    CLK = 2
+    MISO = 3
+    MOSI = 4
+    CS = 17
+    mcp = Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS, miso=MISO, mosi=MOSI)
 
 
 while True:
