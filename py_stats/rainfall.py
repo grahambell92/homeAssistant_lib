@@ -170,14 +170,14 @@ if True:
 
     # Plot history trace over median
     if True:
-        historyLengths = [24, 36, 60, 120, 240]
+        historyLengths = np.array([24, 36, 60, 120, 240])*30.0
 
         figScale = 4.0
         figsize = (2.0 * figScale, figScale)
         for column in rainDf.columns:
             for length in historyLengths:
 
-                minDate = pd.Timestamp.today() - pd.Timedelta(length, unit='M')
+                minDate = pd.Timestamp.today() - pd.Timedelta(length, unit='D')
                 maxDate = pd.Timestamp.today()
                 plotDateRange = pd.date_range(start=minDate, end=maxDate, freq='D').normalize()
                 plotDayOfYear = plotDateRange.dayofyear
@@ -187,7 +187,9 @@ if True:
 
                 ax.plot(plotDateRange, np.array(rain_median.loc[plotDayOfYear, column])*30.0, label='{0} median'.format(column))
 
-                ax.plot(rainDf_rolling.loc[plotDateRange, column]*30.0, label='{0} recent'.format(column))
+                # ax.plot(rainDf_rolling.loc[plotDateRange, column]*30.0, label='{0} recent'.format(column))
+                ax.plot(rainDf_rolling.reindex(plotDateRange)[column]*30.0, label='{0} recent'.format(column))
+
                 # plot the seasons
                 plotSeasonBands(minDate=minDate, maxDate=maxDate, ax=ax)
 
@@ -215,7 +217,9 @@ if True:
             plotDateRange = pd.date_range(start=minDate, end=maxDate, freq='D').normalize()
             plotDayOfYear = plotDateRange.dayofyear
 
-            anomaly = rainDf_rolling.loc[plotDateRange, column] - np.array(rain_median.loc[plotDayOfYear, column])
+            # anomaly = rainDf_rolling.loc[plotDateRange, column] - np.array(rain_median.loc[plotDayOfYear, column])
+            anomaly = rainDf_rolling.reindex(plotDateRange)[column] - np.array(rain_median.loc[plotDayOfYear, column])
+
             anomalyPercent = (anomaly/np.array(rain_median.loc[plotDayOfYear, column]))*100.0
 
             if True:
