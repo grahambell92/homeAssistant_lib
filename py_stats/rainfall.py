@@ -29,7 +29,7 @@ viewbankRawDf = pd.read_csv('./rainfall/BOMdata/IDCJAC0009_086068_1800_viewbank/
 euroaRawDf = pd.read_csv('./rainfall/BOMdata/IDCJAC0009_082016_1800_euroa/IDCJAC0009_082016_1800_Data.csv')
 leongathaRawDf = pd.read_csv('./rainfall/BOMdata/IDCJAC0009_085049_1800_leongatha/IDCJAC0009_085049_1800_Data.csv')
 castlemaneRawDf = pd.read_csv('./rainfall/BOMdata/IDCJAC0009_088110_1800_castlemane/IDCJAC0009_088110_1800_Data.csv')
-dubboRawDf = pd.read_csv('./rainfall/BOMdata/IDCJAC0009_065030_1800_dubbo/IDCJAC0009_065030_1800_Data.csv')
+# dubboRawDf = pd.read_csv('./rainfall/BOMdata/IDCJAC0009_065030_1800_dubbo/IDCJAC0009_065030_1800_Data.csv')
 
 locations = ['Redesdale',
              'lakeEildon',
@@ -38,7 +38,7 @@ locations = ['Redesdale',
              'Euroa',
              'Leongatha',
              'Castlemaine',
-             'Dubbo'
+             # 'Dubbo'
              ]
 dataFrames = [redesdaleRawDf,
               lakeEildonRawDf,
@@ -47,7 +47,7 @@ dataFrames = [redesdaleRawDf,
               euroaRawDf,
               leongathaRawDf,
               castlemaneRawDf,
-              dubboRawDf
+              # dubboRawDf
               ]
 
 if False:
@@ -80,7 +80,7 @@ if True:
     rain_std = rainDf_rolling.groupby(by='dayOfYear').std()
 
 
-
+#33
     # compare medians
     if True:
         fig = plt.figure(figsize=figSize)
