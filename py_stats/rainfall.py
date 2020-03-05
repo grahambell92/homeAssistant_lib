@@ -25,7 +25,7 @@ def pullBOMWeatherTrace():
 
 def copyTowwwFolder(currentImagePath):
     # Copy to the www folder for the HomeAssistant Server
-    wwwFolder = '/home/homeassistant/.homeassistant/www/' + 'rainfallFigs/'
+    wwwFolder = '/home/pi/homeassistant/www/' + 'rainfallFigs/'
     os.makedirs(wwwFolder, exist_ok=True)
     shutil.copy(currentImagePath, wwwFolder)
     print('Copied to HA local folder:{}'.format(wwwFolder))
