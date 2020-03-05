@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+import shutil
 
 def plotSeasonBands(minDate, maxDate, ax):
     # plot the seasons
@@ -20,6 +21,14 @@ def plotSeasonBands(minDate, maxDate, ax):
 
 def pullBOMWeatherTrace():
     pass
+
+
+def copyTowwwFolder(currentImagePath):
+    # Copy to the www folder for the HomeAssistant Server
+    wwwFolder = '/home/homeassistant/.homeassistant/www/'
+    os.makedirs(wwwFolder, exist_ok=True)
+    shutil.copy(currentImagePath, wwwFolder)
+    print('Copied to HA local folder:{}'.format(wwwFolder))
 
 # kynetonDf = pd.read_csv('./rainfall/BOMdata/IDCJAC0001_088123_kyneton/IDCJAC0001_088123_Data12.csv')
 redesdaleRawDf = pd.read_csv('./rainfall/BOMdata/IDCJAC0009_088051_1800_redesdale/IDCJAC0009_088051_1800_Data.csv')
@@ -103,8 +112,10 @@ if True:
         ax.yaxis.grid()
         ax.legend()
         fig.tight_layout()
-        fig.savefig(fname=figureFolder+'04_medianRainfall.png',dpi=200)
+        fname = figureFolder+'04_medianRainfall.png'
+        fig.savefig(fname=fname,dpi=200)
         plt.close(fig)
+        copyTowwwFolder(currentImagePath=fname)
         # plt.show()
         # exit(0)
 
@@ -131,8 +142,11 @@ if True:
         ax.yaxis.grid()
         # ax.legend()
         fig.tight_layout()
-        fig.savefig(fname=figureFolder+'03_Redesdale_medianStdRainfall.png',dpi=200)
+        fname = figureFolder+'03_Redesdale_medianStdRainfall.png'
+        fig.savefig(fname=fname,dpi=200)
         plt.close(fig)
+        copyTowwwFolder(currentImagePath=fname)
+
         # plt.show()
 
     # Bar plot of total rainfall per year
@@ -151,8 +165,11 @@ if True:
         ax.spines['left'].set_visible(False)
         ax.set_ylabel('Annual rainfall (mm)')
         fig.tight_layout()
-        fig.savefig(fname=figureFolder+'05_annualRainfall_bar.png', dpi=200)
+        fname = figureFolder + '05_annualRainfall_bar.png'
+        fig.savefig(fname=fname, dpi=200)
         plt.close(fig)
+        copyTowwwFolder(currentImagePath=fname)
+
         # exit(0)
 
 
@@ -202,9 +219,10 @@ if True:
                 ax.set_ylabel('Sum of 30 Day Rainfall (mm)')
 
                 ax.legend()
-
-                fig.savefig(fname='{0}00_{2}_currentHistory_{1}months.png'.format(figureFolder, length, column), dpi=200)
+                fname='{0}00_{2}_currentHistory_{1}months.png'.format(figureFolder, length, column)
+                fig.savefig(fname=fname, dpi=200)
                 plt.close(fig)
+                copyTowwwFolder(currentImagePath=fname)
 
     # Plot the rain anomaly away from median.
     if True:
@@ -234,9 +252,11 @@ if True:
                 # ax.set_ylim(bottom=-50, top=50)
                 ax.hlines(0.0, xmin=minDate, xmax=maxDate)
                 plotSeasonBands(minDate=minDate, maxDate=maxDate, ax=ax)
-
-                fig.savefig(fname='{0}01_rainfallAnomalyTrace_{1}.png'.format(figureFolder, column))
+                fname = '{0}01_rainfallAnomalyTrace_{1}.png'.format(figureFolder, column)
+                fig.savefig(fname=fname)
                 plt.close(fig)
+                copyTowwwFolder(currentImagePath=fname)
+
 
             if True:
 
@@ -257,8 +277,11 @@ if True:
 
                 plotSeasonBands(minDate=minDate, maxDate=maxDate, ax=ax)
 
-                fig.savefig(fname='{0}02_rainfallDeficitTrace_{1}.png'.format(figureFolder, column))
+                fname = '{0}02_rainfallDeficitTrace_{1}.png'.format(figureFolder, column)
+                fig.savefig(fname=fname)
                 plt.close(fig)
+                copyTowwwFolder(currentImagePath=fname)
+
 
 
 
