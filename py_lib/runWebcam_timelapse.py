@@ -56,46 +56,28 @@ class webcam_timelapse():
                 imgPaths.sort(key=os.path.getmtime)
                 print(imgPaths)
 
-                gifimages = []
-                for index, imgPath in enumerate(imgPaths[-numImgs:]):
-                        try:
-                                gifimages.append(imageio.imread(imgPath))
-                                print('#', index, 'Appended:', imgPath)
-                        except:
-                                print('#', index, 'Unable to read:', imgPath)
-
                 if False:
-                        if len(imgPaths) > 0:
-                                # Build the input file list
+                        gifimages = []
+                        for index, imgPath in enumerate(imgPaths[-numImgs:]):
+                                try:
+                                        gifimages.append(imageio.imread(imgPath))
+                                        print('#', index, 'Appended:', imgPath)
+                                except:
+                                        print('#', index, 'Unable to read:', imgPath)
 
-                                inputFileCommand = ' -i '.join(imgPaths[:3])
+                if len(imgPaths) > 0:
+                        with imageio.get_writer(self.currentGifPath, mode='I') as writer:
+                                for index, imgPath in enumerate(imgPaths[-numImgs:]):
+                                        image = imageio.imread(imgPath)
+                                        print('Writing:', imgPath)
+                                        writer.append_data(image)
 
-                                # use this input from:
-                                # https://superuser.com/questions/556029/how-do-i-convert-a-video-to-gif-using-ffmpeg-with-reasonable-quality
-                                # ffmpeg -i input.mp4 -vf "fps=3:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" output.gif
-                                # ffmpeg -y -i /home/pi/webcamImages/rollingImages/image0.jpg -filter_complex "[0:v] split [a][b];[a] palettegen [p];[b][p] paletteuse" FancyStickAround.gif
-                                gifCommand = ['ffmpeg', '-y', '-r 3', '-i', inputFileCommand,
-                                              '-filter_complex "[0:v] split [a][b];[a] palettegen [p];[b][p] paletteuse"',
-                                              self.currentGifPath
-                                              ]
-                                gifCommand = " ".join(gifCommand)
-                                print(gifCommand)
-                                exit(0)
-                                correct = subprocess.run(gifCommand, shell=True)
-
-                                # Move the image via secure copy (scp) to the home assistant www folder on the main rpi.
-                                if remoteCopyLocation is not None:
-                                        print('Copying to remote HA www folder...')
-                                        self.scpToRemote(inputFilePath=self.currentGifPath, outputFilePath=remoteCopyLocation)
-                                        print('Done.')
-
-
-                if len(gifimages) > 0:
-                        imageio.mimsave(self.currentGifPath, gifimages, fps=fps, subrectangles=True)
-                        print('Saving current gif:', self.currentGifPath)
+                        if False:
+                                imageio.mimsave(self.currentGifPath, gifimages, fps=fps, subrectangles=True)
+                                print('Saving current gif:', self.currentGifPath)
 
                         # Compress using gifsicle
-                        if True:
+                        if False:
                             gifCommand = ['gifsicle -i {0} --optimize=3 --colors 64 -o {0}'.format(self.currentGifPath)]
                             correct = subprocess.run(gifCommand, shell=True)
 
