@@ -31,6 +31,9 @@ class webcam_timelapse():
         def scpToRemote(self, inputFilePath, outputFilePath):
                 # shouldn't need the passwd because of ssh key installed.
                 print('Trying to copy img to remote...')
+                print('SCP from:', inputFilePath)
+                print('SCP to:', outputFilePath)
+                print()
                 # inputFilePath = '~/webcamImages/currentImage.jpg'
                 # outputFilePath = 'homeassistant@10.0.0.19:/home/homeassistant/.homeassistant/www/'
                 # command = 'scp ~/webcamImages/currentImage.jpg homeassistant@10.0.0.19:/home/homeassistant/.homeassistant/www/'
