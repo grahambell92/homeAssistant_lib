@@ -26,7 +26,7 @@ while True:
     for i in range(5):
         shutil.copy(webcam.currentImagePath, motionComparionImg)
         webcam.fireCamera(filePath=webcam.currentImagePath)
-        if False:
+        if True:
             webcam.motionCheck(currentImgPath=webcam.currentImagePath,
                                prevImgPath=motionComparionImg,
                                remoteCopyPath=remoteCam_settings['haLiveImgMotionPath'],
