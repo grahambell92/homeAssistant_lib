@@ -26,11 +26,12 @@ while True:
     for i in range(5):
         shutil.copy(webcam.currentImagePath, motionComparionImg)
         webcam.fireCamera(filePath=webcam.currentImagePath)
-        webcam.motionCheck(currentImgPath=webcam.currentImagePath,
-                           prevImgPath=motionComparionImg,
-                           remoteCopyPath=remoteCam_settings['haLiveImgMotionPath'],
-                           mqttBrokerIP=remoteCam_settings['mqttBrokerIP'],
-                           motionThreshold=remoteCam_settings['motionThreshold'],
-                           mqttMotionPublishTopic=remoteCam_settings['mqttMotionPublishTopic'],
-                           mqttMotionClient=remoteCam_settings['mqttMotionClient'])
+        if False:
+            webcam.motionCheck(currentImgPath=webcam.currentImagePath,
+                               prevImgPath=motionComparionImg,
+                               remoteCopyPath=remoteCam_settings['haLiveImgMotionPath'],
+                               mqttBrokerIP=remoteCam_settings['mqttBrokerIP'],
+                               motionThreshold=remoteCam_settings['motionThreshold'],
+                               mqttMotionPublishTopic=remoteCam_settings['mqttMotionPublishTopic'],
+                               mqttMotionClient=remoteCam_settings['mqttMotionClient'])
         time.sleep(5)
