@@ -54,6 +54,7 @@ class webcam_timelapse():
                 # Make a gif of the most recent images
                 imgPaths = glob.glob(self.archiveFolder + '*.jpg')
                 imgPaths.sort(key=os.path.getmtime)
+                print(imgPaths)
 
                 gifimages = []
                 for index, imgPath in enumerate(imgPaths[-numImgs:]):
