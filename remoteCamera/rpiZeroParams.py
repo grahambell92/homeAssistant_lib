@@ -11,7 +11,7 @@ remoteCam0_settings = {
     'haLiveGifPath': haUser + '@' + haIP + ':' + haFolder + 'www/remoteCam0_timelapse.gif',
 
     # Gif timelapse building properties.
-    'buildGifEvery': 180, # Seconds
+    'buildGifEvery': 60, # Seconds
     'GifFrames': 8,
     'gifFPS': 2, # Frames per second.
 
