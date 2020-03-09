@@ -4,11 +4,18 @@ haIP = "192.168.0.55" # "10.0.0.19"
 haFolder = '/home/pi/homeassistant/'
 haUser = 'pi'
 
-remoteCam0_settings = {
+remoteCam0_Settings = {
+    'macAddress': '',
+
     'archiveBaseFolder': '/home/pi/webcamImages/',
     'haLiveImgPath': haUser + '@' + haIP + ':' + haFolder + 'www/remoteCam0_currentImage.jpg',
     'haLiveImgMotionPath': haUser + '@' + haIP + ':' + haFolder + 'www/remoteCam0_lastMotion.jpg',
     'haLiveGifPath': haUser + '@' + haIP + ':' + haFolder + 'www/remoteCam0_timelapse.gif',
+
+    # Rpi camera settings
+    'imgQuality': 6,
+    'flipVert': True,
+    'flipHori': False,
 
     # Gif timelapse building properties.
     'buildGifEvery': 60, # Seconds
@@ -28,3 +35,42 @@ remoteCam0_settings = {
 
 }
 
+
+remoteCam1_settings = {
+
+    'archiveBaseFolder': '/home/pi/webcamImages/',
+    'haLiveImgPath': haUser + '@' + haIP + ':' + haFolder + 'www/remoteCam1_currentImage.jpg',
+    'haLiveImgMotionPath': haUser + '@' + haIP + ':' + haFolder + 'www/remoteCam1_lastMotion.jpg',
+    'haLiveGifPath': haUser + '@' + haIP + ':' + haFolder + 'www/remoteCam1_timelapse.gif',
+
+    # Rpi camera settings
+    'imgQuality': 6,
+    'flipVert': True,
+    'flipHori': False,
+
+    # Gif timelapse building properties.
+    'buildGifEvery': 60, # Seconds
+    'GifFrames': 8,
+    'gifFPS': 2, # Frames per second.
+
+    # Motion MQTT reporting properties.
+    'mqttBrokerIP': haIP,
+    'motionThreshold': 6.0, # Just a threshold.
+    'mqttMotionClient': "remoteCamera1_motion",
+    'mqttMotionPublishTopic': "remoteCamera1/motionValue",
+
+    # MQTT Alive reporting properties.
+    'mqttAliveClient': "remoteCamera1_lastPing",
+    'mqttAlivePublishTopic': "remoteCamera1/lastPing",
+    'mqttBattVoltPublishTopic': "remoteCamera1/battVoltage",
+
+}
+
+macAddressDict = {
+    202481595754817: remoteCam0_Settings,
+    64425562547: remoteCam1_settings
+}
+
+from uuid import getnode as get_mac
+macAddress = get_mac()
+remoteCam_settings = macAddressDict[macAddress]
