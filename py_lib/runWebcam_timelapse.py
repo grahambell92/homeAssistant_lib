@@ -161,7 +161,8 @@ class webcam_timelapse():
             flipHorz = '-hf'
         else:
             flipHorz = ''
-
+        print(quality, flipVert, flipHorz)
+        exit(0)
         # Take an image for the current image
         self.fireCamera(filePath=self.currentImagePath,
                         quality=quality,
