@@ -13,7 +13,7 @@ remoteCam0_Settings = {
     'haLiveGifPath': haUser + '@' + haIP + ':' + haFolder + 'www/remoteCam0_timelapse.gif',
 
     # Rpi camera settings
-    'imgQuality': 6,
+    'imgQuality': 3,
     'flipVert': True,
     'flipHori': True,
 
@@ -44,7 +44,7 @@ remoteCam1_settings = {
     'haLiveGifPath': haUser + '@' + haIP + ':' + haFolder + 'www/remoteCam1_timelapse.gif',
 
     # Rpi camera settings
-    'imgQuality': 6,
+    'imgQuality': 3,
     'flipVert': True,
     'flipHori': True,
 
