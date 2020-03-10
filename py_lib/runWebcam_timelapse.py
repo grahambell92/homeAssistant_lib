@@ -149,9 +149,25 @@ class webcam_timelapse():
             self.scpToRemote(currentImgPath, outputFilePath=remoteCopyPath)
 
 
-    def takeAndArchive(self, imgArchiveNum, sleepDuration=120, remoteCopyLocation=None):
+    def takeAndArchive(self, imgArchiveNum, sleepDuration=120, remoteCopyLocation=None,
+                       quality=3, flipVert=False, flipHorz=False):
+
+        if flipVert is True:
+            flipVert = '-vf'
+        else:
+            flipVert = ''
+
+        if flipHorz is True:
+            flipHorz = '-hf'
+        else:
+            flipHorz = ''
+
         # Take an image for the current image
-        self.fireCamera(filePath=self.currentImagePath)
+        self.fireCamera(filePath=self.currentImagePath,
+                        quality=quality,
+                        flipVert=flipVert,
+                        flipHorz=flipHorz
+                        )
 
         # Archive the image
         archiveImage = 'image{0}.jpg'.format(imgArchiveNum)

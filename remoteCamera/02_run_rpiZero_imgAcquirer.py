@@ -23,7 +23,11 @@ if os.path.exists(webcam.archiveFolder):
 
 while True:
     imgNum = next(imageCountCycler)
-    webcam.takeAndArchive(imgArchiveNum=imgNum, sleepDuration=5, remoteCopyLocation=remoteCam_settings['haLiveImgPath'])
+    webcam.takeAndArchive(imgArchiveNum=imgNum, sleepDuration=5, remoteCopyLocation=remoteCam_settings['haLiveImgPath'],
+                          quality=remoteCam_settings['imgQuality'],
+                          flipVert=remoteCam_settings['flipVert'],
+                          flipHorz=remoteCam_settings['flipHori']
+                          )
     for i in range(5):
         shutil.copy(webcam.currentImagePath, motionComparionImg)
         webcam.fireCamera(filePath=webcam.currentImagePath,
