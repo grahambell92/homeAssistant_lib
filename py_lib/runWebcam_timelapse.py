@@ -12,6 +12,8 @@ import numpy as np
 import paho.mqtt.client as paho
 import glob
 import math
+import picamera
+import datetime as dt
 
 class webcam_timelapse():
     def __init__(self, archiveBaseFolder='/home/pi/webcamImages/',):
@@ -23,27 +25,23 @@ class webcam_timelapse():
 
     def fireCamera(self, filePath, quality=3, flipVert=False, flipHorz=False):
         print('Firing camera...')
-        # correct = subprocess.run(['fswebcam', '-r 640x480', '--quiet', filePath])
-        # correct = subprocess.run('fswebcam -r 640x480 --quiet --jpeg 50 {}'.format(filePath), shell=True)
-        # Use the rasperry pi noIR camera instead
-        if True:
-            import time
-            import picamera
-            import datetime as dt
-
-            with picamera.PiCamera() as camera:
-                camera.resolution = (1024, 768)
-                camera.start_preview()
-                # Camera warm-up time
-                time.sleep(2)
-                camera.vflip = True
-                camera.hflip = True
-                camera.annotate_background = picamera.Color('black')
-                camera.annotate_text = dt.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                camera.capture(filePath, format='jpeg', quality=quality)
-                camera.stop_preview()
+        with picamera.PiCamera() as camera:
+            camera.resolution = (1024, 768)
+            camera.start_preview()
+            # Camera warm-up time
+            time.sleep(2)
+            camera.vflip = flipVert
+            camera.hflip = flipHorz
+            camera.annotate_background = picamera.Color('black')
+            camera.annotate_text = dt.datetime.now().strftime('%d-%m-%Y %H:%M:%S')
+            camera.capture(filePath, format='jpeg', quality=quality)
+            camera.stop_preview()
 
         if False:
+            # correct = subprocess.run(['fswebcam', '-r 640x480', '--quiet', filePath])
+            # correct = subprocess.run('fswebcam -r 640x480 --quiet --jpeg 50 {}'.format(filePath), shell=True)
+            # Use the rasperry pi noIR camera instead
+
             if flipVert is True:
                 flipVert = '-vf'
             else:
