@@ -13,7 +13,6 @@ from rpiZeroParams import remoteCam_settings
 import time
 
 
-
 webcam = webcam_timelapse(archiveBaseFolder=remoteCam_settings['archiveBaseFolder'])
 imageCountCycler = itertools.cycle(range(500))
 motionComparionImg = webcam.archiveBaseFolder + 'motionPrev.jpg'

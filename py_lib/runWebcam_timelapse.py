@@ -16,6 +16,7 @@ import math
 class webcam_timelapse():
     def __init__(self, archiveBaseFolder='/home/pi/webcamImages/',):
         self.archiveBaseFolder = archiveBaseFolder
+        os.makedirs(self.archiveBaseFolder, exist_ok=True)
         self.archiveFolder = self.archiveBaseFolder + 'rollingImages/'
         self.currentImagePath = self.archiveBaseFolder + 'currentImage.jpg'
         self.currentGifPath = self.archiveBaseFolder + 'currentSeq.gif'
