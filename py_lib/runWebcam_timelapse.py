@@ -152,17 +152,6 @@ class webcam_timelapse():
     def takeAndArchive(self, imgArchiveNum, sleepDuration=120, remoteCopyLocation=None,
                        quality=3, flipVert=False, flipHorz=False):
 
-        if flipVert is True:
-            flipVert = '-vf'
-        else:
-            flipVert = ''
-
-        if flipHorz is True:
-            flipHorz = '-hf'
-        else:
-            flipHorz = ''
-        print(quality, flipVert, flipHorz)
-        exit(0)
         # Take an image for the current image
         self.fireCamera(filePath=self.currentImagePath,
                         quality=quality,
