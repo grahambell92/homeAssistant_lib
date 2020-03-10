@@ -106,12 +106,25 @@ sensor:
     state_topic: "remoteCamera1/battVoltage"
     unit_of_measurement: "V"
 
+    # Smooth battery voltage
+  - platform: filter
+    name: "remotecamera1_battvoltage_smooth"
+    entity_id: sensor.remotecamera1_battvoltage
+    filters:
+      - filter: outlier
+        window_size: 4
+        radius: 2.0
+      - filter: lowpass
+        time_constant: 10
+      - filter: time_simple_moving_average
+        window_size: "00:05"
+        precision: 2
+
   # Remote sensor 1
   - platform: mqtt
     name: 'remoteSensor1/motionValue'
     state_topic: "remoteSensor1/motionValue"
     unit_of_measurement: "%"
-
 
   - platform: bom
     station: IDV60901.95874
