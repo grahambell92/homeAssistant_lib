@@ -1,7 +1,7 @@
 import time
 import paho.mqtt.client as paho
 import datetime
-from rpiZeroParams import remoteCam0_settings as remoteCam_settings
+from rpiZeroParams import remoteCam_settings
 
 
 
