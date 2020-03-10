@@ -17,6 +17,7 @@ camera:
   - platform: bom
     location: Melbourne
 
+  ######### Remote Camera 0 ###########
   # Remote camera 0 - currentImage
   - platform: local_file
     name: remoteCam0_currentImage
@@ -32,19 +33,21 @@ camera:
     name: remoteCam0_timelapse
     file_path: /config/www/remoteCam0_timelapse.gif
 
+
+  ######### Remote Camera 1 ###########
   # Remote camera 1 - currentImage
   - platform: local_file
-    name: remoteCam0_currentImage
+    name: remoteCam1_currentImage
     file_path: /config/www/remoteCam1_currentImage.jpg
 
   # Remote camera 1 - last motion
   - platform: local_file
-    name: remoteCam0_lastMotion
+    name: remoteCam1_lastMotion
     file_path: /config/www/remoteCam1_lastMotion.jpg
 
   # Remote camera 1 - timelapse
   - platform: local_file
-    name: remoteCam0_timelapse
+    name: remoteCam1_timelapse
     file_path: /config/www/remoteCam1_timelapse.gif
 
 weather:
