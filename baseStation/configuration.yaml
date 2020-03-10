@@ -120,6 +120,19 @@ sensor:
         window_size: "00:05"
         precision: 2
 
+  - platform: filter
+    name: "remotecamera0_battvoltage_smooth"
+    entity_id: sensor.remotecamera0_battvoltage
+    filters:
+      - filter: outlier
+        window_size: 4
+        radius: 2.0
+      - filter: lowpass
+        time_constant: 10
+      - filter: time_simple_moving_average
+        window_size: "00:05"
+        precision: 2
+
   # Remote sensor 1
   - platform: mqtt
     name: 'remoteSensor1/motionValue'
