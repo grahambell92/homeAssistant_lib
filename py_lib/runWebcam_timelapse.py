@@ -26,19 +26,37 @@ class webcam_timelapse():
         # correct = subprocess.run(['fswebcam', '-r 640x480', '--quiet', filePath])
         # correct = subprocess.run('fswebcam -r 640x480 --quiet --jpeg 50 {}'.format(filePath), shell=True)
         # Use the rasperry pi noIR camera instead
+        if True:
+            import time
+            import picamera
+            import datetime as dt
 
-        if flipVert is True:
-            flipVert = '-vf'
-        else:
-            flipVert = ''
+            with picamera.PiCamera() as camera:
+                camera.resolution = (1024, 768)
+                camera.start_preview()
+                # Camera warm-up time
+                time.sleep(2)
+                camera.v_flip()
+                camera.h_flip()
+                camera.annotate_background = picamera.Color('black')
+                camera.annotate_text = dt.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                camera.capture(filePath, format='jpeg', quality=quality)
+                camera.stop_preview()
 
-        if flipHorz is True:
-            flipHorz = '-hf'
-        else:
-            flipHorz = ''
+        if False:
+            if flipVert is True:
+                flipVert = '-vf'
+            else:
+                flipVert = ''
 
-        command = 'raspistill -o {0} -q {1} -t 1500 {2} {3}'.format(filePath, quality, flipVert, flipHorz)
-        correct = subprocess.run(command, shell=True)
+            if flipHorz is True:
+                flipHorz = '-hf'
+            else:
+                flipHorz = ''
+
+            command = 'raspistill -o {0} -q {1} -t 1500 {2} {3}'.format(filePath, quality, flipVert, flipHorz)
+            correct = subprocess.run(command, shell=True)
+
         print('Done.')
 
     def scpToRemote(self, inputFilePath, outputFilePath):
