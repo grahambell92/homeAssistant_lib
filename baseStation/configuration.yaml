@@ -32,6 +32,21 @@ camera:
     name: remoteCam0_timelapse
     file_path: /config/www/remoteCam0_timelapse.gif
 
+  # Remote camera 1 - currentImage
+  - platform: local_file
+    name: remoteCam0_currentImage
+    file_path: /config/www/remoteCam1_currentImage.jpg
+
+  # Remote camera 1 - last motion
+  - platform: local_file
+    name: remoteCam0_lastMotion
+    file_path: /config/www/remoteCam1_lastMotion.jpg
+
+  # Remote camera 1 - timelapse
+  - platform: local_file
+    name: remoteCam0_timelapse
+    file_path: /config/www/remoteCam1_timelapse.gif
+
 weather:
   - platform: bom
     name: Viewbank
