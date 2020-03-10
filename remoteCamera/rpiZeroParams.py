@@ -15,7 +15,7 @@ remoteCam0_Settings = {
     # Rpi camera settings
     'imgQuality': 6,
     'flipVert': True,
-    'flipHori': False,
+    'flipHori': True,
 
     # Gif timelapse building properties.
     'buildGifEvery': 60, # Seconds
@@ -46,7 +46,7 @@ remoteCam1_settings = {
     # Rpi camera settings
     'imgQuality': 6,
     'flipVert': True,
-    'flipHori': False,
+    'flipHori': True,
 
     # Gif timelapse building properties.
     'buildGifEvery': 60, # Seconds
