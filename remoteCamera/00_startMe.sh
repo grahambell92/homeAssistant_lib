@@ -1,4 +1,4 @@
-
+#!/bin/bash
 cd /home/pi/homeAssistant_lib/remoteCamera/
 
 # Disable the hdmi output to conserve power.
