@@ -5,6 +5,7 @@ cd /home/pi/homeAssistant_lib/remoteCamera/
 /opt/vc/bin/tvservice -o
 
 # Use the full path to start tmux
+/usr/bin/tmux set remain-on-exit on
 /usr/bin/tmux kill-server
 
 /usr/bin/tmux new-session -d -s imgAcquirer 'python3 02_run_rpiZero_imgAcquirer.py' &

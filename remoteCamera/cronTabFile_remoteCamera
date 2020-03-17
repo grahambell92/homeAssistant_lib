@@ -1,0 +1,6 @@
+# m h  dom mon dow   command
+@reboot /home/pi/homeAssistant_lib/remoteCamera/00_startMe.sh &
+
+# Reboot every four hours to maintain link.
+0 */4 * * * /sbin/shutdown now -r
+
