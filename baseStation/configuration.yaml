@@ -189,3 +189,21 @@ sensor:
     entity_id: sensor.bom_redesdale_rain_today
     max_age:
       hours: 30
+
+
+
+# Automations
+
+# Example configuration.yaml entry
+# Exposes service shell_command.restart_pow
+shell_command:
+  # Adding shell commands for the basestation
+  restart_basestation: sudo reboot
+  shutdown_basestation: sudo shutdown now
+
+  # Adding shell commands for the remoteCameras
+  restart_remoteCamera0: ssh 192.168.0.56 'sudo reboot'
+  restart_remoteCamera1: ssh 192.168.0.56 'sudo reboot'
+  shutdown_remoteCamera0: ssh 192.168.0.56 'sudo shutdown now'
+  shutdown_remoteCamera1: ssh 192.168.0.56 'sudo shutdown now'
+
