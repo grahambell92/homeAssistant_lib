@@ -64,6 +64,8 @@ mqtt:
 
 # enable the recorder integration (optional)
 recorder:
+    purge_keep_days: 30
+    purge_interval: 5
 
 # Sensors
 sensor:
@@ -193,6 +195,23 @@ sensor:
 
 
 # Automations
+# Add buttons for the start and stop of these services
+#type: button
+#name: Shutdown basestation
+#entity: script.shutdown_basestation
+#tap_action:
+#  action: call-service
+#  service: shell_command.shutdown_basestation
+#
+#type: button
+#name: Restart basestation
+#entity: script.shutdown_basestation
+#tap_action:
+#  action: call-service
+#  service: shell_command.shutdown_basestation
+
+
+
 
 # Example configuration.yaml entry
 # Exposes service shell_command.restart_pow
