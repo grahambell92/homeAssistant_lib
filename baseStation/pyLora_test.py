@@ -16,7 +16,7 @@ print(two_up)
 # exit(0)
 
 # parentPath = Path(__file__).parents[1]
-addPath = os.path.join(os.path.dirname(two_up), 'pySX127x', 'SC127x')
+addPath = os.path.join(os.path.dirname(two_up), 'pySX127x', 'SX127x')
 print('add path:', addPath)
 sys.path.append(addPath)
 
