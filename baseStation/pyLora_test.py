@@ -4,6 +4,13 @@ import sys
 from pathlib import Path
 import sys, os
 
+
+import os
+two_up = os.path.dirname(os.path.dirname(__file__))
+print(two_up)
+
+
+exit(0)
 print(Path(__file__))
 print(Path(__file__).parents[0])
 print(Path(__file__).parents[1])
