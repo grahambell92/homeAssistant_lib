@@ -20,7 +20,8 @@ addPath = os.path.join(os.path.dirname(two_up), 'pySX127x', 'SX127x')
 print('add path:', addPath)
 sys.path.append(addPath)
 
-from SX127x.LoRa import *
+# from SX127x.LoRa import *
+from LoRa import *
 from SX127x.board_config import BOARD
 
 # from pySX127x.LoRa import *
