@@ -4,9 +4,10 @@ import sys
 from pathlib import Path
 import sys, os
 
-# print(Path(__file__).parents[0])
-# print(Path(__file__).parents[1])
-# print(Path(__file__))
+print(Path(__file__).parents[0])
+print(Path(__file__).parents[1])
+print(Path(__file__))
+exit(0)
 
 parentPath = Path(__file__).parents[1]
 addPath = os.path.join(os.path.dirname(parentPath), 'pySX127x')
