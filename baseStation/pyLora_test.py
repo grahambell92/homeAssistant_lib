@@ -6,7 +6,7 @@ import sys, os
 
 
 import os
-two_up = os.path.dirname(os.path.dirname(os.getcwdb()))
+two_up = os.path.dirname(os.path.dirname(os.getcwd()))
 print(two_up)
 #
 # exit(0)
