@@ -6,18 +6,17 @@ import sys, os
 
 
 import os
-two_up = os.path.dirname(os.path.dirname(__file__))
+two_up = os.path.dirname(os.path.dirname(os.getcwdb()))
 print(two_up)
+#
+# exit(0)
+# print(Path(__file__))
+# print(Path(__file__).parents[0])
+# print(Path(__file__).parents[1])
+# exit(0)
 
-
-exit(0)
-print(Path(__file__))
-print(Path(__file__).parents[0])
-print(Path(__file__).parents[1])
-exit(0)
-
-parentPath = Path(__file__).parents[1]
-addPath = os.path.join(os.path.dirname(parentPath), 'pySX127x')
+# parentPath = Path(__file__).parents[1]
+addPath = os.path.join(os.path.dirname(two_up), 'pySX127x')
 sys.path.append(addPath)
 from pySX127x.LoRa import *
 from pySX127x.board_config import BOARD
