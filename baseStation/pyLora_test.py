@@ -6,7 +6,7 @@ import sys, os
 
 
 import os
-two_up = os.path.dirname(os.getcwd())
+two_up = os.path.dirname(os.path.dirname(os.getcwd()))
 print(two_up)
 #
 # exit(0)
@@ -16,9 +16,13 @@ print(two_up)
 # exit(0)
 
 # parentPath = Path(__file__).parents[1]
-addPath = os.path.join(os.path.dirname(two_up), 'pySX127x')
+addPath = os.path.join(os.path.dirname(two_up), 'pySX127x', 'SC127x')
 print('add path:', addPath)
 sys.path.append(addPath)
-from pySX127x.LoRa import *
-from pySX127x.board_config import BOARD
+
+from SX127x.LoRa import *
+from SX127x.board_config import BOARD
+
+# from pySX127x.LoRa import *
+# from pySX127x.board_config import BOARD
 BOARD.setup()
