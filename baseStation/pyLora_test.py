@@ -5,6 +5,9 @@ from pathlib import Path
 import sys, os
 
 
+# Board setup tips here:
+# https://github.com/mayeranalytics/pySX127x/issues/21
+
 import os
 two_up = os.path.dirname(os.getcwd())
 print(two_up)

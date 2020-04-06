@@ -49,7 +49,7 @@ while True:
             #battVolt = 0.009821428 * battRead + 0.2558928 # for the outdoor camera battery
             # For the 12 v battery voltage divider with a 3.2 and a 9.9k ohm R2 and R1 combo.
             battVolt = 0.013052441*battRead + 0.004452565
-            print('Battery voltage')
+            print('Battery voltage:', battVolt)
             client.publish(remoteCam_settings["mqttBattVoltPublishTopic"], '{:.3f}'.format(battVolt))
     except:
         print('Failed to post MQTT message to', brokerIP)
