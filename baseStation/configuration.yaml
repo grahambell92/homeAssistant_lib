@@ -67,6 +67,9 @@ recorder:
     purge_keep_days: 30
     purge_interval: 5
 
+# Add the logbook card availability
+logbook:
+
 # Sensors
 sensor:
   # Remote camera 0
