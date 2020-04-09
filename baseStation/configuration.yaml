@@ -70,6 +70,12 @@ recorder:
 # Add the logbook card availability
 logbook:
 
+# Add an RSS feed reader
+# Example configuration.yaml entry
+feedreader:
+  urls:
+    - http://www.bom.gov.au/fwo/IDZ00059.warnings_vic.xml
+
 # Sensors
 sensor:
   # Remote camera 0
