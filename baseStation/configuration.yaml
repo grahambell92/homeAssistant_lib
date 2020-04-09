@@ -82,19 +82,19 @@ feedreader:
 # Sensors
 sensor:
 
-  platform: feedparser
-  name: Engineering Feed
-  feed_url: 'https://www.sciencedaily.com/rss/matter_energy/engineering.xml'
-  date_format: '%a, %b %d %I:%M %p'
-  inclusions:
-    - title
-    - link
-    - description
-    - image
-    - language
-    - pubDate
-  exclusions:
-    - language
+#  platform: feedparser
+#  name: Engineering Feed
+#  feed_url: 'https://www.sciencedaily.com/rss/matter_energy/engineering.xml'
+#  date_format: '%a, %b %d %I:%M %p'
+#  inclusions:
+#    - title
+#    - link
+#    - description
+#    - image
+#    - language
+#    - pubDate
+#  exclusions:
+#    - language
 
   # Remote camera 0
   - platform: mqtt
