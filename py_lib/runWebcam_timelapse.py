@@ -18,7 +18,7 @@ class webcam_timelapse():
     def __init__(self, archiveBaseFolder='/home/pi/webcamImages/', cameraName='default', cameraNumber=0):
         self.archiveBaseFolder = archiveBaseFolder
         os.makedirs(self.archiveBaseFolder, exist_ok=True)
-        self.archiveFolder = self.archiveBaseFolder + 'rollingImages/'
+        self.archiveFolder = self.archiveBaseFolder + 'archiveImages/'
         self.currentImagePath = self.archiveBaseFolder + 'currentImage.jpg'
         self.currentGifPath = self.archiveBaseFolder + 'currentSeq.gif'
 
@@ -203,7 +203,8 @@ class webcam_timelapse():
         # self.currentArchivePath = self.archiveFolder + archiveImage
         self.currentArchivePath = self.archiveFolder + relativeArchivePath
         print('Archive location:', self.currentArchivePath)
-        exit(0)
+
+
         # Create the directory if it doesnt exist
         os.makedirs(self.archiveFolder, exist_ok=True)
         shutil.copy(self.currentImagePath, self.currentArchivePath)
