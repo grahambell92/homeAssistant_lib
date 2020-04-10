@@ -74,14 +74,10 @@ class webcam_timelapse():
         import os.path
         outputDest, outputFile = os.path.split(outputFilePath)
         remoteHost, outputFolder = outputDest.split(':')
-        print(outputFolder)
-        print(remoteHost)
-        exit(0)
-
 
         # ssh remote-host 'mkdir -p foo/bar/qux'
         # remote_host =
-        command = ' '.join(['ssh', inputFilePath, outputFilePath])
+        command = ' '.join(['ssh', remoteHost, "'mkdir -p {:}'".format(outputFolder)])
         correct = subprocess.run(command, shell=True)
 
         command = ' '.join(['scp', inputFilePath, outputFilePath])
