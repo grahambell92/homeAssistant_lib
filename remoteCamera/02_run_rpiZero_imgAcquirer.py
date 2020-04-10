@@ -13,7 +13,10 @@ from rpiZeroParams import remoteCam_settings
 import time
 
 
-webcam = webcam_timelapse(archiveBaseFolder=remoteCam_settings['archiveBaseFolder'])
+webcam = webcam_timelapse(archiveBaseFolder=remoteCam_settings['archiveBaseFolder'],
+                          cameraName=remoteCam_settings['cameraName'],
+                          cameraNumber=remoteCam_settings['cameraNumber'])
+
 imageCountCycler = itertools.cycle(range(500))
 motionComparionImg = webcam.archiveBaseFolder + 'motionPrev.jpg'
 
@@ -23,6 +26,7 @@ if os.path.exists(webcam.archiveFolder):
 
 while True:
     imgNum = next(imageCountCycler)
+    webcam.removeOldDayFolders()
     webcam.takeAndArchive(imgArchiveNum=imgNum, sleepDuration=5, remoteCopyLocation=remoteCam_settings['haLiveImgPath'],
                           quality=remoteCam_settings['imgQuality'],
                           flipVert=remoteCam_settings['flipVert'],

@@ -1,7 +1,7 @@
 # This file is for
 
 import subprocess
-import datetime
+from datetime import datetime
 import itertools
 import os
 import shutil
@@ -13,15 +13,18 @@ import paho.mqtt.client as paho
 import glob
 import math
 import picamera
-import datetime as dt
 
 class webcam_timelapse():
-    def __init__(self, archiveBaseFolder='/home/pi/webcamImages/',):
+    def __init__(self, archiveBaseFolder='/home/pi/webcamImages/', cameraName='default', cameraNumber=0):
         self.archiveBaseFolder = archiveBaseFolder
         os.makedirs(self.archiveBaseFolder, exist_ok=True)
         self.archiveFolder = self.archiveBaseFolder + 'rollingImages/'
         self.currentImagePath = self.archiveBaseFolder + 'currentImage.jpg'
         self.currentGifPath = self.archiveBaseFolder + 'currentSeq.gif'
+
+        self.cameraName = cameraName
+        self.cameraNumber = cameraNumber
+        self.daysToKeep = 7
 
     def fireCamera(self, filePath, quality=3, flipVert=False, flipHorz=False):
         print('Firing camera...')
@@ -164,6 +167,11 @@ class webcam_timelapse():
             print('Motion detected! Copying to remote.')
             self.scpToRemote(currentImgPath, outputFilePath=remoteCopyPath)
 
+    def archiveDayFolderString(self):
+        now = datetime.now()  # current date and time
+        # date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
+        archiveDayFolder = now.strftime("%j_%d%B%Y")
+        return archiveDayFolder
 
     def takeAndArchive(self, imgArchiveNum, sleepDuration=120, remoteCopyLocation=None,
                        quality=3, flipVert=False, flipHorz=False):
@@ -177,7 +185,24 @@ class webcam_timelapse():
 
         # Archive the image
         archiveImage = 'image{0}.jpg'.format(imgArchiveNum)
-        self.currentArchivePath = self.archiveFolder + archiveImage
+
+        # day of year, date in human readable form/camera/time_camera.png
+        # The format is: 312_24April2020/01_avenue/12-23-21_avenue.png
+        # The format is: 313_24April2020/02_yard/12-23-21_yard.png
+
+        now = datetime.now()  # current date and time
+
+        # date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
+
+        archiveDayFolder = now.strftime("%j_%d%B%Y")
+        cameraFolder = ('{0.3f}_{1.3f}').format(self.cameraNumber, self.cameraName)
+        archiveFile = now.strftime('%H-%M-%S.jpg')
+        relativeArchivePath = archiveDayFolder + '/' + cameraFolder + '/' + archiveFile
+        print('New Relative archive path:', relativeArchivePath)
+        exit(0)
+
+        # self.currentArchivePath = self.archiveFolder + archiveImage
+        self.currentArchivePath = self.archiveFolder + relativeArchivePath
         # Create the directory if it doesnt exist
         os.makedirs(self.archiveFolder, exist_ok=True)
         shutil.copy(self.currentImagePath, self.currentArchivePath)
@@ -192,6 +217,26 @@ class webcam_timelapse():
         time.sleep(sleepDuration)
         print('')
         return
+
+    def removeOldDayOfYearFolders(self):
+        now = datetime.now()  # current date and time
+        dayOfYearToday = now.strftime("%j")
+        # Day folder locaions
+        # Get folders in the archive store
+        for folder in glob.glob(self.archiveFolder):
+            # First 3 chars of folder correspond to the day of year
+            print('Examining folder:', folder)
+            try:
+               folder_dayOfYear = int(folder[:3])
+               if int(folder[:3]) + self.daysToKeep < dayOfYearToday and dayOfYearToday > self.daysToKeep:
+                    print('Deleting folder:', folder)
+                    exit(0)
+                    shutil.rmtree(folder)
+               else: print('Retaining folder:', folder)
+            except:
+                print('Folder could not be deleted or could not be interpreted by day of year.')
+
+
 
 if __name__ == '__main__':
     webcam = webcam_timelapse()

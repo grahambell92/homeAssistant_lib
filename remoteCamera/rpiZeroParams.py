@@ -4,9 +4,18 @@ haIP = "192.168.0.55" # "10.0.0.19"
 haFolder = '/home/pi/homeassistant/'
 haUser = 'pi'
 
+cameraNames = {
+    'avenue': 0,
+    'yard'  : 1,
+    'windmill': 2,
+    'mintos': 3,
+}
+
 remoteCam0_Settings = {
+
     'macAddress': '',
 
+    'cameraName': 'avenue',
     'archiveBaseFolder': '/home/pi/webcamImages/',
     'haLiveImgPath': haUser + '@' + haIP + ':' + haFolder + 'www/remoteCam0_currentImage.jpg',
     'haLiveImgMotionPath': haUser + '@' + haIP + ':' + haFolder + 'www/remoteCam0_lastMotion.jpg',
@@ -74,3 +83,7 @@ macAddressDict = {
 from uuid import getnode as get_mac
 macAddress = get_mac()
 remoteCam_settings = macAddressDict[macAddress]
+
+dicts = [remoteCam0_Settings, remoteCam1_settings]
+for dict in dicts:
+    dict['cameraNumber'] = cameraNames[dict['cameraName']]
