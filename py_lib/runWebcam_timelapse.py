@@ -36,7 +36,7 @@ class webcam_timelapse():
             camera.vflip = flipVert
             camera.hflip = flipHorz
             camera.annotate_background = picamera.Color('black')
-            camera.annotate_text = datetime.datetime.now().strftime('%d-%m-%Y %H:%M:%S')
+            camera.annotate_text = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
             camera.capture(filePath, format='jpeg', quality=quality)
             camera.stop_preview()
 
