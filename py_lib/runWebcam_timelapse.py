@@ -229,7 +229,7 @@ class webcam_timelapse():
         dayOfYearToday = now.strftime("%j")
         # Day folder locaions
         # Get folders in the archive store
-        for folder in glob.glob(self.archiveFolder):
+        for folder in glob.glob(self.archiveFolder + "*/"):
             # First 3 chars of folder correspond to the day of year
             print('Examining folder:', folder)
             try:
