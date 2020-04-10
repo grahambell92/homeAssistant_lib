@@ -27,6 +27,10 @@ if False:
         print('Existing archive directory, deleting.')
         shutil.rmtree(webcam.archiveFolder)
 
+# ensure the archiveBaseFolder exists:
+os.makedirs(webcam.archiveBaseFolder, exist_ok=True)
+
+
 while True:
     imgNum = next(imageCountCycler)
     webcam.removeOldDayOfYearFolders()
