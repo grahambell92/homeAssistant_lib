@@ -75,7 +75,7 @@ class webcam_timelapse():
         # command = ' '.join(['scp', inputFilePath, outputFilePath])
         # correct = subprocess.run(command, shell=True)
 
-        command = ' '.join(['rsync -a', inputFilePath, outputFilePath])
+        command = ' '.join(['rsync -a --compress', inputFilePath, outputFilePath])
         correct = subprocess.run(command, shell=True)
 
         print('Done.')
