@@ -2,7 +2,7 @@
 
 haIP = "192.168.0.55" # "10.0.0.19"
 haFolder = '/home/pi/homeassistant/'
-baseStationImgArchiveFolder = '/home/pi/cameraImageArchive/'
+baseStationImgArchiveFolder = '/home/pi/basestationData/cameraImageArchive/'
 
 haUser = 'pi'
 
