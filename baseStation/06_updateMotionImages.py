@@ -20,7 +20,7 @@ while True:
     for currentImgFilename, destination in zip(currentImgFilenames, destinations):
         os.makedirs(destination, exist_ok=True)
         count = next(countCycler)
-        inputFilePath = wwwFolder + currentImgFilename
+        inputFilePath = wwwFolder + currentImgFilename + '.jpg'
         outputFilePath = avenueGallery + currentImgFilename + str(count) + '.jpg'
         command = ' '.join(['cp', inputFilePath, outputFilePath])
         correct = subprocess.run(command, shell=True)
