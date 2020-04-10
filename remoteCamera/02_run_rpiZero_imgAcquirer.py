@@ -34,19 +34,22 @@ os.makedirs(webcam.archiveBaseFolder, exist_ok=True)
 while True:
     imgNum = next(imageCountCycler)
     webcam.removeOldDayOfYearFolders()
-    webcam.takeAndArchive(imgArchiveNum=imgNum, sleepDuration=5, remoteCopyLocation=remoteCam_settings['haLiveImgPath'],
+    webcam.takeAndArchive(imgArchiveNum=imgNum, sleepDuration=5,
+                          remoteCopyLocation_LQ=remoteCam_settings['haLiveImgPath'],
+                          remoteCopyLocation_HQ=remoteCam_settings['haLiveImgPath'],
+                          remoteArchiveFolder=remoteCam_settings['haArchiveSCPFolderPath'],
                           quality=remoteCam_settings['imgQuality'],
                           flipVert=remoteCam_settings['flipVert'],
                           flipHorz=remoteCam_settings['flipHori']
                           )
     for i in range(5):
-        shutil.copy(webcam.currentImagePath, motionComparionImg)
-        webcam.fireCamera(filePath=webcam.currentImagePath,
+        shutil.copy(webcam.currentImagePath_HQ, motionComparionImg)
+        webcam.fireCamera(filePath=webcam.currentImagePath_HQ,
                           quality=remoteCam_settings['imgQuality'],
                           flipVert=remoteCam_settings['flipVert'],
                           flipHorz=remoteCam_settings['flipHori'])
         if True:
-            webcam.motionCheck(currentImgPath=webcam.currentImagePath,
+            webcam.motionCheck(currentImgPath=webcam.currentImagePath_HQ,
                                prevImgPath=motionComparionImg,
                                remoteCopyPath=remoteCam_settings['haLiveImgMotionPath'],
                                mqttBrokerIP=remoteCam_settings['mqttBrokerIP'],

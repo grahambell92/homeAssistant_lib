@@ -19,12 +19,14 @@ class webcam_timelapse():
         self.archiveBaseFolder = archiveBaseFolder
         os.makedirs(self.archiveBaseFolder, exist_ok=True)
         self.archiveFolder = self.archiveBaseFolder + 'archiveImages/'
-        self.currentImagePath = self.archiveBaseFolder + 'currentImage.jpg'
+        self.currentImagePath_HQ = self.archiveBaseFolder + 'currentImage_HQ.jpg'
+        self.currentImagePath_LQ = self.archiveBaseFolder + 'currentImage_LQ.jpg'
         self.currentGifPath = self.archiveBaseFolder + 'currentSeq.gif'
 
         self.cameraName = cameraName
         self.cameraNumber = cameraNumber
         self.daysToKeep = 7
+        self.liveViewQuality = 20
 
     def fireCamera(self, filePath, quality=3, flipVert=False, flipHorz=False):
         print('Firing camera...')
@@ -71,6 +73,7 @@ class webcam_timelapse():
         # command = 'scp ~/webcamImages/currentImage.jpg homeassistant@10.0.0.19:/home/homeassistant/.homeassistant/www/'
         command = ' '.join(['scp', inputFilePath, outputFilePath])
         correct = subprocess.run(command, shell=True)
+
         print('Done.')
 
     def copyTowwwFolder(self, currentImagePath):
@@ -173,11 +176,17 @@ class webcam_timelapse():
         archiveDayFolder = now.strftime("%j_%d%B%Y")
         return archiveDayFolder
 
-    def takeAndArchive(self, imgArchiveNum, sleepDuration=120, remoteCopyLocation=None,
-                       quality=3, flipVert=False, flipHorz=False):
+    def takeAndArchive(self, imgArchiveNum,
+                       sleepDuration=120,
+                       remoteCopyLocation_LQ=None,
+                       remoteCopyLocation_HQ=None,
+                       remoteArchiveFolder=None,
+                       quality=3,
+                       flipVert=False,
+                       flipHorz=False):
 
         # Take an image for the current image
-        self.fireCamera(filePath=self.currentImagePath,
+        self.fireCamera(filePath=self.currentImagePath_HQ,
                         quality=quality,
                         flipVert=flipVert,
                         flipHorz=flipHorz
@@ -211,12 +220,23 @@ class webcam_timelapse():
 
         # Create the directory if it doesnt exist
         os.makedirs(self.archiveFolder, exist_ok=True)
-        shutil.copy(self.currentImagePath, self.currentArchivePath)
+        shutil.copy(self.currentImagePath_HQ, self.currentArchivePath)
         print('Archived image:{}'.format(self.currentArchivePath))
 
         # Move the image via secure copy (scp) to the home assistant www folder on the main rpi.
-        if remoteCopyLocation is not None:
-            self.scpToRemote(inputFilePath=self.currentImagePath, outputFilePath=remoteCopyLocation)
+        if remoteCopyLocation_LQ is not None:
+            # Compress the image for the live view
+            image = Image.open(self.currentImagePath_HQ)
+            image.save(self.currentImagePath_LQ, quality=self.liveViewQuality, optimize=True)
+            self.scpToRemote(inputFilePath=self.currentImagePath_LQ, outputFilePath=remoteCopyLocation)
+
+        if remoteCopyLocation_HQ is not None:
+            self.scpToRemote(inputFilePath=self.currentImagePath_HQ, outputFilePath=remoteCopyLocation)
+
+        if remoteArchiveFolder is not None:
+            # Also put the image into archive storage on the basestation as well.
+            remoteArchivePath = haArchiveSCPFolderPath + relativeArchivePath
+            self.scpToRemote(inputFilePath=self.currentImagePath_HQ, outputFilePath=remoteArchivePath)
 
         # Sleep delay for next image
         print('Sleeping for {} seconds.'.format(sleepDuration))
@@ -235,15 +255,14 @@ class webcam_timelapse():
             subFolder = folder.replace(self.archiveFolder, "") # Remove the full path
             folder_dayOfYear = int(subFolder[:3])
             print('doy', folder_dayOfYear)
-            if folder_dayOfYear + self.daysToKeep < int(dayOfYearToday) and int(dayOfYearToday) > self.daysToKeep:
-                print('Deleting folder:', folder)
-                exit(0)
-                shutil.rmtree(folder)
-            else: print('Retaining folder:', folder)
-        # except:
-        #     print('Folder could not be deleted or could not be interpreted by day of year.')
-        exit(0)
-
+            # Last if is incase it's at the end of the year and new year.
+            try:
+                if folder_dayOfYear + self.daysToKeep < int(dayOfYearToday) and int(dayOfYearToday) > self.daysToKeep:
+                    print('Deleting folder:', folder)
+                    shutil.rmtree(folder)
+                else: print('Retaining folder:', folder)
+            except:
+                print('Unable to parse or delete existing day of year archive folder:', folder)
 
 
 if __name__ == '__main__':

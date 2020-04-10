@@ -2,6 +2,8 @@
 
 haIP = "192.168.0.55" # "10.0.0.19"
 haFolder = '/home/pi/homeassistant/'
+baseStationImgArchiveFolder = '/home/pi/cameraImageArchive/'
+
 haUser = 'pi'
 
 cameraNames = {
@@ -50,9 +52,14 @@ remoteCam1_settings = {
     'cameraName': 'yard',
 
     'archiveBaseFolder': '/home/pi/webcamImages/',
-    'haLiveImgPath': haUser + '@' + haIP + ':' + haFolder + 'www/remoteCam1_currentImage.jpg',
+
+    'haLiveImgPath_LQ': haUser + '@' + haIP + ':' + haFolder + 'www/remoteCam1_currentImage_LQ.jpg',
+    'haLiveImgPath_HQ': haUser + '@' + haIP + ':' + haFolder + 'www/remoteCam1_currentImage_HQ.jpg',
+
     'haLiveImgMotionPath': haUser + '@' + haIP + ':' + haFolder + 'www/remoteCam1_lastMotion.jpg',
     'haLiveGifPath': haUser + '@' + haIP + ':' + haFolder + 'www/remoteCam1_timelapse.gif',
+
+    'haArchiveSCPFolderPath': haUser + '@' + haIP + ':' + baseStationImgArchiveFolder,
 
     # Rpi camera settings
     'imgQuality': 10,
