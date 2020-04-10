@@ -28,7 +28,7 @@ if os.path.exists(webcam.archiveFolder):
 
 while True:
     imgNum = next(imageCountCycler)
-    webcam.removeOldDayFolders()
+    webcam.removeOldDayOfYearFolders()
     webcam.takeAndArchive(imgArchiveNum=imgNum, sleepDuration=5, remoteCopyLocation=remoteCam_settings['haLiveImgPath'],
                           quality=remoteCam_settings['imgQuality'],
                           flipVert=remoteCam_settings['flipVert'],
