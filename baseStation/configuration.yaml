@@ -5,7 +5,7 @@ default_config:
 # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
 # http:
 #   base_url: example.duckdns.org:8123
-
+# Testing
 
 group: !include groups.yaml
 automation: !include automations.yaml
