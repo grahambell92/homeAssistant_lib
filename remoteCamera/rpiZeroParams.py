@@ -19,9 +19,14 @@ remoteCam0_Settings = {
 
     'cameraName': 'avenue',
     'archiveBaseFolder': '/home/pi/webcamImages/',
-    'haLiveImgPath': haUser + '@' + haIP + ':' + haFolder + 'www/remoteCam0_currentImage.jpg',
+
+    'haLiveImgPath_LQ': haUser + '@' + haIP + ':' + haFolder + 'www/remoteCam0_currentImage_LQ.jpg',
+    'haLiveImgPath_HQ': haUser + '@' + haIP + ':' + haFolder + 'www/remoteCam0_currentImage_HQ.jpg',
+
     'haLiveImgMotionPath': haUser + '@' + haIP + ':' + haFolder + 'www/remoteCam0_lastMotion.jpg',
     'haLiveGifPath': haUser + '@' + haIP + ':' + haFolder + 'www/remoteCam0_timelapse.gif',
+
+    'haArchiveSCPFolderPath': haUser + '@' + haIP + ':' + baseStationImgArchiveFolder,
 
     # Rpi camera settings
     'imgQuality': 10,
