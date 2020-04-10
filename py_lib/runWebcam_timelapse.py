@@ -235,7 +235,7 @@ class webcam_timelapse():
             subFolder = folder.replace(self.archiveFolder, "") # Remove the full path
             folder_dayOfYear = int(subFolder[:3])
             print('doy', folder_dayOfYear)
-            if folder_dayOfYear + self.daysToKeep < dayOfYearToday and dayOfYearToday > self.daysToKeep:
+            if folder_dayOfYear + self.daysToKeep < dayOfYearToday and int(dayOfYearToday) > self.daysToKeep:
                 print('Deleting folder:', folder)
                 exit(0)
                 shutil.rmtree(folder)
