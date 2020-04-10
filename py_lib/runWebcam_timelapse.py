@@ -228,10 +228,10 @@ class webcam_timelapse():
             # Compress the image for the live view
             image = Image.open(self.currentImagePath_HQ)
             image.save(self.currentImagePath_LQ, quality=self.liveViewQuality, optimize=True)
-            self.scpToRemote(inputFilePath=self.currentImagePath_LQ, outputFilePath=remoteCopyLocation)
+            self.scpToRemote(inputFilePath=self.currentImagePath_LQ, outputFilePath=remoteCopyLocation_LQ)
 
         if remoteCopyLocation_HQ is not None:
-            self.scpToRemote(inputFilePath=self.currentImagePath_HQ, outputFilePath=remoteCopyLocation)
+            self.scpToRemote(inputFilePath=self.currentImagePath_HQ, outputFilePath=remoteCopyLocation_HQ)
 
         if remoteArchiveFolder is not None:
             # Also put the image into archive storage on the basestation as well.
