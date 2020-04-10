@@ -195,7 +195,7 @@ class webcam_timelapse():
         # date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
 
         archiveDayFolder = now.strftime("%j_%d%B%Y")
-        cameraFolder = ('{0.3f}_{1.3f}').format(self.cameraNumber, self.cameraName)
+        cameraFolder = ('{0:02d}_{1}').format(self.cameraNumber, self.cameraName)
         archiveFile = now.strftime('%H-%M-%S.jpg')
         relativeArchivePath = archiveDayFolder + '/' + cameraFolder + '/' + archiveFile
         print('New Relative archive path:', relativeArchivePath)
