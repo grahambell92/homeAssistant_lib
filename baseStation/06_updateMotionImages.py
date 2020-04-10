@@ -15,7 +15,7 @@ currentImgFilenames = [
     'remoteCam1_currentImage_LQ', # '.jpg
 ]
 
-countCycler = itertools.cycle(10)
+countCycler = itertools.cycle(itertools.count(10))
 while True:
     for currentImgFilename, destination in zip(currentImgFilenames, destinations):
         os.makedirs(destination, exist_ok=True)
