@@ -235,7 +235,7 @@ class webcam_timelapse():
 
         if remoteArchiveFolder is not None:
             # Also put the image into archive storage on the basestation as well.
-            remoteArchivePath = haArchiveSCPFolderPath + relativeArchivePath
+            remoteArchivePath = remoteArchiveFolder + relativeArchivePath
             self.scpToRemote(inputFilePath=self.currentImagePath_HQ, outputFilePath=remoteArchivePath)
 
         # Sleep delay for next image
