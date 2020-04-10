@@ -197,13 +197,17 @@ class webcam_timelapse():
         archiveDayFolder = now.strftime("%j_%d%B%Y")
         cameraFolder = ('{0:02d}_{1}').format(self.cameraNumber, self.cameraName)
         archiveFile = now.strftime('%H-%M-%S.jpg')
-        relativeArchivePath = archiveDayFolder + '/' + cameraFolder + '/' + archiveFile
+        relativeArchiveFolder = archiveDayFolder + '/' + cameraFolder + '/'
+        relativeArchivePath = relativeArchiveFolder + archiveFile
         print('New Relative archive path:', relativeArchivePath)
 
         # self.currentArchivePath = self.archiveFolder + archiveImage
         self.currentArchivePath = self.archiveFolder + relativeArchivePath
         print('Archive location:', self.currentArchivePath)
 
+        # Make sure the relativeArchiveFolder exists
+        currentArchiveFolder = self.archiveFolder + relativeArchiveFolder
+        os.makedirs(currentArchiveFolder, exist_ok=True)
 
         # Create the directory if it doesnt exist
         os.makedirs(self.archiveFolder, exist_ok=True)
