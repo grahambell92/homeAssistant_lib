@@ -33,4 +33,4 @@ while True:
         print('Moved:', inputFilePath)
         print('To:', outputFilePath)
         print()
-    time.sleep(5)
+    time.sleep(90)
