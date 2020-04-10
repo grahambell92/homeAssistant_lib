@@ -23,11 +23,11 @@ currentImgFilenames = [
 
 countCycler = itertools.cycle(range(10))
 while True:
+    count = next(countCycler)
     for currentImgFilename, destination in zip(currentImgFilenames, destinations):
         os.makedirs(destination, exist_ok=True)
-        count = next(countCycler)
         inputFilePath = wwwFolder + currentImgFilename + '.jpg'
-        outputFilePath = avenueGallery + currentImgFilename + str(count) + '.jpg'
+        outputFilePath = destination + currentImgFilename + str(count) + '.jpg'
         command = ' '.join(['cp', inputFilePath, outputFilePath])
         correct = subprocess.run(command, shell=True)
         print('Moved:', inputFilePath)
