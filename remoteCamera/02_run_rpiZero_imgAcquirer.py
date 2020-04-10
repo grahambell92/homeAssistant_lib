@@ -12,6 +12,8 @@ import shutil
 from rpiZeroParams import remoteCam_settings
 import time
 
+for key,value in remoteCam_settings.items():
+    print(key, value)
 
 webcam = webcam_timelapse(archiveBaseFolder=remoteCam_settings['archiveBaseFolder'],
                           cameraName=remoteCam_settings['cameraName'],

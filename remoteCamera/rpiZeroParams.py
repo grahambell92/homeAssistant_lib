@@ -87,3 +87,4 @@ remoteCam_settings = macAddressDict[macAddress]
 dicts = [remoteCam0_Settings, remoteCam1_settings]
 for dict in dicts:
     dict['cameraNumber'] = cameraNames[dict['cameraName']]
+
