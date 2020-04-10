@@ -22,9 +22,10 @@ webcam = webcam_timelapse(archiveBaseFolder=remoteCam_settings['archiveBaseFolde
 imageCountCycler = itertools.cycle(range(500))
 motionComparionImg = webcam.archiveBaseFolder + 'motionPrev.jpg'
 
-if os.path.exists(webcam.archiveFolder):
-    print('Existing archive directory, deleting.')
-    shutil.rmtree(webcam.archiveFolder)
+if False:
+    if os.path.exists(webcam.archiveFolder):
+        print('Existing archive directory, deleting.')
+        shutil.rmtree(webcam.archiveFolder)
 
 while True:
     imgNum = next(imageCountCycler)
