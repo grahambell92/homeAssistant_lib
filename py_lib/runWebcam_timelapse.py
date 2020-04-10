@@ -71,12 +71,24 @@ class webcam_timelapse():
         # inputFilePath = '~/webcamImages/currentImage.jpg'
         # outputFilePath = 'homeassistant@10.0.0.19:/home/homeassistant/.homeassistant/www/'
         # command = 'scp ~/webcamImages/currentImage.jpg homeassistant@10.0.0.19:/home/homeassistant/.homeassistant/www/'
+        import os.path
+        outputDest, outputFile = os.path.split(outputFilePath)
+        remoteHost, outputFolder = outputDest.split(':')
+        print(outputFolder)
+        print(remoteHost)
+        exit(0)
 
-        # command = ' '.join(['scp', inputFilePath, outputFilePath])
-        # correct = subprocess.run(command, shell=True)
 
-        command = ' '.join(['rsync -a --compress', inputFilePath, outputFilePath])
+        # ssh remote-host 'mkdir -p foo/bar/qux'
+        # remote_host =
+        command = ' '.join(['ssh', inputFilePath, outputFilePath])
         correct = subprocess.run(command, shell=True)
+
+        command = ' '.join(['scp', inputFilePath, outputFilePath])
+        correct = subprocess.run(command, shell=True)
+
+        # command = ' '.join(['rsync -a --compress', inputFilePath, outputFilePath])
+        # correct = subprocess.run(command, shell=True)
 
         print('Done.')
 
