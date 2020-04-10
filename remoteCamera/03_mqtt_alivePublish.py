@@ -41,7 +41,7 @@ while True:
         dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
         msg = dt_string
         client.publish(remoteCam_settings["mqttAlivePublishTopic"], msg)
-        time.sleep(30)
+        time.sleep(120)
 
         if True:
 

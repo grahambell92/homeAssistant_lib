@@ -25,7 +25,7 @@ class webcam_timelapse():
 
         self.cameraName = cameraName
         self.cameraNumber = cameraNumber
-        self.daysToKeep = 7
+        self.daysToKeep = 3
         self.liveViewQuality = 20
 
     def fireCamera(self, filePath, quality=3, flipVert=False, flipHorz=False):

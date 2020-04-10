@@ -20,4 +20,7 @@ chmod 775 ./01_startHomeAssistant.sh
 tmux new-session -d -s homeAssistant './01_startHomeAssistant.sh'
 
 # start the mqtt publisher (local)
-tmux new-session -d -s mqtt 'python3 ./00_serialToMqttTest.py'
+#tmux new-session -d -s mqtt 'python3 ./00_serialToMqttTest.py'
+
+# start the mqtt publisher (local)
+tmux new-session -d -s motionImages 'python3 ./06_updateMotionImages.py'
