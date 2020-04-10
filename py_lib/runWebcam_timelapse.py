@@ -232,17 +232,16 @@ class webcam_timelapse():
         for folder in glob.glob(self.archiveFolder + "*/"):
             # First 3 chars of folder correspond to the day of year
             print('Examining folder:', folder)
-            try:
-                subFolder = folder.replace(self.archiveFolder, "") # Remove the full path
-                folder_dayOfYear = int(subFolder[:3])
-                print('doy', folder_dayOfYear)
-                if int(folder[:3]) + self.daysToKeep < dayOfYearToday and dayOfYearToday > self.daysToKeep:
-                    print('Deleting folder:', folder)
-                    exit(0)
-                    shutil.rmtree(folder)
-                else: print('Retaining folder:', folder)
-            except:
-                print('Folder could not be deleted or could not be interpreted by day of year.')
+            subFolder = folder.replace(self.archiveFolder, "") # Remove the full path
+            folder_dayOfYear = int(subFolder[:3])
+            print('doy', folder_dayOfYear)
+            if folder_dayOfYear + self.daysToKeep < dayOfYearToday and dayOfYearToday > self.daysToKeep:
+                print('Deleting folder:', folder)
+                exit(0)
+                shutil.rmtree(folder)
+            else: print('Retaining folder:', folder)
+        # except:
+        #     print('Folder could not be deleted or could not be interpreted by day of year.')
         exit(0)
 
 
