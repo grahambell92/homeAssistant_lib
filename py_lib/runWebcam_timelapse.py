@@ -241,6 +241,7 @@ class webcam_timelapse():
                else: print('Retaining folder:', folder)
             except:
                 print('Folder could not be deleted or could not be interpreted by day of year.')
+        exit(0)
 
 
 
