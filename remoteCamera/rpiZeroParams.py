@@ -47,6 +47,8 @@ remoteCam0_Settings = {
 
 remoteCam1_settings = {
 
+    'cameraName': 'yard',
+
     'archiveBaseFolder': '/home/pi/webcamImages/',
     'haLiveImgPath': haUser + '@' + haIP + ':' + haFolder + 'www/remoteCam1_currentImage.jpg',
     'haLiveImgMotionPath': haUser + '@' + haIP + ':' + haFolder + 'www/remoteCam1_lastMotion.jpg',
