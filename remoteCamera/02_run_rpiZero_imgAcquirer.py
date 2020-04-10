@@ -35,8 +35,8 @@ while True:
     imgNum = next(imageCountCycler)
     webcam.removeOldDayOfYearFolders()
     webcam.takeAndArchive(imgArchiveNum=imgNum, sleepDuration=5,
-                          remoteCopyLocation_LQ=remoteCam_settings['haLiveImgPath'],
-                          remoteCopyLocation_HQ=remoteCam_settings['haLiveImgPath'],
+                          remoteCopyLocation_LQ=remoteCam_settings['haLiveImgPath_LQ'],
+                          remoteCopyLocation_HQ=remoteCam_settings['haLiveImgPath_HQ'],
                           remoteArchiveFolder=remoteCam_settings['haArchiveSCPFolderPath'],
                           quality=remoteCam_settings['imgQuality'],
                           flipVert=remoteCam_settings['flipVert'],
