@@ -80,7 +80,7 @@ while True:
 
         # except:
         #     print('Failed to post battery voltage MQTT message to', brokerIP)
-    time.sleep(120)
+    time.sleep(30)
 
 client.disconnect() #disconnect
 # client.loop_stop() #stop loop
