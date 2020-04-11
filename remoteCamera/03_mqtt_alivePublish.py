@@ -46,8 +46,9 @@ while True:
         try:
             now = datetime.datetime.now()
             # dd/mm/YY H:M:S
-            dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
-            msg = dt_string
+            # dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+            # msg = dt_string
+            msg = 'online'
             print('Trying to publish...')
             print('Topic:', remoteCam_settings["mqttAlivePublishTopic"])
             print('Message:', msg)
