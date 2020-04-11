@@ -37,7 +37,7 @@ if True:
     mcp = Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS, miso=MISO, mosi=MOSI)
 
 while True:
-    if False:
+    if True:
         try:
             now = datetime.datetime.now()
             # dd/mm/YY H:M:S
@@ -61,7 +61,6 @@ while True:
         battVolt = 0.013052441*battRead + 0.004452565
         print('Battery voltage:', battVolt)
         print('Done.')
-        print(np.isfinite(battVolt))
         print()
         if np.isfinite(battVolt):
             print('Publishing battery voltage to:')

@@ -239,7 +239,7 @@ class webcam_timelapse():
         if remoteCopyLocation_LQ is not None:
             # Compress the image for the live view
             image = Image.open(self.currentImagePath_HQ)
-            image.save(self.currentImagePath_LQ, quality=self.liveViewQuality, optimize=True)
+            image.save(self.currentImagePath_LQ, quality=self.liveViewQuality)#, optimize=True) # Optimise uses a lot of processing power apparently.
             self.scpToRemote(inputFilePath=self.currentImagePath_LQ, outputFilePath=remoteCopyLocation_LQ)
 
         if remoteCopyLocation_HQ is not None:
