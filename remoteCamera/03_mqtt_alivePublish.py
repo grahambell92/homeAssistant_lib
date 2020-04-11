@@ -53,29 +53,28 @@ while True:
             print('Failed to post alive MQTT message to', brokerIP)
 
     if True:
-        try:
-            print('Reading adc for battery voltage...')
-            battRead = mcp.read_adc(0)
-            #battVolt = 0.009821428 * battRead + 0.2558928 # for the outdoor camera battery
-            # For the 12 v battery voltage divider with a 3.2 and a 9.9k ohm R2 and R1 combo.
-            battVolt = 0.013052441*battRead + 0.004452565
-            print('Battery voltage:', battVolt)
-            print('Done.')
-            print(np.isfinite(battVolt))
-            print()
-            if np.isfinite(battVolt):
-                print('Publishing battery voltage to:')
-                print('Topic:', remoteCam_settings["mqttBattVoltPublishTopic"])
-                msg = '{:.3f}'.format(battVolt)
-                print('Msg:', msg)
-                client.publish(remoteCam_settings["mqttBattVoltPublishTopic"], msg)
-                print('Done')
-            else:
-                print('Bad battVolt:', battVolt)
-            print()
+        print('Reading adc for battery voltage...')
+        battRead = mcp.read_adc(0)
+        #battVolt = 0.009821428 * battRead + 0.2558928 # for the outdoor camera battery
+        # For the 12 v battery voltage divider with a 3.2 and a 9.9k ohm R2 and R1 combo.
+        battVolt = 0.013052441*battRead + 0.004452565
+        print('Battery voltage:', battVolt)
+        print('Done.')
+        print(np.isfinite(battVolt))
+        print()
+        if np.isfinite(battVolt):
+            print('Publishing battery voltage to:')
+            print('Topic:', remoteCam_settings["mqttBattVoltPublishTopic"])
+            msg = '{:.3f}'.format(battVolt)
+            print('Msg:', msg)
+            client.publish(remoteCam_settings["mqttBattVoltPublishTopic"], msg)
+            print('Done')
+        else:
+            print('Bad battVolt:', battVolt)
+        print()
 
-        except:
-            print('Failed to post battery voltage MQTT message to', brokerIP)
+        # except:
+        #     print('Failed to post battery voltage MQTT message to', brokerIP)
     time.sleep(120)
 
 client.disconnect() #disconnect
