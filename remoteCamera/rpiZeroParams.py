@@ -83,7 +83,7 @@ remoteCam1_settings = {
     'mqttMotionPublishTopic': "remoteCamera1/motionValue",
 
     # MQTT Alive reporting properties.
-    'mqttAliveClient': "remoteCamera1_lastPing",
+    'mqttClientName': "remoteCamera1",
     'mqttAlivePublishTopic': "remoteCamera1/lastPing",
     'mqttBattVoltPublishTopic': "remoteCamera1/battVoltage",
 
