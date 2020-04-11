@@ -4,6 +4,7 @@ import datetime
 from rpiZeroParams import remoteCam_settings
 import Adafruit_GPIO.SPI as SPI
 import Adafruit_MCP3008
+import numpy as np
 
 def on_message(client, userdata, message):
     time.sleep(1)
