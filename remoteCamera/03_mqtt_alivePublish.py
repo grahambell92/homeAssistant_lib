@@ -13,12 +13,7 @@ def on_message(client, userdata, message):
 def on_publish(client,userdata,result):             #create function for callback
     print("data published:", userdata)
 
-brokerIP = remoteCam_settings['mqttBrokerIP'] # "192.168.0.55" #"10.0.0.19"
-print('Setting up broker IP:', brokerIP)
-client = paho.Client(remoteCam_settings["mqttClientName"])
 
-client.on_message = on_message
-client.connect(brokerIP)
 
 if False:
     # Hardware SPI configuration:
@@ -37,6 +32,16 @@ if True:
     mcp = Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS, miso=MISO, mosi=MOSI)
 
 while True:
+
+    # Reconnect to the broker each time prevents the HA server from being unable to find new events.
+    # The broker reaches out and connects with the mosquitto server each time.
+    brokerIP = remoteCam_settings['mqttBrokerIP']  # "192.168.0.55" #"10.0.0.19"
+    print('Setting up broker IP:', brokerIP)
+    client = paho.Client(remoteCam_settings["mqttClientName"])
+
+    client.on_message = on_message
+    client.connect(brokerIP)
+
     if True:
         try:
             now = datetime.datetime.now()
