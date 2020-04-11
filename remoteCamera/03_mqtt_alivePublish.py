@@ -61,6 +61,8 @@ while True:
             battVolt = 0.013052441*battRead + 0.004452565
             print('Battery voltage:', battVolt)
             print('Done.')
+            print(np.isfinite(battVolt))
+            print()
             if np.isfinite(battVolt):
                 print('Publishing battery voltage to:')
                 print('Topic:', remoteCam_settings["mqttBattVoltPublishTopic"])
