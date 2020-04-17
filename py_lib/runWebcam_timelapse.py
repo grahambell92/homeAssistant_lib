@@ -448,7 +448,7 @@ class webcam_timelapse():
                 if (datetime.now() - lastTimeLapseTime).seconds > timelapseInterval:
                     print('Saving timelapse image.')
                     # cv2.imwrite(filename=currentTimelapse, img=frame)
-                    cv2.imwrite(filename=currentTimelapse, img=thresh)
+                    cv2.imwrite(filename=currentTimelapse, img=frameDelta)
 
                     self.archiveImage(
                         currentImagePath_HQ=currentTimelapse,

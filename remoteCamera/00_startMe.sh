@@ -10,7 +10,9 @@ cd /home/pi/homeAssistant_lib/remoteCamera/
 #/usr/bin/tmux set remain-on-exit on
 /usr/bin/tmux kill-server
 echo 'Killed server'
-/usr/bin/tmux new-session -d -s camera '/usr/bin/python3 02_run_rpiZero_imgAcquirer.py'
+#/usr/bin/tmux new-session -d -s camera '/usr/bin/python3 02_run_rpiZero_imgAcquirer.py'
+/usr/bin/tmux new-session -d -s camera '/usr/bin/python3 05_run_surveilanceCamera.py'
+
 echo 'Started img aquisition'
 /usr/bin/tmux new-session -d -s mqtt '/usr/bin/python3 03_mqtt_alivePublish.py'
 echo 'Started mqtt publisher'
