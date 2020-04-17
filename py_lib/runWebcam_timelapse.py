@@ -357,7 +357,7 @@ class webcam_timelapse():
             # grab the raw NumPy array representing the image and initialize
             # the timestamp and occupied/unoccupied text
             # frame = f.array
-            timestamp = datetime.datetime.now()
+            timestamp = datetime.now()
             text = "Unoccupied"
             # resize the frame, convert it to grayscale, and blur it
             frame = imutils.resize(frame, width=500)
