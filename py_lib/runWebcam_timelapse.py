@@ -16,7 +16,7 @@ import math
 import picamera
 from picamera.array import PiRGBArray
 import imutils
-import cv2import
+import cv2
 
 class webcam_timelapse():
     def __init__(self, archiveBaseFolder='/home/pi/webcamImages/', cameraName='default', cameraNumber=0):
