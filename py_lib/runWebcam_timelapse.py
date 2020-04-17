@@ -317,7 +317,7 @@ class webcam_timelapse():
             self.removeOldDayOfYearFolders()
 
         # initialize the camera and grab a reference to the raw camera capture
-        camera = PiCamera()
+        camera = picamera.PiCamera()
         camera.framerate = cameraFPS
         camera.vflip = flipVert
         camera.hflip = flipHorz
