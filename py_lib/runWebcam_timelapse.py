@@ -366,7 +366,7 @@ class webcam_timelapse():
             if avg is None:
                 print("[INFO] starting background model...")
                 avg = gray.copy().astype("float")
-                rawCapture.truncate(0)
+                # rawCapture.truncate(0)
                 continue
 
             # accumulate the weighted average between the current frame and
@@ -458,7 +458,7 @@ class webcam_timelapse():
                         break
 
             # clear the stream in preparation for the next frame
-            rawCapture.truncate(0)
+            # rawCapture.truncate(0)
 
 if __name__ == '__main__':
     webcam = webcam_timelapse()
