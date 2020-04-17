@@ -5,6 +5,7 @@
 import datetime
 import sys
 sys.path.append("../py_lib/")
+from runWebcam_timelapse import webcam_timelapse
 import os
 import shutil
 from rpiZeroParams import remoteCam_settings
