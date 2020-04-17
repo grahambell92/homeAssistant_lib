@@ -333,7 +333,7 @@ class webcam_timelapse():
         # uploaded timestamp, and frame motion counter
 
         print("[INFO] warming up...")
-        time.sleep(config["camera_warmup_time"])
+        time.sleep(3.0)
 
         avg = None
         lastUploaded = datetime.datetime.now()
@@ -407,6 +407,7 @@ class webcam_timelapse():
                         if True:
                             # Save the image to currentMotion.jpg
                             cv2.imsave(frame, 'currentMotion.jpg')
+                            print('Saving motion images...')
                             # Archive the currentMotion.jpg with the _motion suffix to the remote directories.
 
                             self.archiveImage(
@@ -417,6 +418,7 @@ class webcam_timelapse():
                             )
                             # update the last uploaded timestamp and reset the motion
                             # counter
+                            print('Done.')
                             lastUploaded = timestamp
                             motionCounter = 0
             # otherwise, the room is not occupied
@@ -435,6 +437,7 @@ class webcam_timelapse():
                         remoteArchiveFolder=remoteArchiveFolder,
                     )
                     lastTimeLapseTime = datetime.now()
+                    print('Done.')
 
             # check to see if the frames should be displayed to screen
             if False:
