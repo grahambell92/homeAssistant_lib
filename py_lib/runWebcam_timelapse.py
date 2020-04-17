@@ -352,8 +352,8 @@ class webcam_timelapse():
             # prior iterations output a longer image)
             stream.truncate()
             stream.seek(0)
-            if process(stream):
-                break
+            # if process(stream):
+            #     break
             # camera.capture(stream, format='jpeg')
 
             print('Capturing image')
