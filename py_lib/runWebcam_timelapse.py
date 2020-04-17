@@ -423,7 +423,7 @@ class webcam_timelapse():
                         # Here's where you've satisfied the conditions and will post an additional motion image.
                         if True:
                             # Save the image to currentMotion.jpg
-                            cv2.imsave(frame, currentMotionImage)
+                            cv2.imwrite(filename=currentMotionImage, img=frame)
                             print('Saving motion images...')
                             # Archive the currentMotion.jpg with the _motion suffix to the remote directories.
 
