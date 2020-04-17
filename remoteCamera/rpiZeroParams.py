@@ -32,6 +32,7 @@ remoteCam0_Settings = {
     'imgQuality': 30,
     'flipVert': True,
     'flipHori': True,
+    'timelapseInterval': 120, # Seconds.
 
     # Gif timelapse building properties.
     'buildGifEvery': 60, # Seconds

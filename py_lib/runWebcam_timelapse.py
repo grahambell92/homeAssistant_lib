@@ -188,25 +188,28 @@ class webcam_timelapse():
         archiveDayFolder = now.strftime("%j_%d%B%Y")
         return archiveDayFolder
 
-    def takeAndArchive(self, imgArchiveNum,
-                       sleepDuration=120,
-                       remoteCopyLocation_LQ=None,
-                       remoteCopyLocation_HQ=None,
-                       remoteArchiveFolder=None,
-                       quality=3,
-                       flipVert=False,
-                       flipHorz=False):
 
+    def takeCurrentImage(self,
+                         imagePath=None,
+                         quality=3,
+                         flipVert=False,
+                         flipHorz=False):
         # Take an image for the current image
-        self.fireCamera(filePath=self.currentImagePath_HQ,
+        if imagePath is None:
+            imagePath = self.currentImagePath_HQ
+
+        self.fireCamera(filePath=imagePath,
                         quality=quality,
                         flipVert=flipVert,
                         flipHorz=flipHorz
                         )
 
-        # Archive the image
-        archiveImage = 'image{0}.jpg'.format(imgArchiveNum)
-
+    def archiveImage(self,
+                     currentImagePath_HQ,
+                     remoteCopyLocation_LQ=None,
+                     remoteCopyLocation_HQ=None,
+                     remoteArchiveFolder=None,
+                     ):
         # day of year, date in human readable form/camera/time_camera.png
         # The format is: 312_24April2020/01_avenue/12-23-21_avenue.png
         # The format is: 313_24April2020/02_yard/12-23-21_yard.png
@@ -239,7 +242,8 @@ class webcam_timelapse():
         if remoteCopyLocation_LQ is not None:
             # Compress the image for the live view
             image = Image.open(self.currentImagePath_HQ)
-            image.save(self.currentImagePath_LQ, quality=self.liveViewQuality)#, optimize=True) # Optimise uses a lot of processing power apparently.
+            image.save(self.currentImagePath_LQ,
+                       quality=self.liveViewQuality)  # , optimize=True) # Optimise uses a lot of processing power apparently.
             self.scpToRemote(inputFilePath=self.currentImagePath_LQ, outputFilePath=remoteCopyLocation_LQ)
 
         if remoteCopyLocation_HQ is not None:
@@ -250,11 +254,29 @@ class webcam_timelapse():
             remoteArchivePath = remoteArchiveFolder + relativeArchivePath
             self.scpToRemote(inputFilePath=self.currentImagePath_HQ, outputFilePath=remoteArchivePath)
 
-        # Sleep delay for next image
-        print('Sleeping for {} seconds.'.format(sleepDuration))
+    def takeAndArchive(self,
+                       sleepDuration=120,
+                       remoteCopyLocation_LQ=None,
+                       remoteCopyLocation_HQ=None,
+                       remoteArchiveFolder=None,
+                       ):
+
+        # Take an image for the current image
+        self.fireCamera(filePath=self.currentImagePath_HQ,
+                        quality=quality,
+                        flipVert=flipVert,
+                        flipHorz=flipHorz
+                        )
+
+        self.archiveImage(
+            currentImagePath_HQ=self.currentImagePath_HQ,
+            remoteCopyLocation_LQ=remoteCopyLocation_LQ,
+            remoteCopyLocation_HQ=remoteCopyLocation_HQ,
+            remoteArchiveFolder=remoteArchiveFolder,
+        )
+
         time.sleep(sleepDuration)
-        print('')
-        return
+
 
     def removeOldDayOfYearFolders(self):
         now = datetime.now()  # current date and time
@@ -276,6 +298,155 @@ class webcam_timelapse():
             except:
                 print('Unable to parse or delete existing day of year archive folder:', folder)
 
+    def motionSurveilance(self,
+                          remoteCopyLocation_LQ=None,
+                          remoteCopyLocation_HQ=None,
+                          remoteArchiveFolder=None,
+                          flipVert=False,
+                          flipHorz=False,
+                          timelapseInterval=120,
+                          removeOldData=False,
+                          cameraFPS=24,
+                          cameraResolution=(1024, 768),
+                          delayBetweenMotionEvents=3.0,
+                          minFramesToTrigMotion=3,
+                          motionThreshold=2,
+                          minMotionArea=5000):
+
+        if removeOldData is True:
+            self.removeOldDayOfYearFolders()
+
+        # initialize the camera and grab a reference to the raw camera capture
+        camera = PiCamera()
+        camera.framerate = cameraFPS
+        camera.vflip = flipVert
+        camera.hflip = flipHorz
+        rawCapture = PiRGBArray(camera, size=cameraResolution)
+
+        currentMotionImage = 'currentMotion.jpg'
+        currentTimelapse = 'currentTimelapse.jpg'
+
+        lastTimeLapseTime = datetime.now()
+
+        # allow the camera to warmup, then initialize the average frame, last
+        # uploaded timestamp, and frame motion counter
+
+        print("[INFO] warming up...")
+        time.sleep(config["camera_warmup_time"])
+
+        avg = None
+        lastUploaded = datetime.datetime.now()
+        motionCounter = 0
+
+        # capture frames from the camera
+
+        for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+
+            # grab the raw NumPy array representing the image and initialize
+            # the timestamp and occupied/unoccupied text
+            # frame = f.array
+            timestamp = datetime.datetime.now()
+            text = "Unoccupied"
+            # resize the frame, convert it to grayscale, and blur it
+            frame = imutils.resize(frame, width=500)
+
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            gray = cv2.GaussianBlur(gray, (21, 21), 0)
+
+            # if the average frame is None, initialize it
+            if avg is None:
+                print("[INFO] starting background model...")
+                avg = gray.copy().astype("float")
+                rawCapture.truncate(0)
+                continue
+
+            # accumulate the weighted average between the current frame and
+            # previous frames, then compute the difference between the current
+            # frame and running average
+            cv2.accumulateWeighted(src=gray, dst=avg, alpha=0.5)
+            frameDelta = cv2.absdiff(src1=gray, src2=cv2.convertScaleAbs(avg))
+
+            # threshold the delta image, dilate the thresholded image to fill
+            # in holes, then find contours on thresholded image
+            thresh = cv2.threshold(src=frameDelta, thresh=motionThreshold, maxval=255, type=cv2.THRESH_BINARY)[1]
+
+            thresh = cv2.dilate(thresh, None, iterations=2)
+            contours = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            contours = imutils.grab_contours(contours)
+            # loop over the contours
+            for contour in contours:
+                # if the contour is too small, ignore it
+                if cv2.contourArea(contour) > minMotionArea:
+                    # compute the bounding box for the contour, draw it on the frame,
+                    # and update the text
+                    (x, y, w, h) = cv2.boundingRect(contour)
+                    cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+                    text = "Occupied"
+
+
+            # draw the text and timestamp on the frame
+            # camera.annotate_background = picamera.Color('black')
+            # camera.annotate_text = datetime.now().strftime('%d-%m-%Y %H:%M:%S\nStatus: {0}'.format(text))
+
+            # ts = timestamp.strftime("%A %d %B %Y %I:%M:%S%p")
+            timeText = datetime.now().strftime('%d-%m-%Y %H:%M:%S\nStatus: {0}'.format(text))
+            cv2.putText(frame, "Room Status: {}".format(text), (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+            cv2.putText(frame, timeText, (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
+
+            # check to see if the room is occupied
+            if text == "Occupied":
+                # check to see if enough time has passed between uploads
+                if (timestamp - lastUploaded).seconds >= delayBetweenMotionEvents:
+                    # increment the motion counter
+                    motionCounter += 1
+                    # check to see if the number of frames with consistent motion is
+                    # high enough
+                    if motionCounter >= minFramesToTrigMotion:
+                        # Here's where you've satisfied the conditions and will post an additional motion image.
+                        if True:
+                            # Save the image to currentMotion.jpg
+                            cv2.imsave(frame, 'currentMotion.jpg')
+                            # Archive the currentMotion.jpg with the _motion suffix to the remote directories.
+
+                            self.archiveImage(
+                                currentImagePath_HQ='currentMotion.jpg',
+                                remoteCopyLocation_LQ=remoteCopyLocation_LQ.replace('.jpg', '_motion.jpg'),
+                                remoteCopyLocation_HQ=remoteCopyLocation_HQ.replace('.jpg', '_motion.jpg'),
+                                remoteArchiveFolder=remoteArchiveFolder.replace('.jpg', '_motion.jpg'),
+                            )
+                            # update the last uploaded timestamp and reset the motion
+                            # counter
+                            lastUploaded = timestamp
+                            motionCounter = 0
+            # otherwise, the room is not occupied
+            else:
+                motionCounter = 0
+
+                # If the elapsed time is past the regular image interval time.
+                # Archive the image without the _motion suffix.
+                if (datetime.now() - lastTimeLapseTime).seconds > timelapseInterval:
+                    print('Saving timelapse image.')
+                    cv2.imsave(frame, currentTimelapse)
+                    self.archiveImage(
+                        currentImagePath_HQ=currentTimelapse,
+                        remoteCopyLocation_LQ=remoteCopyLocation_LQ,
+                        remoteCopyLocation_HQ=remoteCopyLocation_HQ,
+                        remoteArchiveFolder=remoteArchiveFolder,
+                    )
+                    lastTimeLapseTime = datetime.now()
+
+            # check to see if the frames should be displayed to screen
+            if False:
+                if config["show_video"]:
+                    # display the security feed
+                    cv2.imshow("Security Feed", frame)
+                    key = cv2.waitKey(1) & 0xFF
+                    # if the `q` key is pressed, break from the lop
+                    if key == ord("q"):
+                        break
+
+            # clear the stream in preparation for the next frame
+            rawCapture.truncate(0)
 
 if __name__ == '__main__':
     webcam = webcam_timelapse()
