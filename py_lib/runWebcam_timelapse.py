@@ -209,7 +209,7 @@ class webcam_timelapse():
                         )
 
     def archiveImage(self,
-                     currentImagePath_HQ,
+                     currentImagePath_HQ=None,
                      remoteCopyLocation_LQ=None,
                      remoteCopyLocation_HQ=None,
                      remoteArchiveFolder=None,
@@ -221,6 +221,8 @@ class webcam_timelapse():
         now = datetime.now()  # current date and time
 
         # date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
+        if currentImagePath_HQ is None:
+            currentImagePath_HQ = self.currentImagePath_HQ
 
         archiveDayFolder = now.strftime("%j_%d%B%Y")
         cameraFolder = ('{0:02d}_{1}').format(self.cameraNumber, self.cameraName)
@@ -239,24 +241,24 @@ class webcam_timelapse():
 
         # Create the directory if it doesnt exist
         os.makedirs(self.archiveFolder, exist_ok=True)
-        shutil.copy(self.currentImagePath_HQ, self.currentArchivePath)
+        shutil.copy(currentImagePath_HQ, self.currentArchivePath)
         print('Archived image:{}'.format(self.currentArchivePath))
 
         # Move the image via secure copy (scp) to the home assistant www folder on the main rpi.
         if remoteCopyLocation_LQ is not None:
             # Compress the image for the live view
-            image = Image.open(self.currentImagePath_HQ)
+            image = Image.open(currentImagePath_HQ)
             image.save(self.currentImagePath_LQ,
                        quality=self.liveViewQuality)  # , optimize=True) # Optimise uses a lot of processing power apparently.
             self.scpToRemote(inputFilePath=self.currentImagePath_LQ, outputFilePath=remoteCopyLocation_LQ)
 
         if remoteCopyLocation_HQ is not None:
-            self.scpToRemote(inputFilePath=self.currentImagePath_HQ, outputFilePath=remoteCopyLocation_HQ)
+            self.scpToRemote(inputFilePath=currentImagePath_HQ, outputFilePath=remoteCopyLocation_HQ)
 
         if remoteArchiveFolder is not None:
             # Also put the image into archive storage on the basestation as well.
             remoteArchivePath = remoteArchiveFolder + relativeArchivePath
-            self.scpToRemote(inputFilePath=self.currentImagePath_HQ, outputFilePath=remoteArchivePath)
+            self.scpToRemote(inputFilePath=currentImagePath_HQ, outputFilePath=remoteArchivePath)
 
     def takeAndArchive(self,
                        sleepDuration=120,
@@ -415,12 +417,12 @@ class webcam_timelapse():
                         # Here's where you've satisfied the conditions and will post an additional motion image.
                         if True:
                             # Save the image to currentMotion.jpg
-                            cv2.imsave(frame, 'currentMotion.jpg')
+                            cv2.imsave(frame, currentMotionImage)
                             print('Saving motion images...')
                             # Archive the currentMotion.jpg with the _motion suffix to the remote directories.
 
                             self.archiveImage(
-                                currentImagePath_HQ='currentMotion.jpg',
+                                currentImagePath_HQ=currentMotionImage,
                                 remoteCopyLocation_LQ=remoteCopyLocation_LQ.replace('.jpg', '_motion.jpg'),
                                 remoteCopyLocation_HQ=remoteCopyLocation_HQ.replace('.jpg', '_motion.jpg'),
                                 remoteArchiveFolder=remoteArchiveFolder.replace('.jpg', '_motion.jpg'),
