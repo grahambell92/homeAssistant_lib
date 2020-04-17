@@ -336,7 +336,7 @@ class webcam_timelapse():
         time.sleep(3.0)
 
         avg = None
-        lastUploaded = datetime.datetime.now()
+        lastUploaded = datetime.now()
         motionCounter = 0
 
         # capture frames from the camera
