@@ -13,6 +13,7 @@ import paho.mqtt.client as paho
 import glob
 import math
 import picamera
+from picamera.array import PiRGBArray
 
 class webcam_timelapse():
     def __init__(self, archiveBaseFolder='/home/pi/webcamImages/', cameraName='default', cameraNumber=0):
