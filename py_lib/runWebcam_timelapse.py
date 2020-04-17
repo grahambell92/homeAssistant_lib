@@ -393,6 +393,7 @@ class webcam_timelapse():
             # loop over the contours
             for contour in contours:
                 # if the contour is too small, ignore it
+                print('num contours:', len(contours))
                 if cv2.contourArea(contour) > minMotionArea:
                     # compute the bounding box for the contour, draw it on the frame,
                     # and update the text
@@ -446,7 +447,9 @@ class webcam_timelapse():
                 print('time since last timelapse img: ', (datetime.now() - lastTimeLapseTime).seconds)
                 if (datetime.now() - lastTimeLapseTime).seconds > timelapseInterval:
                     print('Saving timelapse image.')
-                    cv2.imwrite(filename=currentTimelapse, img=frame)
+                    # cv2.imwrite(filename=currentTimelapse, img=frame)
+                    cv2.imwrite(filename=currentTimelapse, img=thresh)
+
                     self.archiveImage(
                         currentImagePath_HQ=currentTimelapse,
                         remoteCopyLocation_LQ=remoteCopyLocation_LQ,
