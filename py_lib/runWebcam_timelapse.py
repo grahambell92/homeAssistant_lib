@@ -331,8 +331,6 @@ class webcam_timelapse():
         # Create the in-memory stream
         stream = io.BytesIO()
         camera.start_preview()
-        time.sleep(2)
-
 
         currentMotionImage = 'currentMotion.jpg'
         currentTimelapse = 'currentTimelapse.jpg'
@@ -349,8 +347,15 @@ class webcam_timelapse():
         lastUploaded = datetime.now()
         motionCounter = 0
 
-        while True:
-            camera.capture(stream, format='jpeg')
+        for frame in camera.capture_continuous(stream, format='jpeg'):
+            # Truncate the stream to the current position (in case
+            # prior iterations output a longer image)
+            stream.truncate()
+            stream.seek(0)
+            if process(stream):
+                break
+            # camera.capture(stream, format='jpeg')
+
             print('Capturing image')
             # Construct a numpy array from the stream
             data = np.fromstring(stream.getvalue(), dtype=np.uint8)
@@ -360,9 +365,9 @@ class webcam_timelapse():
             timestamp = datetime.now()
             text = "Unoccupied"
             # resize the frame, convert it to grayscale, and blur it
-            frame = imutils.resize(frame, width=500)
+            frame_small = imutils.resize(frame, width=500)
 
-            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            gray = cv2.cvtColor(frame_small, cv2.COLOR_BGR2GRAY)
             gray = cv2.GaussianBlur(gray, (21, 21), 0)
 
             # if the average frame is None, initialize it
