@@ -16,7 +16,7 @@ import math
 import picamera
 from picamera.array import PiRGBArray
 import imutils
-import cv2
+import cv2import
 
 class webcam_timelapse():
     def __init__(self, archiveBaseFolder='/home/pi/webcamImages/', cameraName='default', cameraNumber=0):
@@ -345,7 +345,7 @@ class webcam_timelapse():
         # capture frames from the camera
 
         stream = io.BytesIO()
-        for foo in camera.capture_continuous(stream, format='jpeg'):
+        for frame in camera.capture_continuous(stream, format='jpeg'):
             # YOURS:  for frame in camera.capture_continuous(stream, format="bgr",  use_video_port=True):
             # Truncate the stream to the current position (in case
             # prior iterations output a longer image)
