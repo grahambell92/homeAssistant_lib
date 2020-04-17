@@ -325,7 +325,12 @@ class webcam_timelapse():
         camera.framerate = cameraFPS
         camera.vflip = flipVert
         camera.hflip = flipHorz
-        rawCapture = PiRGBArray(camera, size=cameraResolution)
+
+        # Create the in-memory stream
+        stream = io.BytesIO()
+        camera.start_preview()
+        time.sleep(2)
+
 
         currentMotionImage = 'currentMotion.jpg'
         currentTimelapse = 'currentTimelapse.jpg'
@@ -336,29 +341,19 @@ class webcam_timelapse():
         # uploaded timestamp, and frame motion counter
 
         print("[INFO] warming up...")
-        time.sleep(3.0)
+        time.sleep(2.0)
 
         avg = None
         lastUploaded = datetime.now()
         motionCounter = 0
 
-        # capture frames from the camera
+        while True:
+            camera.capture(stream, format='jpeg')
+            # Construct a numpy array from the stream
+            data = np.fromstring(stream.getvalue(), dtype=np.uint8)
+            # "Decode" the image from the array, preserving colour
+            frame = cv2.imdecode(data, 1)
 
-        stream = io.BytesIO()
-        for frame in camera.capture_continuous(stream, format='jpeg'):
-            # YOURS:  for frame in camera.capture_continuous(stream, format="bgr",  use_video_port=True):
-            # Truncate the stream to the current position (in case
-            # prior iterations output a longer image)
-            stream.truncate()
-            stream.seek(0)
-            # if process(stream):
-            #     break
-
-            # for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
-
-            # grab the raw NumPy array representing the image and initialize
-            # the timestamp and occupied/unoccupied text
-            # frame = f.array
             timestamp = datetime.now()
             text = "Unoccupied"
             # resize the frame, convert it to grayscale, and blur it
