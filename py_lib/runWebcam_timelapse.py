@@ -308,7 +308,7 @@ class webcam_timelapse():
                           remoteArchiveFolder=None,
                           flipVert=False,
                           flipHorz=False,
-                          timelapseInterval=120,
+                          timelapseInterval=15,
                           removeOldData=False,
                           cameraFPS=24,
                           cameraResolution=(1024, 768),
