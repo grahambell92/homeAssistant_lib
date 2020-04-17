@@ -349,6 +349,7 @@ class webcam_timelapse():
 
         while True:
             camera.capture(stream, format='jpeg')
+            print('Capturing image')
             # Construct a numpy array from the stream
             data = np.fromstring(stream.getvalue(), dtype=np.uint8)
             # "Decode" the image from the array, preserving colour
@@ -435,6 +436,7 @@ class webcam_timelapse():
 
                 # If the elapsed time is past the regular image interval time.
                 # Archive the image without the _motion suffix.
+                print('time since last timelapse img: ', (datetime.now() - lastTimeLapseTime).seconds)
                 if (datetime.now() - lastTimeLapseTime).seconds > timelapseInterval:
                     print('Saving timelapse image.')
                     cv2.imsave(frame, currentTimelapse)
