@@ -313,7 +313,7 @@ class webcam_timelapse():
                           timelapseInterval=10,
                           removeOldData=False,
                           cameraFPS=24,
-                          cameraResolution=(1024, 768),
+                          cameraResolution= (1024, 768),
                           delayBetweenMotionEvents=3.0,
                           minFramesToTrigMotion=3,
                           motionThreshold=2,
