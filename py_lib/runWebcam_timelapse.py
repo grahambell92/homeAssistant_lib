@@ -412,7 +412,7 @@ class webcam_timelapse():
             cv2.putText(frame, timeText, (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
 
             # check to see if the room is occupied
-            if text == "Occupied":
+            if False and text == "Occupied":
                 # check to see if enough time has passed between uploads
                 if (timestamp - lastUploaded).seconds >= delayBetweenMotionEvents:
                     # increment the motion counter
