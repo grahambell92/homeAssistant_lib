@@ -10,6 +10,8 @@ cd /home/pi/homeAssistant_lib/remoteCamera/
 #/usr/bin/tmux set remain-on-exit on
 /usr/bin/tmux kill-server
 echo 'Killed server'
+echo 'Waiting 5 seconds to release camera...'
+sleep 5
 #/usr/bin/tmux new-session -d -s camera '/usr/bin/python3 02_run_rpiZero_imgAcquirer.py'
 /usr/bin/tmux new-session -d -s camera '/usr/bin/python3 05_run_surveilanceCamera.py'
 
