@@ -33,16 +33,24 @@ if True:
 
 while True:
 
-    # Reconnect to the broker each time prevents the HA server from being unable to find new events.
-    # The broker reaches out and connects with the mosquitto server each time.
-    brokerIP = remoteCam_settings['mqttBrokerIP']  # "192.168.0.55" #"10.0.0.19"
-    print('Setting up broker IP:', brokerIP)
-    client = paho.Client(remoteCam_settings["mqttClientName"])
+    tryPostAliveMsg = False
+    try:
+        # Reconnect to the broker each time prevents the HA server from being unable to find new events.
+        # The broker reaches out and connects with the mosquitto server each time.
 
-    client.on_message = on_message
-    client.connect(brokerIP)
+        brokerIP = remoteCam_settings['mqttBrokerIP']  # "192.168.0.55" #"10.0.0.19"
+        print('Setting up broker IP:', brokerIP)
+        client = paho.Client(remoteCam_settings["mqttClientName"])
 
-    if True:
+        client.on_message = on_message
+        client.connect(brokerIP)
+
+        tryPostAliveMsg = True
+
+    except:
+        print('Failed to connect to broker IP.')
+
+    if tryPostAliveMsg:
         try:
             now = datetime.datetime.now()
             # dd/mm/YY H:M:S
@@ -59,29 +67,37 @@ while True:
         except:
             print('Failed to post alive MQTT message to', brokerIP)
 
-    if True:
-        print('Reading adc for battery voltage...')
-        battRead = mcp.read_adc(0)
-        #battVolt = 0.009821428 * battRead + 0.2558928 # for the outdoor camera battery
-        # For the 12 v battery voltage divider with a 3.2 and a 9.9k ohm R2 and R1 combo.
-        battVolt = 0.013052441*battRead + 0.004452565
-        print('Battery voltage:', battVolt)
-        print('Done.')
-        print()
-        if np.isfinite(battVolt):
-            print('Publishing battery voltage to:')
-            print('Topic:', remoteCam_settings["mqttBattVoltPublishTopic"])
-            msg = '{:.3f}'.format(battVolt)
-            print('Msg:', msg)
-            client.publish(remoteCam_settings["mqttBattVoltPublishTopic"], msg)
-            print('Done')
-        else:
-            print('Bad battVolt:', battVolt)
-        print()
+    if tryPostAliveMsg:
+        try:
+            print('Reading adc for battery voltage...')
+            battRead = mcp.read_adc(0)
+            #battVolt = 0.009821428 * battRead + 0.2558928 # for the outdoor camera battery
+            # For the 12 v battery voltage divider with a 3.2 and a 9.9k ohm R2 and R1 combo.
+            battVolt = 0.013052441*battRead + 0.004452565
+            print('Battery voltage:', battVolt)
+            print('Done.')
+            print()
+            if np.isfinite(battVolt):
+                print('Publishing battery voltage to:')
+                print('Topic:', remoteCam_settings["mqttBattVoltPublishTopic"])
+                msg = '{:.3f}'.format(battVolt)
+                print('Msg:', msg)
+                client.publish(remoteCam_settings["mqttBattVoltPublishTopic"], msg)
+                print('Done')
+            else:
+                print('Bad battVolt:', battVolt)
+            print()
 
-        # except:
-        #     print('Failed to post battery voltage MQTT message to', brokerIP)
-    time.sleep(30)
+        except:
+            print('Failed to post battery voltage MQTT message to', brokerIP)
+
+    # post the alive msg in 50 seconds if message post is successful.
+    if tryPostAliveMsg:
+        time.sleep(50)
+
+    # if failed to connect, then retry publishing in 10 seconds.
+    if tryPostAliveMsg is False:
+        time.sleep(10)
 
 client.disconnect() #disconnect
 # client.loop_stop() #stop loop
