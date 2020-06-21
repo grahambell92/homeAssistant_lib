@@ -17,7 +17,7 @@ remoteCam0_Settings = {
 
     'macAddress': '',
 
-    'cameraName': 'avenue',
+    'cameraName': 'yard',
     'archiveBaseFolder': '/home/pi/webcamImages/',
 
     'haLiveImgPath_LQ': haUser + '@' + haIP + ':' + haFolder + 'www/remoteCam0_currentImage_LQ.jpg',
@@ -55,7 +55,7 @@ remoteCam0_Settings = {
 
 remoteCam1_settings = {
 
-    'cameraName': 'yard',
+    'cameraName': 'avenue',
 
     'archiveBaseFolder': '/home/pi/webcamImages/',
 
