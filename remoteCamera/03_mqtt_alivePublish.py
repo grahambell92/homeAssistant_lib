@@ -70,7 +70,7 @@ while True:
     if timeSinceLastBattPost > timeBetweenBattVoltPosts:
         connectToBroker()
 
-        try:
+        if True:
             if np.isfinite(battVolt_median):
                 print('Publishing battery voltage to:')
                 print('Topic:', remoteCam_settings["mqttBattVoltPublishTopic"])
@@ -82,20 +82,16 @@ while True:
                 print('Bad battVolt:', battVolt_median)
             print()
 
-        except:
-            brokerIP = remoteCam_settings['mqttBrokerIP']  # "192.168.0.55" #"10.0.0.19"
-            print('Failed to post median battery voltage MQTT message to', brokerIP)
+        # except:
+        #     brokerIP = remoteCam_settings['mqttBrokerIP']  # "192.168.0.55" #"10.0.0.19"
+        #     print('Failed to post median battery voltage MQTT message to', brokerIP)
 
         timeOfLastBattPost = time.time()
 
     if timeSinceLastAlivePost > timeBetweenAlivePosts:
         connectToBroker()
 
-        try:
-            now = datetime.datetime.now()
-            # dd/mm/YY H:M:S
-            # dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
-            # msg = dt_string
+        if True:
             msg = 'online'
             print('Trying to publish...')
             print('Topic:', remoteCam_settings["mqttAlivePublishTopic"])
@@ -104,9 +100,9 @@ while True:
             print('Done.')
             print()
 
-        except:
-            brokerIP = remoteCam_settings['mqttBrokerIP']  # "192.168.0.55" #"10.0.0.19"
-            print('Failed to post alive MQTT message to', brokerIP)
+        # except:
+        #     brokerIP = remoteCam_settings['mqttBrokerIP']  # "192.168.0.55" #"10.0.0.19"
+        #     print('Failed to post alive MQTT message to', brokerIP)
 
         timeOfLastAlivePost = time.time()
 
@@ -122,6 +118,7 @@ while True:
         if np.isfinite(battVolt):
             battVolts.append(battVolt)
 
+
         if len(battVolts) > 20:
             # remove the first value from the list
             battVolts.pop(0)
@@ -134,8 +131,12 @@ while True:
             print('Batt volt error: Median calculation contains bad value.')
             battVolt_median = 0.0
 
+        print('Batt volt median', battVolt_median)
+        print('Battvolts:', battVolts)
+
         timeOfLastBattRead = time.time()
 
+    print('')
     time.sleep(1.0) # Just slow the code down here so it isn't constantly checking the time.
 
 
