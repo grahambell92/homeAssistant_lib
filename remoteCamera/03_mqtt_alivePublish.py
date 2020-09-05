@@ -31,7 +31,8 @@ if True:
     CS = 17
     mcp = Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS, miso=MISO, mosi=MOSI)
 
-    battVolts = []
+battVolts = []
+battVolt_median = 0.0
 
 timeBetweenAlivePosts = 30.0
 timeBetweenBattVoltPosts = 60.0
@@ -73,15 +74,16 @@ while True:
             if np.isfinite(battVolt_median):
                 print('Publishing battery voltage to:')
                 print('Topic:', remoteCam_settings["mqttBattVoltPublishTopic"])
-                msg = '{:.3f}'.format(battVolt)
+                msg = '{:.3f}'.format(battVolt_median)
                 print('Msg:', msg)
                 client.publish(remoteCam_settings["mqttBattVoltPublishTopic"], msg)
                 print('Done')
             else:
-                print('Bad battVolt:', battVolt)
+                print('Bad battVolt:', battVolt_median)
             print()
 
         except:
+            brokerIP = remoteCam_settings['mqttBrokerIP']  # "192.168.0.55" #"10.0.0.19"
             print('Failed to post median battery voltage MQTT message to', brokerIP)
 
         timeOfLastBattPost = time.time()
@@ -103,6 +105,7 @@ while True:
             print()
 
         except:
+            brokerIP = remoteCam_settings['mqttBrokerIP']  # "192.168.0.55" #"10.0.0.19"
             print('Failed to post alive MQTT message to', brokerIP)
 
         timeOfLastAlivePost = time.time()
@@ -133,7 +136,7 @@ while True:
 
         timeOfLastBattRead = time.time()
 
-        time.sleep(2.0) # Just slow the code down here so it isn't constantly checking the time.
+    time.sleep(1.0) # Just slow the code down here so it isn't constantly checking the time.
 
 
 
