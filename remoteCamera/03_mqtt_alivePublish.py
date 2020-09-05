@@ -61,6 +61,11 @@ while True:
     timeSinceLastBattRead = timeOfLastBattRead - time.time()
     timeSinceLastAlivePost = timeOfLastAlivePost - time.time()
 
+
+    print('Time since last batt post', timeSinceLastBattPost)
+    print('Time since last alive post', timeSinceLastAlivePost)
+    print('Time since last batt read', timeSinceLastBattRead)
+
     if timeSinceLastBattPost > timeBetweenBattVoltPosts:
         connectToBroker()
 
