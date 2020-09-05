@@ -53,6 +53,7 @@ def connectToBroker():
 
         client.on_message = on_message
         client.connect(brokerIP)
+        return client
 
     except:
         print('Failed to connect to broker IP.')
@@ -68,7 +69,7 @@ while True:
     print('Time since last batt read', timeSinceLastBattRead)
 
     if timeSinceLastBattPost > timeBetweenBattVoltPosts:
-        connectToBroker()
+        client = connectToBroker()
 
         if True:
             if np.isfinite(battVolt_median):
@@ -89,7 +90,7 @@ while True:
         timeOfLastBattPost = time.time()
 
     if timeSinceLastAlivePost > timeBetweenAlivePosts:
-        connectToBroker()
+        client = connectToBroker()
 
         if True:
             msg = 'online'
