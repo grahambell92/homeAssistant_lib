@@ -37,9 +37,9 @@ timeBetweenAlivePosts = 30.0
 timeBetweenBattVoltPosts = 60.0
 timeBetweenBattReads = 3.0
 
-timeOfLastBattPost = time.now() - 100.0
-timeOfLastBattRead = time.now() - 100.0
-timeOfLastAlivePost = time.now() - 100.0
+timeOfLastBattPost = time.time() - 100.0
+timeOfLastBattRead = time.time() - 100.0
+timeOfLastAlivePost = time.time() - 100.0
 
 def connectToBroker():
     try:
@@ -79,7 +79,7 @@ while True:
         except:
             print('Failed to post median battery voltage MQTT message to', brokerIP)
 
-        timeOfLastBattPost = time.now()
+        timeOfLastBattPost = time.time()
 
     if timeSinceLastAlivePost > timeBetweenAlivePosts:
         connectToBroker()
@@ -100,7 +100,7 @@ while True:
         except:
             print('Failed to post alive MQTT message to', brokerIP)
 
-        timeOfLastAlivePost = time.now()
+        timeOfLastAlivePost = time.time()
 
     if timeSinceLastBattRead > timeBetweenBattReads:
         # Read the battery voltage and do a rolling median on the value
@@ -126,7 +126,7 @@ while True:
             print('Batt volt error: Median calculation contains bad value.')
             battVolt_median = 0.0
 
-        timeOfLastBattRead = time.now()
+        timeOfLastBattRead = time.time()
 
         time.sleep(2.0) # Just slow the code down here so it isn't constantly checking the time.
 
