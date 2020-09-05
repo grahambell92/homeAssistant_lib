@@ -32,7 +32,7 @@ if True:
     mcp = Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS, miso=MISO, mosi=MOSI)
 
 battVolts = []
-battVolt_median = 0.0
+battVolt_median = 12.0
 
 timeBetweenAlivePosts = 30.0
 timeBetweenBattVoltPosts = 60.0
@@ -63,15 +63,15 @@ while True:
     timeSinceLastBattRead = time.time() - timeOfLastBattRead
     timeSinceLastAlivePost = time.time() - timeOfLastAlivePost
 
-
-    print('Time since last batt post', timeSinceLastBattPost)
-    print('Time since last alive post', timeSinceLastAlivePost)
-    print('Time since last batt read', timeSinceLastBattRead)
+    if False:
+        print('Time since last batt post', timeSinceLastBattPost)
+        print('Time since last alive post', timeSinceLastAlivePost)
+        print('Time since last batt read', timeSinceLastBattRead)
 
     if timeSinceLastBattPost > timeBetweenBattVoltPosts:
         client = connectToBroker()
 
-        if True:
+        try:
             if np.isfinite(battVolt_median):
                 print('Publishing battery voltage to:')
                 print('Topic:', remoteCam_settings["mqttBattVoltPublishTopic"])
@@ -83,16 +83,16 @@ while True:
                 print('Bad battVolt:', battVolt_median)
             print()
 
-        # except:
-        #     brokerIP = remoteCam_settings['mqttBrokerIP']  # "192.168.0.55" #"10.0.0.19"
-        #     print('Failed to post median battery voltage MQTT message to', brokerIP)
+        except:
+            brokerIP = remoteCam_settings['mqttBrokerIP']  # "192.168.0.55" #"10.0.0.19"
+            print('Failed to post median battery voltage MQTT message to', brokerIP)
 
         timeOfLastBattPost = time.time()
 
     if timeSinceLastAlivePost > timeBetweenAlivePosts:
         client = connectToBroker()
 
-        if True:
+        try:
             msg = 'online'
             print('Trying to publish...')
             print('Topic:', remoteCam_settings["mqttAlivePublishTopic"])
@@ -101,9 +101,9 @@ while True:
             print('Done.')
             print()
 
-        # except:
-        #     brokerIP = remoteCam_settings['mqttBrokerIP']  # "192.168.0.55" #"10.0.0.19"
-        #     print('Failed to post alive MQTT message to', brokerIP)
+        except:
+            brokerIP = remoteCam_settings['mqttBrokerIP']  # "192.168.0.55" #"10.0.0.19"
+            print('Failed to post alive MQTT message to', brokerIP)
 
         timeOfLastAlivePost = time.time()
 
@@ -130,10 +130,10 @@ while True:
 
         else:
             print('Batt volt error: Median calculation contains bad value.')
-            battVolt_median = 0.0
+            battVolt_median = 12.0
 
-        print('Batt volt median', battVolt_median)
-        print('Battvolts:', battVolts)
+        # print('Batt volt median', battVolt_median)
+        # print('Battvolts:', battVolts)
 
         timeOfLastBattRead = time.time()
 
