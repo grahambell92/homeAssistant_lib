@@ -31,9 +31,17 @@ if True:
     CS = 17
     mcp = Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS, miso=MISO, mosi=MOSI)
 
-while True:
+    battVolts = []
 
-    tryPostAliveMsg = False
+timeBetweenAlivePosts = 30.0
+timeBetweenBattVoltPosts = 60.0
+timeBetweenBattReads = 3.0
+
+timeOfLastBattPost = time.now() - 100.0
+timeOfLastBattRead = time.now() - 100.0
+timeOfLastAlivePost = time.now() - 100.0
+
+def connectToBroker():
     try:
         # Reconnect to the broker each time prevents the HA server from being unable to find new events.
         # The broker reaches out and connects with the mosquitto server each time.
@@ -45,12 +53,37 @@ while True:
         client.on_message = on_message
         client.connect(brokerIP)
 
-        tryPostAliveMsg = True
-
     except:
         print('Failed to connect to broker IP.')
 
-    if tryPostAliveMsg:
+while True:
+    timeSinceLastBattPost = timeOfLastBattPost - time.now()
+    timeSinceLastBattRead = timeOfLastBattRead - time.now()
+    timeSinceLastAlivePost = timeOfLastAlivePost - time.now()
+
+    if timeSinceLastBattPost > timeBetweenBattVoltPosts:
+        connectToBroker()
+
+        try:
+            if np.isfinite(battVolt_median):
+                print('Publishing battery voltage to:')
+                print('Topic:', remoteCam_settings["mqttBattVoltPublishTopic"])
+                msg = '{:.3f}'.format(battVolt)
+                print('Msg:', msg)
+                client.publish(remoteCam_settings["mqttBattVoltPublishTopic"], msg)
+                print('Done')
+            else:
+                print('Bad battVolt:', battVolt)
+            print()
+
+        except:
+            print('Failed to post median battery voltage MQTT message to', brokerIP)
+
+        timeOfLastBattPost = time.now()
+
+    if timeSinceLastAlivePost > timeBetweenAlivePosts:
+        connectToBroker()
+
         try:
             now = datetime.datetime.now()
             # dd/mm/YY H:M:S
@@ -67,37 +100,37 @@ while True:
         except:
             print('Failed to post alive MQTT message to', brokerIP)
 
-    if tryPostAliveMsg:
-        try:
-            print('Reading adc for battery voltage...')
-            battRead = mcp.read_adc(0)
-            #battVolt = 0.009821428 * battRead + 0.2558928 # for the outdoor camera battery
-            # For the 12 v battery voltage divider with a 3.2 and a 9.9k ohm R2 and R1 combo.
-            battVolt = 0.013052441*battRead + 0.004452565
-            print('Battery voltage:', battVolt)
-            print('Done.')
-            print()
-            if np.isfinite(battVolt):
-                print('Publishing battery voltage to:')
-                print('Topic:', remoteCam_settings["mqttBattVoltPublishTopic"])
-                msg = '{:.3f}'.format(battVolt)
-                print('Msg:', msg)
-                client.publish(remoteCam_settings["mqttBattVoltPublishTopic"], msg)
-                print('Done')
-            else:
-                print('Bad battVolt:', battVolt)
-            print()
+        timeOfLastAlivePost = time.now()
 
-        except:
-            print('Failed to post battery voltage MQTT message to', brokerIP)
+    if timeSinceLastBattRead > timeBetweenBattReads:
+        # Read the battery voltage and do a rolling median on the value
+        print('Reading adc for battery voltage...')
+        battRead = mcp.read_adc(0)
+        # battVolt = 0.009821428 * battRead + 0.2558928 # for the outdoor camera battery
+        # For the 12 v battery voltage divider with a 3.2 and a 9.9k ohm R2 and R1 combo.
+        battVolt = 0.013052441 * battRead + 0.004452565
+        print('Battery voltage:', battVolt)
 
-    # post the alive msg in 50 seconds if message post is successful.
-    if tryPostAliveMsg:
-        time.sleep(50)
+        if np.isfinite(battVolt):
+            battVolts.append(battVolt)
 
-    # if failed to connect, then retry publishing in 10 seconds.
-    if tryPostAliveMsg is False:
-        time.sleep(10)
+        if len(battVolts) > 20:
+            # remove the first value from the list
+            battVolts.pop(0)
+
+        median = np.median(battVolts)
+        if np.isfinite(median):
+            battVolt_median = median
+
+        else:
+            print('Batt volt error: Median calculation contains bad value.')
+            battVolt_median = 0.0
+
+        timeOfLastBattRead = time.now()
+
+        time.sleep(2.0) # Just slow the code down here so it isn't constantly checking the time.
+
+
 
 client.disconnect() #disconnect
 # client.loop_stop() #stop loop
