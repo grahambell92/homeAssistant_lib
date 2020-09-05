@@ -57,9 +57,9 @@ def connectToBroker():
         print('Failed to connect to broker IP.')
 
 while True:
-    timeSinceLastBattPost = timeOfLastBattPost - time.now()
-    timeSinceLastBattRead = timeOfLastBattRead - time.now()
-    timeSinceLastAlivePost = timeOfLastAlivePost - time.now()
+    timeSinceLastBattPost = timeOfLastBattPost - time.time()
+    timeSinceLastBattRead = timeOfLastBattRead - time.time()
+    timeSinceLastAlivePost = timeOfLastAlivePost - time.time()
 
     if timeSinceLastBattPost > timeBetweenBattVoltPosts:
         connectToBroker()
