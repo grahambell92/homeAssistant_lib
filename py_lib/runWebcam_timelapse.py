@@ -92,6 +92,30 @@ class webcam_timelapse():
 
         print('Done.')
 
+    def rsyncToRemote(self, inputPath, outputPath):
+
+        # shouldn't need the passwd because of ssh key installed.
+        print('Trying to rsync to remote...')
+        print('rsync from:', inputPath)
+        print('rsync to:', outputPath)
+        print()
+        # inputFilePath = '~/webcamImages/currentImage.jpg'
+        # outputFilePath = 'homeassistant@10.0.0.19:/home/homeassistant/.homeassistant/www/'
+        # command = 'scp ~/webcamImages/currentImage.jpg homeassistant@10.0.0.19:/home/homeassistant/.homeassistant/www/'
+
+        # remote rsync
+        # rsync -avz rpmpkgs/ root@192.168.0.101:/home/
+
+        command = ' '.join(['rsync', '-avzh', inputPath, outputPath])
+        print('running:', command)
+        exit(0)
+        correct = subprocess.run(command, shell=True)
+
+        # command = ' '.join(['rsync -a --compress', inputFilePath, outputFilePath])
+        # correct = subprocess.run(command, shell=True)
+
+        print('Done.')
+
     def copyTowwwFolder(self, currentImagePath):
 
         # Copy to the www folder for the HomeAssistant Server
@@ -208,6 +232,7 @@ class webcam_timelapse():
                         flipHorz=flipHorz
                         )
 
+
     def archiveImage(self,
                      currentImagePath_HQ=None,
                      remoteCopyLocation_LQ=None,
@@ -255,10 +280,21 @@ class webcam_timelapse():
         if remoteCopyLocation_HQ is not None:
             self.scpToRemote(inputFilePath=currentImagePath_HQ, outputFilePath=remoteCopyLocation_HQ)
 
-        if remoteArchiveFolder is not None:
-            # Also put the image into archive storage on the basestation as well.
-            remoteArchivePath = remoteArchiveFolder + relativeArchivePath
-            self.scpToRemote(inputFilePath=currentImagePath_HQ, outputFilePath=remoteArchivePath)
+
+        if False:
+            if remoteArchiveFolder is not None:
+                # Also put the image into archive storage on the basestation as well.
+                remoteArchivePath = remoteArchiveFolder + relativeArchivePath
+                self.scpToRemote(inputFilePath=currentImagePath_HQ, outputFilePath=remoteArchivePath)
+
+        # Instead of scp via scpToRemote do an rsync with the local to remote camera archive.
+        # This is because if the network drops out, the images are lost. But the local archives are constantly recording.
+        # So instead do rsync to remote copy the latest images to the basestation.
+        if True:
+            if remoteArchiveFolder is not None:
+                self.rsyncToRemote(inputPath=self.archiveFolder, outputPath=remoteArchiveFolder)
+
+
 
     def takeAndArchive(self,
                        sleepDuration=120,

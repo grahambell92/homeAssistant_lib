@@ -32,7 +32,7 @@ if True:
     mcp = Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS, miso=MISO, mosi=MOSI)
 
 battVolts = []
-battVolt_median = 12.0
+battVolt_median = np.nan
 
 timeBetweenAlivePosts = 30.0
 timeBetweenBattVoltPosts = 60.0
@@ -67,6 +67,10 @@ while True:
         print('Time since last batt post', timeSinceLastBattPost)
         print('Time since last alive post', timeSinceLastAlivePost)
         print('Time since last batt read', timeSinceLastBattRead)
+
+    if np.isnan(battVolt_median):
+        timeOfLastBattPost = time.time()
+
 
     if timeSinceLastBattPost > timeBetweenBattVoltPosts:
         client = connectToBroker()
@@ -130,7 +134,7 @@ while True:
 
         else:
             print('Batt volt error: Median calculation contains bad value.')
-            battVolt_median = 12.0
+            battVolt_median = np.nan
 
         # print('Batt volt median', battVolt_median)
         # print('Battvolts:', battVolts)
