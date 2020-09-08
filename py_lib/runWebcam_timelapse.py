@@ -107,8 +107,6 @@ class webcam_timelapse():
         # rsync -avz rpmpkgs/ root@192.168.0.101:/home/
 
         command = ' '.join(['rsync', '-avzh', inputPath, outputPath])
-        print('running:', command)
-        exit(0)
         correct = subprocess.run(command, shell=True)
 
         # command = ' '.join(['rsync -a --compress', inputFilePath, outputFilePath])
