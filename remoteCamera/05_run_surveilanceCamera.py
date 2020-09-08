@@ -28,5 +28,5 @@ webcam.motionSurveilance(
     # quality=remoteCam_settings['imgQuality'],
     flipVert=remoteCam_settings['flipVert'],
     flipHorz=remoteCam_settings['flipHori'],
-    timelapseInterval=60,
+    timelapseInterval=3*60,
 )
