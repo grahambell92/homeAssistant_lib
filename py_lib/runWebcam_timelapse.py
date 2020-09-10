@@ -307,9 +307,9 @@ class webcam_timelapse():
                     self.rsyncToRemote(inputPath=self.archiveFolder, outputPath=remoteArchiveFolder)
                 else:
                     remoteArchiveDayFolder = remoteArchiveFolder + relativeArchiveFolder
-                    print('Rsync from:', currentArchiveFolder)
-                    print('Rsync to:', remoteArchiveDayFolder)
-                    exit(0)
+                    # print('Rsync from:', currentArchiveFolder)
+                    # print('Rsync to:', remoteArchiveDayFolder)
+                    # exit(0)
                     self.rsyncToRemote(inputPath=currentArchiveFolder, outputPath=remoteArchiveDayFolder)
 
 
