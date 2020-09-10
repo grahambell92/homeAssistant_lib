@@ -252,13 +252,14 @@ class webcam_timelapse():
         # Owncloud has been breaking on 0kB sized files.
         # fileSize is in bytes
         fileSize = os.path.getsize(currentImagePath_HQ)
+        print()
         print('Current image file size:', fileSize)
+        print()
         if fileSize < 1000:
             print('current high quality image is < 1kB>?')
             print('Assuming bad image and not posting to archives')
-
             return
-
+        exit(0)
         archiveDayFolder = now.strftime("%j_%d%B%Y")
         cameraFolder = ('{0:02d}_{1}').format(self.cameraNumber, self.cameraName)
         archiveFile = now.strftime('%H-%M-%S.jpg')
@@ -501,12 +502,9 @@ class webcam_timelapse():
                 print('time since last timelapse img: ', (datetime.now() - lastTimeLapseTime).seconds)
                 if (datetime.now() - lastTimeLapseTime).seconds > timelapseInterval:
                     print('Saving timelapse image.')
-                    print()
-                    print(frame.shape)
-                    print(np.sum(frame))
-                    exit(0)
                     cv2.imwrite(filename=currentTimelapse, img=frame)
                     # cv2.imwrite(filename=currentTimelapse, img=thresh)
+
 
                     self.archiveImage(
                         currentImagePath_HQ=currentTimelapse,
