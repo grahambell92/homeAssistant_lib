@@ -251,7 +251,8 @@ class webcam_timelapse():
         # Check that the current image path has some size to it.
         # Owncloud has been breaking on 0kB sized files.
         # fileSize is in bytes
-        fileSize = os.path.getsize("/path/isa_005.mp3")
+        fileSize = os.path.getsize(currentImagePath_HQ)
+        print('Current image file size:', fileSize)
         if fileSize < 1000:
             print('current high quality image is < 1kB>?')
             print('Assuming bad image and not posting to archives')
