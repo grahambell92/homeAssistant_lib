@@ -92,7 +92,7 @@ class webcam_timelapse():
 
         print('Done.')
 
-    def rsyncToRemote(self, inputPath, outputPath):
+    def rsync(self, inputPath, outputPath):
 
         # shouldn't need the passwd because of ssh key installed.
         print('Trying to rsync to remote...')
@@ -259,7 +259,6 @@ class webcam_timelapse():
             print('current high quality image is < 1kB>?')
             print('Assuming bad image and not posting to archives')
             return
-        exit(0)
         archiveDayFolder = now.strftime("%j_%d%B%Y")
         cameraFolder = ('{0:02d}_{1}').format(self.cameraNumber, self.cameraName)
         archiveFile = now.strftime('%H-%M-%S.jpg')
@@ -277,7 +276,9 @@ class webcam_timelapse():
 
         # Create the directory if it doesnt exist
         os.makedirs(self.archiveFolder, exist_ok=True)
-        shutil.copy(currentImagePath_HQ, self.currentArchivePath)
+        # shutil.copy(currentImagePath_HQ, self.currentArchivePath)
+        self.rsync(inputPath=currentImagePath_HQ, outputPath=self.currentArchivePath)
+
         print('Archived image:{}'.format(self.currentArchivePath))
 
         # Move the image via secure copy (scp) to the home assistant www folder on the main rpi.
@@ -305,13 +306,13 @@ class webcam_timelapse():
         if True:
             if remoteArchiveFolder is not None:
                 if syncAllDays is True:
-                    self.rsyncToRemote(inputPath=self.archiveFolder, outputPath=remoteArchiveFolder)
+                    self.rsync(inputPath=self.archiveFolder, outputPath=remoteArchiveFolder)
                 else:
                     remoteArchiveDayFolder = remoteArchiveFolder + relativeArchiveFolder
                     # print('Rsync from:', currentArchiveFolder)
                     # print('Rsync to:', remoteArchiveDayFolder)
                     # exit(0)
-                    self.rsyncToRemote(inputPath=currentArchiveFolder, outputPath=remoteArchiveDayFolder)
+                    self.rsync(inputPath=currentArchiveFolder, outputPath=remoteArchiveDayFolder)
 
 
     def takeAndArchive(self,
@@ -502,18 +503,27 @@ class webcam_timelapse():
                 print('time since last timelapse img: ', (datetime.now() - lastTimeLapseTime).seconds)
                 if (datetime.now() - lastTimeLapseTime).seconds > timelapseInterval:
                     print('Saving timelapse image.')
-                    cv2.imwrite(filename=currentTimelapse, img=frame)
+                    writeSuccess = cv2.imwrite(filename=currentTimelapse, img=frame)
+                    # Just wait half a second to finish writing the buffer.
+                    # Had several instances of 0b files.
+                    time.sleep(0.2)
+
                     # cv2.imwrite(filename=currentTimelapse, img=thresh)
+                    if writeSuccess:
+                        print('Successfully saved:', currentTimelapse)
+                        self.archiveImage(
+                            currentImagePath_HQ=currentTimelapse,
+                            remoteCopyLocation_LQ=remoteCopyLocation_LQ,
+                            remoteCopyLocation_HQ=remoteCopyLocation_HQ,
+                            remoteArchiveFolder=remoteArchiveFolder,
+                        )
+                        lastTimeLapseTime = datetime.now()
+                        print('Done.')
+                        print()
+                    else:
+                        print('Failed to save:', currentTimelapse)
+                        print()
 
-
-                    self.archiveImage(
-                        currentImagePath_HQ=currentTimelapse,
-                        remoteCopyLocation_LQ=remoteCopyLocation_LQ,
-                        remoteCopyLocation_HQ=remoteCopyLocation_HQ,
-                        remoteArchiveFolder=remoteArchiveFolder,
-                    )
-                    lastTimeLapseTime = datetime.now()
-                    print('Done.')
 
             # check to see if the frames should be displayed to screen
             if False:
