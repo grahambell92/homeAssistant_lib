@@ -236,6 +236,7 @@ class webcam_timelapse():
                      remoteCopyLocation_LQ=None,
                      remoteCopyLocation_HQ=None,
                      remoteArchiveFolder=None,
+                     syncAllDays=False
                      ):
         # day of year, date in human readable form/camera/time_camera.png
         # The format is: 312_24April2020/01_avenue/12-23-21_avenue.png
@@ -246,6 +247,16 @@ class webcam_timelapse():
         # date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
         if currentImagePath_HQ is None:
             currentImagePath_HQ = self.currentImagePath_HQ
+
+        # Check that the current image path has some size to it.
+        # Owncloud has been breaking on 0kB sized files.
+        # fileSize is in bytes
+        fileSize = os.path.getsize("/path/isa_005.mp3")
+        if fileSize < 1000:
+            print('current high quality image is < 1kB>?')
+            print('Assuming bad image and not posting to archives')
+
+            return
 
         archiveDayFolder = now.strftime("%j_%d%B%Y")
         cameraFolder = ('{0:02d}_{1}').format(self.cameraNumber, self.cameraName)
@@ -288,10 +299,17 @@ class webcam_timelapse():
         # Instead of scp via scpToRemote do an rsync with the local to remote camera archive.
         # This is because if the network drops out, the images are lost. But the local archives are constantly recording.
         # So instead do rsync to remote copy the latest images to the basestation.
+        # Changed to do just the current day rsync so that I can delete previous days from the basestation.
         if True:
             if remoteArchiveFolder is not None:
-                self.rsyncToRemote(inputPath=self.archiveFolder, outputPath=remoteArchiveFolder)
-
+                if syncAllDays is True:
+                    self.rsyncToRemote(inputPath=self.archiveFolder, outputPath=remoteArchiveFolder)
+                else:
+                    remoteArchiveDayFolder = remoteArchiveFolder + archiveDayFolder
+                    print('Rsync from:', currentArchiveFolder)
+                    print('Rsync to:', remoteArchiveDayFolder)
+                    exit(0)
+                    self.rsyncToRemote(inputPath=currentArchiveFolder, outputPath=remoteArchiveDayFolder)
 
 
     def takeAndArchive(self,
