@@ -92,7 +92,7 @@ class webcam_timelapse():
 
         print('Done.')
 
-    def rsync(self, inputPath, outputPath):
+    def rsync(self, inputPath, outputPath, skipSmallFiles=False):
 
         # shouldn't need the passwd because of ssh key installed.
         print('Trying to rsync to remote...')
@@ -107,6 +107,8 @@ class webcam_timelapse():
         # rsync -avz rpmpkgs/ root@192.168.0.101:/home/
 
         command = ' '.join(['rsync', '-avzh', inputPath, outputPath])
+        if skipSmallFiles is True:
+            command += ' --min-size=1k'
         correct = subprocess.run(command, shell=True)
 
         # command = ' '.join(['rsync -a --compress', inputFilePath, outputFilePath])
@@ -306,13 +308,15 @@ class webcam_timelapse():
         if True:
             if remoteArchiveFolder is not None:
                 if syncAllDays is True:
-                    self.rsync(inputPath=self.archiveFolder, outputPath=remoteArchiveFolder)
+                    self.rsync(inputPath=self.archiveFolder, outputPath=remoteArchiveFolder,
+                               skipSmallFiles=True)
                 else:
                     remoteArchiveDayFolder = remoteArchiveFolder + relativeArchiveFolder
                     # print('Rsync from:', currentArchiveFolder)
                     # print('Rsync to:', remoteArchiveDayFolder)
                     # exit(0)
-                    self.rsync(inputPath=currentArchiveFolder, outputPath=remoteArchiveDayFolder)
+                    self.rsync(inputPath=currentArchiveFolder, outputPath=remoteArchiveDayFolder,
+                               skipSmallFiles=True)
 
 
     def takeAndArchive(self,
