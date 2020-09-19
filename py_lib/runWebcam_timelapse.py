@@ -105,7 +105,7 @@ class webcam_timelapse():
         # command = 'scp ~/webcamImages/currentImage.jpg homeassistant@10.0.0.19:/home/homeassistant/.homeassistant/www/'
 
         if True:
-            outputDest, outputFile = os.path.split(outputFilePath)
+            outputDest, outputFile = os.path.split(outputPath)
             remoteHost, outputFolder = outputDest.split(':')
             command = ' '.join(['ssh', remoteHost, "'mkdir -p {:}'".format(outputFolder)])
             print(command)
