@@ -118,7 +118,7 @@ class webcam_timelapse():
         # remote rsync
         # rsync -avz rpmpkgs/ root@192.168.0.101:/home/
 
-        command = ' '.join(['rsync', '-avzh', inputPath, outputPath])
+        command = ' '.join(['rsync', '-avzh', '--timeout=10', inputPath, outputPath, '&'])
         if skipSmallFiles is True:
             command += ' --min-size=1k'
         correct = subprocess.run(command, shell=True)
