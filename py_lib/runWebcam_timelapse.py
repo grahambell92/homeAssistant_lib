@@ -105,9 +105,14 @@ class webcam_timelapse():
         # command = 'scp ~/webcamImages/currentImage.jpg homeassistant@10.0.0.19:/home/homeassistant/.homeassistant/www/'
 
         if True:
-            outputDest, outputFile = os.path.split(outputPath)
-            remoteHost, outputFolder = outputDest.split(':')
-            command = ' '.join(['ssh', remoteHost, "'mkdir -p {:}'".format(outputFolder)])
+            try:
+                # if it's on a remote computer then need to do an ssh.
+                outputDest, outputFile = os.path.split(outputPath)
+                remoteHost, outputFolder = outputDest.split(':')
+                command = ' '.join(['ssh', remoteHost, "'mkdir -p {:}'".format(outputFolder)])
+            except:
+                # no need for the ssh, just the mkdir
+                command = 'mkdir -p {:}'.format(outputPath)
             print(command)
             exit(0)
             correct = subprocess.run(command, shell=True)
@@ -288,7 +293,9 @@ class webcam_timelapse():
         # Create the directory if it doesnt exist
         os.makedirs(self.archiveFolder, exist_ok=True)
         # shutil.copy(currentImagePath_HQ, self.currentArchivePath)
-        self.rsync(inputPath=currentImagePath_HQ, outputPath=self.currentArchivePath)
+        # self.rsync(inputPath=currentImagePath_HQ, outputPath=self.currentArchivePath)
+        command = ' '.join(['scp', currentImagePath_HQ, self.currentArchivePath])
+        correct = subprocess.run(command, shell=True)
 
         print('Archived image:{}'.format(self.currentArchivePath))
 
