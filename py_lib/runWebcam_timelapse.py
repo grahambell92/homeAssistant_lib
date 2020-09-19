@@ -4,6 +4,7 @@ import subprocess
 from datetime import datetime
 import itertools
 import os
+import os.path
 import shutil
 import io
 import time
@@ -103,10 +104,18 @@ class webcam_timelapse():
         # outputFilePath = 'homeassistant@10.0.0.19:/home/homeassistant/.homeassistant/www/'
         # command = 'scp ~/webcamImages/currentImage.jpg homeassistant@10.0.0.19:/home/homeassistant/.homeassistant/www/'
 
+        if True:
+            outputDest, outputFile = os.path.split(outputFilePath)
+            remoteHost, outputFolder = outputDest.split(':')
+            command = ' '.join(['ssh', remoteHost, "'mkdir -p {:}'".format(outputFolder)])
+            print(command)
+            exit(0)
+            correct = subprocess.run(command, shell=True)
+
         # remote rsync
         # rsync -avz rpmpkgs/ root@192.168.0.101:/home/
 
-        command = ' '.join(['rsync', '-aRvzh', inputPath, outputPath])
+        command = ' '.join(['rsync', '-avzh', inputPath, outputPath])
         if skipSmallFiles is True:
             command += ' --min-size=1k'
         correct = subprocess.run(command, shell=True)
