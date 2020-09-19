@@ -113,8 +113,6 @@ class webcam_timelapse():
             except:
                 # no need for the ssh, just the mkdir
                 command = 'mkdir -p {:}'.format(outputPath)
-            print(command)
-            exit(0)
             correct = subprocess.run(command, shell=True)
 
         # remote rsync
