@@ -4,3 +4,5 @@
 /py_stats/figs/
 /py_stats/rollingAvgRain/
 /py_stats/figs/
+/py_stats/bomData/
+remoteCamera/rpiOnlineRecord.csv
