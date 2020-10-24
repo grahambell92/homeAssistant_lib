@@ -21,7 +21,7 @@ def have_internet():
 
 if __name__ == '__main__':
 
-    timeBetweenAlivePosts = 30.0
+    timeBetweenAlivePosts = 60.0
 
     timeOfLastAlivePost = time.time() - 2*timeBetweenAlivePosts
     csvFile = 'rpiOnlineRecord.csv'
