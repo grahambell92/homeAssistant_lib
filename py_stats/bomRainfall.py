@@ -30,11 +30,11 @@ stationProductPairs = (
     ('baynton', 'rainfall'),
     ('lancefield', 'rainfall'),
     ('eppalockReservoir', 'rainfall'),
-    ('daylesford', 'rainfall'),
+    ('melbourneAirport', 'rainfall'),
+    # ('daylesford', 'rainfall'), # Daylesford data isn't that good.
 )
 
 rainDf = whf.assembleDataframe(stationProductPairs)
-
 
 
 figureFolder = './figs/rainfall/'
@@ -87,35 +87,36 @@ if True:
         # yTicks = np.arange(len(rainDf.columns))
     # plt.yticks(yTicks[:-1] + 0.5)
     fig.tight_layout()
-    fname = figureFolder + '05_availableData.png'
+    fname = figureFolder + '00_availableData.png'
     fig.savefig(fname=fname, dpi=200)
-    exit(0)
-
-
 
 # compare medians
 if True:
     fig = plt.figure(figsize=figSize)
     ax = fig.add_subplot(1, 1, 1)
+    # Stack 3 years of medians to generate continous looking time series
+    rain_median_stacked = pd.concat([rain_median, rain_median, rain_median])
+    dateRange_fullDays = pd.date_range(start='1/1/2018', periods=len(rain_median_stacked), freq='D')
     for column in rain_median.columns:
-        ax.plot(30.0*rain_median[column], label='{0}'.format(column))
+        ax.plot(dateRange_fullDays, 30.0*rain_median_stacked[column], label='{0}'.format(column))
     ax.set_ylabel('Median rainfall, 30 day cumulative (mm)')
-
-    xticks = pd.date_range(start='1/1/2018', periods=12, freq='MS')
-    ax.set_xticks(xticks.dayofyear, )
-    ax.set_xticklabels(xticks.month_name(), rotation=45)
+    # xticks = pd.date_range(start='1/1/2018', periods=12*3, freq='MS')
+    dateRange_monthsOnly = pd.date_range(start=dateRange_fullDays[0], end=dateRange_fullDays[-1], freq='MS')
+    ax.set_xticks(dateRange_monthsOnly)
+    ax.set_xticklabels(dateRange_monthsOnly.month_name(), rotation=45)
     ax.spines['right'].set_visible(False)
     ax.spines['top'].set_visible(False)
+
+    ax.set_xlim(pd.Timestamp('2018-11-01'), pd.Timestamp('2020-02-01'))
 
     ax.yaxis.grid()
     ax.legend()
     fig.tight_layout()
-    fname = figureFolder+'04_medianRainfall.png'
+    fname = figureFolder+'01_medianRainfall.png'
     fig.savefig(fname=fname,dpi=200)
     plt.close(fig)
-exit(0)
 # Look at median and variance
-if False:
+if True:
     fig = plt.figure(figsize=figSize)
     ax = fig.add_subplot(1, 1, 1)
     ax2 = ax.twinx()
@@ -138,31 +139,63 @@ if False:
     ax.yaxis.grid()
     # ax.legend()
     fig.tight_layout()
-    fname = figureFolder+'03_Redesdale_medianStdRainfall.png'
+    fname = figureFolder+'02_Redesdale_medianStdRainfall.png'
     fig.savefig(fname=fname,dpi=200)
     plt.close(fig)
 
 # Bar plot of total rainfall per year
-if False:
+if True:
     fig = plt.figure(figsize=figSize)
     ax = fig.add_subplot(1, 1, 1)
+
     rain_median_annual = rain_median.sum().sort_values()
+    xticks = []
     for index, row in enumerate(rain_median_annual.iteritems()):
         columns, value = row
+        print(columns, value)
         ax.bar(index, value)
         ax.text(index, value + 5.0, '{:0.0f}'.format(value),
                 color='blue', fontweight='bold', ha='center',)
+        xticks.append(index)
 
-    ax.set_xticks(np.arange(len(np.array(rain_median.columns))))
-    ax.set_xticklabels(np.array(rain_median.columns), rotation=45)
+    ax.set_xticks(xticks)
+    ax.set_xticklabels(list(rain_median_annual.index), rotation=45, ha='right')
     ax.spines['right'].set_visible(False)
     ax.spines['top'].set_visible(False)
     ax.spines['left'].set_visible(False)
     ax.set_ylabel('Annual rainfall (mm)')
     fig.tight_layout()
-    fname = figureFolder + '05_annualRainfall_bar.png'
+    fname = figureFolder + '03_annualRainfall_bar.png'
     fig.savefig(fname=fname, dpi=200)
     plt.close(fig)
+
+# Do correlation between locations for rainfall
+if False:
+    # ('redesdale', 'rainfall'),
+    # ('malmsbury_reservoir', 'rainfall'),
+    # ('lauriston_reservoir', 'rainfall'),
+    # ('kyneton', 'rainfall'),
+    # # ('castlemainePrison', 'rainfall'),
+    # # ('leongatha', 'rainfall'),
+    # ('bendigo', 'rainfall'),
+    # ('newham (cobaw)', 'rainfall'),
+    # ('baynton', 'rainfall'),
+    # ('lancefield', 'rainfall'),
+    # ('eppalockReservoir', 'rainfall'),
+    # ('daylesford', 'rainfall'),
+    corrPairs = [
+        ('redesdale_rainfall', 'malmsbury_reservoir_rainfall'),
+        ('redesdale_rainfall', 'lauriston_reservoir_rainfall'),
+        ('redesdale_rainfall', 'kyneton_rainfall'),
+        ('malmsbury_reservoir_rainfall', 'bendigo_rainfall'),
+        ('eppalockReservoir_rainfall', 'bendigo_rainfall'),
+    ]
+    for place1, place2 in corrPairs:
+        plt.plot(rainDf[place1], rainDf[place2], ls='None',
+                 marker='.', alpha=0.2)
+        plt.title(place1 + ':' + place2)
+        plt.show()
+    exit(0)
 
 # Intensity of rain
 if False:
@@ -176,97 +209,109 @@ if False:
     plt.show()
     exit(0)
 
-# Plot history trace over median
-if False:
-    historyLengths = np.array([24, 36, 60, 120, 240])*30.0
+if True:
+    locations = [
+        'redesdale_rainfall',
+        'kyneton_rainfall',
+        # 'daylesford_rainfall',
+        'bendigo_rainfall',
+        'malmsbury_reservoir_rainfall',
+        'lauriston_reservoir_rainfall',
+        'eppalockReservoir_rainfall',
+        'melbourneAirport_rainfall',
+    ]
+    for location in locations:
+        # Plot history trace over median
+        plotFolder = figureFolder + location + '/'
+        os.makedirs(plotFolder, exist_ok=True)
 
-    figScale = 4.0
-    figsize = (2.0 * figScale, figScale)
-    for column in ['redesdale_rainfall']: #rain_median.columns:
-        for length in historyLengths:
-            minDate = pd.Timestamp.today() - pd.Timedelta(length, unit='D')
+        if True:
+            historyLengths = np.array([1, 3, 5, 10, 30, 50, 150])*365
+
+            figScale = 4.0
+            figsize = (2.0 * figScale, figScale)
+            for length in historyLengths:
+                minDate = pd.Timestamp.today() - pd.Timedelta(length, unit='D')
+                maxDate = pd.Timestamp.today()
+                plotDateRange = pd.date_range(start=minDate, end=maxDate, freq='D').normalize()
+                plotDayOfYear = plotDateRange.dayofyear
+
+                fig = plt.figure(figsize=figsize)
+                ax = fig.add_subplot(1, 1, 1)
+
+                ax.plot(plotDateRange, np.array(rain_median.loc[plotDayOfYear, location])*30.0, label='{0} median'.format(location))
+
+                ax.plot(rainDf_rolling_density.reindex(plotDateRange)[location]*30.0, label='{0} recent'.format(location))
+
+                # plot the seasons
+                plotSeasonBands(minDate=minDate, maxDate=maxDate, ax=ax)
+
+                # Plot 90% CI
+                CImax = 1.64*np.array(rain_std.loc[plotDayOfYear, location]) + np.array(rain_median.loc[plotDayOfYear, location])
+                CImin = -1.64*np.array(rain_std.loc[plotDayOfYear, location]) + np.array(rain_median.loc[plotDayOfYear, location])
+                ax.fill_between(plotDateRange, CImin*30.0, CImax*30.0, facecolor='0.2', alpha=0.3)
+                ax.set_ylim(bottom=0.0)
+                # ax.set_ylabel('Daily Rainfall (mm)')
+                ax.set_ylabel('Sum of 30 Day Rainfall (mm)')
+
+                ax.legend()
+                fname='{0}04_{2}_currentHistory_{1:.0f}year.png'.format(plotFolder, length/365, location)
+                fig.savefig(fname=fname, dpi=200)
+                plt.close(fig)
+
+        # Plot the rain anomaly away from median.
+        if True:
+            figScale = 4.0
+            figsize = (2.0* figScale, figScale)
+
+            minDate = rainDf_rolling_density.index[0]
             maxDate = pd.Timestamp.today()
             plotDateRange = pd.date_range(start=minDate, end=maxDate, freq='D').normalize()
             plotDayOfYear = plotDateRange.dayofyear
 
-            fig = plt.figure(figsize=figsize)
-            ax = fig.add_subplot(1, 1, 1)
+            # anomaly = rainDf_rolling.loc[plotDateRange, column] - np.array(rain_median.loc[plotDayOfYear, column])
+            anomaly = rainDf_rolling_density.reindex(plotDateRange)[location] - np.array(rain_median.loc[plotDayOfYear, location])
 
-            ax.plot(plotDateRange, np.array(rain_median.loc[plotDayOfYear, column])*30.0, label='{0} median'.format(column))
+            anomalyPercent = (anomaly/np.array(rain_median.loc[plotDayOfYear, location]))*100.0 - 100.0
 
-            # ax.plot(rainDf_rolling.loc[plotDateRange, column]*30.0, label='{0} recent'.format(column))
-            ax.plot(rainDf_rolling_density.reindex(plotDateRange)[column]*30.0, label='{0} recent'.format(column))
+            if True:
+                fig = plt.figure(figsize=figsize)
+                ax = fig.add_subplot(1, 1, 1)
 
-            # plot the seasons
-            plotSeasonBands(minDate=minDate, maxDate=maxDate, ax=ax)
+                ax.plot(anomalyPercent.rolling(window=3*365, min_periods=365).median())
+                ax.set_title(location + ' daily rainfall anomaly')
+                # ax.set_ylabel('Rainfall anomaly (mm) \n (3y rolling median filter)')
+                ax.set_ylabel('Rainfall anomaly (% from median) \n (3y rolling median filter applied)')
 
-            # Plot 90% CI
-            CImax = 1.64*np.array(rain_std.loc[plotDayOfYear, column]) + np.array(rain_median.loc[plotDayOfYear, column])
-            CImin = -1.64*np.array(rain_std.loc[plotDayOfYear, column]) + np.array(rain_median.loc[plotDayOfYear, column])
-            ax.fill_between(plotDateRange, CImin*30.0, CImax*30.0, facecolor='0.2', alpha=0.3)
-            ax.set_ylim(bottom=0.0)
-            # ax.set_ylabel('Daily Rainfall (mm)')
-            ax.set_ylabel('Sum of 30 Day Rainfall (mm)')
-
-            ax.legend()
-            fname='{0}00_{2}_currentHistory_{1}months.png'.format(figureFolder, length, column)
-            fig.savefig(fname=fname, dpi=200)
-            plt.close(fig)
-
-# Plot the rain anomaly away from median.
-if True:
-    figScale = 3.0
-    figsize = (2.0* figScale, figScale)
-
-    for column in ['redesdale_rainfall']: #rainDf.columns:
-        minDate = rainDf_rolling_density.index[0]
-        maxDate = pd.Timestamp.today()
-        plotDateRange = pd.date_range(start=minDate, end=maxDate, freq='D').normalize()
-        plotDayOfYear = plotDateRange.dayofyear
-
-        # anomaly = rainDf_rolling.loc[plotDateRange, column] - np.array(rain_median.loc[plotDayOfYear, column])
-        anomaly = rainDf_rolling_density.reindex(plotDateRange)[column] - np.array(rain_median.loc[plotDayOfYear, column])
-
-        anomalyPercent = (anomaly/np.array(rain_median.loc[plotDayOfYear, column]))*100.0
-
-        if True:
-            fig = plt.figure(figsize=figsize)
-            ax = fig.add_subplot(1, 1, 1)
-
-            ax.plot(anomaly.rolling(window=3*365, min_periods=365).median())
-            ax.set_title(column + ' daily rainfall anomaly')
-            # ax.set_ylabel('Rainfall anomaly (mm) \n (3y rolling median filter)')
-            ax.set_ylabel('Rainfall anomaly (% from median) \n (3y rolling median filter applied)')
-
-            # ax.set_ylim(bottom=-50, top=50)
-            ax.hlines(0.0, xmin=minDate, xmax=maxDate)
-            plotSeasonBands(minDate=minDate, maxDate=maxDate, ax=ax)
-            fname = '{0}01_rainfallAnomalyTrace_{1}.png'.format(figureFolder, column)
-            fig.savefig(fname=fname)
-            plt.close(fig)
-            # copyTowwwFolder(currentImagePath=fname)
+                # ax.set_ylim(bottom=-50, top=50)
+                ax.hlines(0.0, xmin=minDate, xmax=maxDate)
+                plotSeasonBands(minDate=minDate, maxDate=maxDate, ax=ax)
+                fname = '{0}05_rainfallAnomalyTrace_{1}.png'.format(figureFolder, location)
+                fig.savefig(fname=fname)
+                plt.close(fig)
+                # copyTowwwFolder(currentImagePath=fname)
 
 
-        if True:
+            if True:
+                for cumWindow in np.array([1, 3, 5, 10])*365:
+                    fig = plt.figure(figsize=figsize)
+                    ax = fig.add_subplot(1, 1, 1)
 
-            fig = plt.figure(figsize=figsize)
-            ax = fig.add_subplot(1, 1, 1)
+                    excessDeficit = anomaly.rolling(window=cumWindow, min_periods=30).sum()
+                    cumulativeMedian = rain_median.loc[plotDayOfYear, location].rolling(window=cumWindow, min_periods=30).sum()
 
-            window = 8*365
-            # excessDeficit = anomaly.rolling(window=window, min_periods=30).sum()/window*30
-            excessDeficit = anomaly.rolling(window=window, min_periods=30).sum()/window #*30
-            cumulativeMedian = rain_median.loc[plotDayOfYear, column].rolling(window=window, min_periods=30).sum()/window
-            excessDeficitPercent = ((excessDeficit/np.array(cumulativeMedian))+1)*100.0
-            excessDeficit = excessDeficitPercent.rolling(window=30*12,min_periods=10).median()
-            ax.plot(excessDeficit)
-            ax.set_title(column + ' rainfall excess/deficit in 30 days')
-            ax.hlines(100.0, xmin=minDate, xmax=maxDate)
-            # ax.set_ylim(bottom=-50, top=50)
-            ax.set_ylabel('Cumulative rainfall (%)')
+                    excessDeficitPercent = (excessDeficit/np.array(cumulativeMedian))*100.0
+                    excessDeficitPercent_smooth = excessDeficitPercent.rolling(window=30*12,min_periods=10).median()
 
-            plotSeasonBands(minDate=minDate, maxDate=maxDate, ax=ax)
+                    ax.plot(excessDeficitPercent_smooth)
+                    ax.set_title(location + ' rainfall excess/deficit')
+                    ax.hlines(0.0, xmin=minDate, xmax=maxDate)
+                    # ax.set_ylim(bottom=-50, top=50)
+                    ax.set_ylabel('{0:.0f} Year Cumulative rainfall (%)'.format(cumWindow/365))
 
-            fname = '{0}02_rainfallDeficitTrace_{1}.png'.format(figureFolder, column)
-            fig.savefig(fname=fname)
-            plt.close(fig)
-            # copyTowwwFolder(currentImagePath=fname)
+                    plotSeasonBands(minDate=minDate, maxDate=maxDate, ax=ax)
+
+                    fname = '{0}06_{1}_rainfallDeficitTrace_{2:.0f}yearCum.png'.format(plotFolder, location, cumWindow/365)
+                    fig.savefig(fname=fname, dpi=200)
+                    plt.close(fig)
+                    # copyTowwwFolder(currentImagePath=fname)

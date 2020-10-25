@@ -45,6 +45,8 @@ stationIDs = {
     'daylesford': '088020',
     'ballarat': '089002',
     'macedonForestry': '087036',
+    'melbourneAirport': '086282',
+    'lavertonRAAF': '087031'
 }
 
 stationIDToName = {v: k for k, v in stationIDs.items()}

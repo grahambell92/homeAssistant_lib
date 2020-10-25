@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import weatherHistoryFuncs as whf
+import os
 
 stationProductPairs = (
     ('redesdale', 'rainfall'),
@@ -9,16 +10,19 @@ stationProductPairs = (
     ('redesdale', 'tmin'),
     ('redesdale', 'solarExp'),
 
-    # ('lakeEildon', 'rainfall'),
-    # ('lakeEildon', 'tmax'),
-    # ('lakeEildon', 'tmin'),
-    # ('lakeEildon', 'solarExp'),
+    ('malmsbury_reservoir', 'solarExp'),
+    ('malmsbury_reservoir', 'rainfall'),
+
+    ('lauriston_reservoir', 'rainfall'),
 
     ('castlemainePrison', 'tmax'),
 )
 
 dataDf = whf.assembleDataframe(stationProductPairs)
 print(dataDf)
+
+figureFolder = './figs/correlations/'
+os.makedirs(figureFolder, exist_ok=True)
 
 
 if False:
@@ -94,6 +98,72 @@ if False:
     fromDate = pd.to_datetime('1950-1-1')
     plt.xlim(left=fromDate)
     plt.legend()
+    plt.show()
+    exit(0)
+
+if True:
+    fig = plt.figure()
+    ax = fig.add_subplot(1, 1, 1)
+    ax.plot(dataDf['redesdale_solarExp'], dataDf['malmsbury_reservoir_solarExp'], ls='None', marker='.',
+            markeredgecolor='None', alpha=0.3)
+    ax.plot([0, 35], [0, 35], color='k')
+    ax.set_xlabel('Redesdale Solar Exposure (MJ/day)')
+    ax.set_ylabel('Malmsbury Reservoir Solar Exposure (MJ/day)')
+    ax.set_aspect('equal')
+
+    fig.savefig(figureFolder + '00_redesdaleSolar-malmsburyReservoirSolar.png', dpi=200)
+    plt.close(fig)
+
+
+
+
+    integrationWindow = 30  # days
+    redesdaleRolling = dataDf['redesdale_rainfall'].rolling(window=integrationWindow,
+                                            min_periods=integrationWindow).sum()
+    malmsburyRolling = dataDf['malmsbury_reservoir_rainfall'].rolling(window=integrationWindow,
+                                                            min_periods=integrationWindow).sum()
+
+    lauristonRolling = dataDf['lauriston_reservoir_rainfall'].rolling(window=integrationWindow,
+                                                            min_periods=integrationWindow).sum()
+
+    fig = plt.figure()
+    ax = fig.add_subplot(1, 1, 1)
+    ax.plot(redesdaleRolling, malmsburyRolling, ls='None', marker='.', alpha=0.1, markeredgecolor='None',)
+    ax.plot([0, 250], [0, 250], color='k')
+    ax.set_xlabel('Redesdale 30 cum. rainfall (mm)')
+    ax.set_ylabel('Malmsbury Reservoir 30 cum. rainfall (mm)')
+
+    ax.set_aspect('equal')
+
+    fig.savefig(figureFolder + '00_redesdaleRainfall-malmsburyReservoirRainfall.png', dpi=200)
+
+    plt.close(fig)
+
+
+
+    fig = plt.figure()
+    ax = fig.add_subplot(1, 1, 1)
+    ax.plot(lauristonRolling, malmsburyRolling, ls='None', marker='.', alpha=0.1, markeredgecolor='None',)
+    ax.plot([0, 250], [0, 250], color='k')
+    ax.set_xlabel('Lauriston Reservoir 30 cum. rainfall (mm)')
+    ax.set_ylabel('Malmsbury Reservoir 30 cum. rainfall (mm)')
+
+    ax.set_aspect('equal')
+
+    fig.savefig(figureFolder + '00_LauristonReservoirRainfall-malmsburyReservoirRainfall.png', dpi=200)
+
+    plt.close(fig)
+
+
+    exit(0)
+    fig = plt.figure()
+    ax = fig.add_subplot(1, 1, 1)
+    ax.plot(dataDf['redesdale_solarExp'], dataDf['malmsbury_reservoir_solarExp'], ls='None', marker='.')
+
+    ax.set_xlabel('redesdale solarexp')
+    ax.set_ylabel('malmsbury solarexp')
+    fig.savefig(figureFolder + '00_redesdaleSolar-malmsburyReservoirSolar.png', dpi=200)
+
     plt.show()
     exit(0)
 
