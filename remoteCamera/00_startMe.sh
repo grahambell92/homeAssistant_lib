@@ -19,7 +19,7 @@ echo 'Started img aquisition'
 /usr/bin/tmux new-session -d -s mqtt '/usr/bin/python3 03_mqtt_alivePublish.py'
 echo 'Started mqtt publisher'
 
-echo 'Started running log checker' # er
-/usr/bin/tmux new-session -d -s rpiOnline '/usr/bin/python3 06_run_piOnlineChecker.py'
+#echo 'Started running log checker' # er
+#/usr/bin/tmux new-session -d -s rpiOnline '/usr/bin/python3 06_run_piOnlineChecker.py'
 
 # tmux new-session -d -s gifBuilder 'python3 04_run_rpiZero_buildTimelapseGif.py' &
