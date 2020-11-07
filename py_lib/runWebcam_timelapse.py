@@ -33,10 +33,10 @@ class webcam_timelapse():
         self.daysToKeep = 3
         self.liveViewQuality = 20
 
-    def fireCamera(self, filePath, quality=3, flipVert=False, flipHorz=False):
+    def fireCamera(self, filePath, quality=3, flipVert=False, flipHorz=False, resolution=(3280, 2464)):
         print('Firing camera...')
         with picamera.PiCamera() as camera:
-            camera.resolution = (3280, 2464) # (1024, 768)
+            camera.resolution = resolution # (1024, 768)
             camera.vflip = flipVert
             camera.hflip = flipHorz
             camera.annotate_background = picamera.Color('black')
@@ -330,17 +330,21 @@ class webcam_timelapse():
 
 
     def takeAndArchive(self,
-                       sleepDuration=120,
                        remoteCopyLocation_LQ=None,
                        remoteCopyLocation_HQ=None,
                        remoteArchiveFolder=None,
+                       cameraResolution=(3280, 2464),
+                       quality=15,
+                       flipVert=False,
+                       flipHorz=False,
                        ):
 
         # Take an image for the current image
         self.fireCamera(filePath=self.currentImagePath_HQ,
                         quality=quality,
                         flipVert=flipVert,
-                        flipHorz=flipHorz
+                        flipHorz=flipHorz,
+                        resolution=cameraResolution
                         )
 
         self.archiveImage(
@@ -350,7 +354,6 @@ class webcam_timelapse():
             remoteArchiveFolder=remoteArchiveFolder,
         )
 
-        time.sleep(sleepDuration)
 
 
     def removeOldDayOfYearFolders(self):
@@ -382,7 +385,7 @@ class webcam_timelapse():
                           timelapseInterval=240,
                           removeOldData=False,
                           cameraFPS=24,
-                          cameraResolution= (1024, 768),
+                          cameraResolution= (3280, 2464),
                           delayBetweenMotionEvents=3.0,
                           minFramesToTrigMotion=3,
                           motionThreshold=2,
@@ -393,13 +396,14 @@ class webcam_timelapse():
 
         # initialize the camera and grab a reference to the raw camera capture
         camera = picamera.PiCamera()
+        camera.resolution = (3280, 2464) # (1024, 768)
         camera.framerate = cameraFPS
         camera.vflip = flipVert
         camera.hflip = flipHorz
 
         # Create the in-memory stream
         stream = io.BytesIO()
-        camera.start_preview()
+        # camera.start_preview()
 
         currentMotionImage = 'currentMotion.jpg'
         currentTimelapse = 'currentTimelapse.jpg'

@@ -21,12 +21,26 @@ motionComparionImg = webcam.archiveBaseFolder + 'motionPrev.jpg'
 os.makedirs(webcam.archiveBaseFolder, exist_ok=True)
 
 
-webcam.motionSurveilance(
-    remoteCopyLocation_LQ=remoteCam_settings['haLiveImgPath_LQ'],
-    remoteCopyLocation_HQ=remoteCam_settings['haLiveImgPath_HQ'],
-    remoteArchiveFolder=remoteCam_settings['haArchiveSCPFolderPath'],
-    quality=remoteCam_settings['imgQuality'],
-    flipVert=remoteCam_settings['flipVert'],
-    flipHorz=remoteCam_settings['flipHori'],
-    timelapseInterval=180,
-)
+if True:
+    while True:
+        webcam.takeAndArchive(
+            remoteCopyLocation_LQ=remoteCam_settings['haLiveImgPath_LQ'],
+            remoteCopyLocation_HQ=remoteCam_settings['haLiveImgPath_HQ'],
+            remoteArchiveFolder=remoteCam_settings['haArchiveSCPFolderPath'],
+            quality=remoteCam_settings['imgQuality'],
+            cameraResolution=(3280, 2464),
+            flipVert=remoteCam_settings['flipVert'],
+            flipHorz=remoteCam_settings['flipHori'],
+        )
+        time.sleep(30)
+
+if False:
+    webcam.motionSurveilance(
+        remoteCopyLocation_LQ=remoteCam_settings['haLiveImgPath_LQ'],
+        remoteCopyLocation_HQ=remoteCam_settings['haLiveImgPath_HQ'],
+        remoteArchiveFolder=remoteCam_settings['haArchiveSCPFolderPath'],
+        quality=remoteCam_settings['imgQuality'],
+        flipVert=remoteCam_settings['flipVert'],
+        flipHorz=remoteCam_settings['flipHori'],
+        timelapseInterval=180,
+    )
