@@ -335,7 +335,7 @@ class webcam_timelapse():
                        remoteCopyLocation_HQ=None,
                        remoteArchiveFolder=None,
                        cameraResolution=(3280, 2464),
-                       quality=50,
+                       quality=12,
                        flipVert=False,
                        flipHorz=False,
                        ):
