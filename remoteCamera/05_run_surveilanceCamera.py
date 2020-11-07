@@ -23,6 +23,8 @@ os.makedirs(webcam.archiveBaseFolder, exist_ok=True)
 
 if True:
     while True:
+        webcam.removeOldDayOfYearFolders()
+
         webcam.takeAndArchive(
             remoteCopyLocation_LQ=remoteCam_settings['haLiveImgPath_LQ'],
             remoteCopyLocation_HQ=remoteCam_settings['haLiveImgPath_HQ'],
@@ -32,7 +34,7 @@ if True:
             flipVert=remoteCam_settings['flipVert'],
             flipHorz=remoteCam_settings['flipHori'],
         )
-        time.sleep(30)
+        time.sleep(180)
 
 if False:
     webcam.motionSurveilance(
