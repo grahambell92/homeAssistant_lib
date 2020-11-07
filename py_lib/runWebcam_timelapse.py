@@ -37,6 +37,7 @@ class webcam_timelapse():
         print('Firing camera...')
         with picamera.PiCamera() as camera:
             camera.resolution = resolution # (1024, 768)
+            time.sleep(2.5) # This is needed for the camera to auto gain and auto adjust the image settings.
             camera.vflip = flipVert
             camera.hflip = flipHorz
             camera.annotate_background = picamera.Color('black')
