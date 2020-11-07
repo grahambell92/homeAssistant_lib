@@ -29,7 +29,7 @@ remoteCam0_Settings = {
     'haArchiveSCPFolderPath': haUser + '@' + haIP + ':' + baseStationImgArchiveFolder,
 
     # Rpi camera settings
-    'imgQuality': 80,
+    'imgQuality': 10,
     'flipVert': True,
     'flipHori': True,
     'timelapseInterval': 5, # Seconds.
@@ -68,7 +68,7 @@ remoteCam1_settings = {
     'haArchiveSCPFolderPath': haUser + '@' + haIP + ':' + baseStationImgArchiveFolder,
 
     # Rpi camera settings
-    'imgQuality': 80,
+    'imgQuality': 10,
     'flipVert': True,
     'flipHori': True,
 

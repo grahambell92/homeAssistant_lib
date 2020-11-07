@@ -25,7 +25,7 @@ webcam.motionSurveilance(
     remoteCopyLocation_LQ=remoteCam_settings['haLiveImgPath_LQ'],
     remoteCopyLocation_HQ=remoteCam_settings['haLiveImgPath_HQ'],
     remoteArchiveFolder=remoteCam_settings['haArchiveSCPFolderPath'],
-    # quality=remoteCam_settings['imgQuality'],
+    quality=remoteCam_settings['imgQuality'],
     flipVert=remoteCam_settings['flipVert'],
     flipHorz=remoteCam_settings['flipHori'],
     timelapseInterval=180,

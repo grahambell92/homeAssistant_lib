@@ -37,15 +37,11 @@ class webcam_timelapse():
         print('Firing camera...')
         with picamera.PiCamera() as camera:
             camera.resolution = (3280, 2464) # (1024, 768)
-            camera.start_preview()
-            # Camera warm-up time
-            time.sleep(2)
             camera.vflip = flipVert
             camera.hflip = flipHorz
             camera.annotate_background = picamera.Color('black')
             camera.annotate_text = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
             camera.capture(filePath, format='jpeg', quality=quality)
-            camera.stop_preview()
 
         if False:
             # correct = subprocess.run(['fswebcam', '-r 640x480', '--quiet', filePath])
