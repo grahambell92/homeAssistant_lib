@@ -36,7 +36,7 @@ class webcam_timelapse():
     def fireCamera(self, filePath, quality=3, flipVert=False, flipHorz=False):
         print('Firing camera...')
         with picamera.PiCamera() as camera:
-            camera.resolution = (1024, 768)
+            camera.resolution = (3280, 2464) # (1024, 768)
             camera.start_preview()
             # Camera warm-up time
             time.sleep(2)
