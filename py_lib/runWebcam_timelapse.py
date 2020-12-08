@@ -372,7 +372,7 @@ class webcam_timelapse():
             try:
                 if folder_dayOfYear + self.daysToKeep < int(dayOfYearToday) and int(dayOfYearToday) > self.daysToKeep:
                     print('Deleting folder:', folder)
-                    shutil.rmtree(folder)
+                    # shutil.rmtree(folder)
                 else: print('Retaining folder:', folder)
             except:
                 print('Unable to parse or delete existing day of year archive folder:', folder)
