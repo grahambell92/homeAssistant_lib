@@ -1,7 +1,7 @@
 # Dictates the parameters for this camera system
 
 haIP = "192.168.0.55" # "10.0.0.19"
-haFolder = '/home/pi/homeassistant/'
+haFolder = '/home/pi/rockbank_homeassistant_config/'
 baseStationImgArchiveFolder = '/home/pi/basestationData/cameraImageArchive/'
 
 haUser = 'pi'
