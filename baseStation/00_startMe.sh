@@ -23,7 +23,7 @@ tmux new-session -d -s homeAssistant './01_startHomeAssistant.sh'
 #tmux new-session -d -s mqtt 'python3 ./00_serialToMqttTest.py'
 
 # start the mqtt publisher (local)
-tmux new-session -d -s motionImages 'python3 ./06_updateMotionImages.py'
+# tmux new-session -d -s motionImages 'python3 ./06_updateMotionImages.py'
 
 # listen to the ttn for the laser tripwire.
 tmux new-session -d -s mqtt_ttn_lasertripwire 'python3 ./ttn-mqtt_forwarder.py'
