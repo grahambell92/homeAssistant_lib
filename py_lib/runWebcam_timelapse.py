@@ -443,10 +443,16 @@ class webcam_timelapse():
             videoFeed = cv2.VideoCapture(1)
 
         # while True:
+
+        with picamera.array.PiRGBArray(camera) as stream:
+            camera.capture(stream, format='bgr')
+            # At this point the image is available as stream.array
+            image = stream.array
+
         for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
             image = frame.array
-
-
+            print(image)
+            exit(0)
             if True:
                 # Display the resulting frame
                 cv2.imshow('', frame)
