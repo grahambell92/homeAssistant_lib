@@ -530,12 +530,15 @@ class webcam_timelapse():
                     frameWidth = frame.shape[1]
                     stretchFactor = frameWidth/frame_small.shape[1]
 
+                    stretchFactor = 1
                     x = int(x*stretchFactor)
                     y = int(y*stretchFactor)
                     w = int(w*stretchFactor)
                     h = int(h*stretchFactor)
 
-                    cv2.rectangle(frame, pt1=(x, y), pt2=(x + w, y + h), color=greenColor, thickness=2)
+                    # cv2.rectangle(frame, pt1=(x, y), pt2=(x + w, y + h), color=greenColor, thickness=2)
+                    cv2.rectangle(frame_small, pt1=(x, y), pt2=(x + w, y + h), color=greenColor, thickness=2)
+
                     text = "Occupied"
 
 
@@ -551,7 +554,7 @@ class webcam_timelapse():
 
 
 
-            time.sleep(0.1)
+            # time.sleep(0.1)
             if False:
                 # check to see if the room is occupied
                 if False and text == "Occupied":
