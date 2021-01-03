@@ -27,7 +27,10 @@ import matplotlib.pyplot as plt
 class webcam_timelapse():
     def __init__(self, archiveBaseFolder='/home/pi/webcamImages/', cameraName='default', cameraNumber=0):
         self.archiveBaseFolder = archiveBaseFolder
-        os.makedirs(self.archiveBaseFolder, exist_ok=True)
+        try:
+            os.makedirs(self.archiveBaseFolder, exist_ok=True)
+        except:
+            pass
         self.archiveFolder = self.archiveBaseFolder + 'archiveImages/'
         self.currentImagePath_HQ = self.archiveBaseFolder + 'currentImage_HQ.jpg'
         self.currentImagePath_LQ = self.archiveBaseFolder + 'currentImage_LQ.jpg'
