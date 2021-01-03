@@ -443,13 +443,14 @@ class webcam_timelapse():
             videoFeed = cv2.VideoCapture(1)
 
         for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
-            image = np.array(frame.array)
+            image = frame.array
             if True:
                 # Display the resulting frame
-                cv2.imshow('', frame)
+                cv2.imshow('', image)
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     break
                 time.sleep(20)
+            exit(0)
 
             if False:
                 # for picamera
