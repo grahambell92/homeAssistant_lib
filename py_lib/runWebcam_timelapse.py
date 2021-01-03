@@ -613,7 +613,7 @@ class webcam_timelapse():
 
             if True:
                 # Display the resulting frame
-                cv2.imshow('', frame)
+                cv2.imshow('', frame_small)
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     break
                 # time.sleep(20)
