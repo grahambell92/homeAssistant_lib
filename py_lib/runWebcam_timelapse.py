@@ -410,8 +410,8 @@ class webcam_timelapse():
             # initialize the camera and grab a reference to the raw camera capture
             camera = picamera.PiCamera()
             # camera.resolution =  (1024, 768) #(3280, 2464) #
-            camera.resolution = resolution
-            # camera.resolution = (1920,1080)
+            # camera.resolution = resolution
+            camera.resolution = (1920,1080)
             camera.framerate = cameraFPS
             camera.vflip = flipVert
             camera.hflip = flipHorz
