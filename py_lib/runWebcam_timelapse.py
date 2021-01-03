@@ -393,7 +393,7 @@ class webcam_timelapse():
                           flipHorz=False,
                           timelapseInterval=240,
                           removeOldData=False,
-                          cameraFPS=3,
+                          cameraFPS=0.8,
                           resolution=(3280, 2464),
                           delayBetweenMotionEvents=3.0,
                           minFramesToTrigMotion=3,
