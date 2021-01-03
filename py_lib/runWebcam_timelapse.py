@@ -447,6 +447,13 @@ class webcam_timelapse():
             image = frame.array
 
 
+            if True:
+                # Display the resulting frame
+                cv2.imshow('', frame)
+                if cv2.waitKey(1) & 0xFF == ord('q'):
+                    break
+                time.sleep(20)
+
             if False:
                 # for picamera
                 frame = frameObj
@@ -466,7 +473,7 @@ class webcam_timelapse():
                 # Construct a numpy array from the stream
 
 
-            if True:
+            if False:
                 # for opencv capture.
                 ret, frame = camera.read()
                 # ret, frame = frameObj
@@ -550,11 +557,6 @@ class webcam_timelapse():
 
 
 
-            if True:
-                # Display the resulting frame
-                cv2.imshow('', frame)
-                if cv2.waitKey(1) & 0xFF == ord('q'):
-                    break
             time.sleep(0.1)
             if False:
                 # check to see if the room is occupied
