@@ -443,7 +443,9 @@ class webcam_timelapse():
         if useOpenCv:
             videoFeed = cv2.VideoCapture(1)
 
-        for piCamObj in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+        # for piCamObj in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+        while True:
+            camera.capture(rawCapture, format='bgr')
             frame = piCamObj.array
             rawCapture.truncate(0)
 
