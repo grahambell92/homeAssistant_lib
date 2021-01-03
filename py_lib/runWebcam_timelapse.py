@@ -438,7 +438,7 @@ class webcam_timelapse():
             # Create the in-memory stream
             # stream = io.BytesIO()
             # videoFeed = camera.capture_continuous(stream, format='jpeg')
-            rawCapture = PiRGBArray(camera, size=resolution)
+            rawCapture = PiRGBArray(camera, size=camera.resolution)
 
         if useOpenCv:
             videoFeed = cv2.VideoCapture(1)
