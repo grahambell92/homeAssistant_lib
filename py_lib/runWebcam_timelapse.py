@@ -393,7 +393,7 @@ class webcam_timelapse():
                           flipHorz=False,
                           timelapseInterval=240,
                           removeOldData=False,
-                          cameraFPS=5,
+                          cameraFPS=2.5,
                           resolution=(3280, 2464),
                           delayBetweenMotionEvents=3.0,
                           minFramesToTrigMotion=3,
@@ -410,8 +410,8 @@ class webcam_timelapse():
             # initialize the camera and grab a reference to the raw camera capture
             camera = picamera.PiCamera()
             # camera.resolution =  (1024, 768) #(3280, 2464) #
-            # camera.resolution = resolution
-            camera.resolution = (1920,1080)
+            camera.resolution = resolution
+            # camera.resolution = (1920,1080)
             camera.framerate = cameraFPS
             camera.vflip = flipVert
             camera.hflip = flipHorz
@@ -446,7 +446,6 @@ class webcam_timelapse():
         for piCamObj in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
             frame = piCamObj.array
             rawCapture.truncate(0)
-            # rawCapture.truncate(0)
 
             if False:
                 # for picamera
