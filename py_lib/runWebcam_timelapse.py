@@ -449,8 +449,7 @@ class webcam_timelapse():
                 cv2.imshow('', image)
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     break
-                time.sleep(20)
-            exit(0)
+                # time.sleep(20)
 
             if False:
                 # for picamera
