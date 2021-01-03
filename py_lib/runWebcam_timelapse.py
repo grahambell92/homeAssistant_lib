@@ -442,14 +442,9 @@ class webcam_timelapse():
         if useOpenCv:
             videoFeed = cv2.VideoCapture(1)
 
-        for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
-            image = frame.array
-            if True:
-                # Display the resulting frame
-                cv2.imshow('', image)
-                if cv2.waitKey(1) & 0xFF == ord('q'):
-                    break
-                # time.sleep(20)
+        for piCamObj in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+            frame = piCamObj.array
+
 
             if False:
                 # for picamera
@@ -614,6 +609,12 @@ class webcam_timelapse():
                             print('Failed to save:', currentTimelapse)
                             print()
 
+            if True:
+                # Display the resulting frame
+                cv2.imshow('', frame)
+                if cv2.waitKey(1) & 0xFF == ord('q'):
+                    break
+                # time.sleep(20)
 
             # check to see if the frames should be displayed to screen
             if False:
