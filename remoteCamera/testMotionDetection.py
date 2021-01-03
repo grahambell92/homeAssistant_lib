@@ -15,7 +15,7 @@ webcam = webcam_timelapse(archiveBaseFolder='/home/graham/Downloads/',
 motionComparionImg = webcam.archiveBaseFolder + 'motionPrev.jpg'
 
 # ensure the archiveBaseFolder exists:
-os.makedirs(webcam.archiveBaseFolder, exist_ok=True)
+# os.makedirs(webcam.archiveBaseFolder, exist_ok=True)
 
 if True:
     webcam.motionSurveilance(
