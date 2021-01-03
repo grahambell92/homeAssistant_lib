@@ -57,8 +57,15 @@ stationIDToName = {v: k for k, v in stationIDs.items()}
 
 # sampleURL = 'http://www.bom.gov.au/jsp/ncc/cdio/weatherData/av?p_display_type=dailyZippedDataFile&p_stn_num=088051&p_nccObsCode=136&p_startYear=2020
 
+# Kyneton
+# rainfall  http://www.bom.gov.au/jsp/ncc/cdio/weatherData/av?p_display_type=dailyZippedDataFile&p_stn_num=088123&p_c=-1553128915&p_nccObsCode=136&p_startYear=2021
+#           http://www.bom.gov.au/jsp/ncc/cdio/weatherData/av?p_display_type=dailyZippedDataFile&p_stn_num=081083&p_c=-1314886867&p_nccObsCode=136&p_startYear=2020
+# tmax      http://www.bom.gov.au/jsp/ncc/cdio/weatherData/av?p_display_type=dailyZippedDataFile&p_stn_num=088123&p_c=-1553126025&p_nccObsCode=122&p_startYear=1976
 
-def pullData():
+
+
+def pullData(stationName, productName):
+
     pass
 
 def getProduct(stationName, productName):

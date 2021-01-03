@@ -115,6 +115,7 @@ if True:
     fname = figureFolder+'01_medianRainfall.png'
     fig.savefig(fname=fname,dpi=200)
     plt.close(fig)
+
 # Look at median and variance
 if True:
     fig = plt.figure(figsize=figSize)

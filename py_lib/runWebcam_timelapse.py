@@ -14,10 +14,15 @@ import numpy as np
 import paho.mqtt.client as paho
 import glob
 import math
-import picamera
-from picamera.array import PiRGBArray
+try:
+    import picamera
+    from picamera.array import PiRGBArray
+except:
+    pass
 import imutils
 import cv2
+import matplotlib.pyplot as plt
+
 
 class webcam_timelapse():
     def __init__(self, archiveBaseFolder='/home/pi/webcamImages/', cameraName='default', cameraNumber=0):
@@ -386,7 +391,7 @@ class webcam_timelapse():
                           timelapseInterval=240,
                           removeOldData=False,
                           cameraFPS=24,
-                          cameraResolution= (3280, 2464),
+                          resolution=(3280, 2464),
                           delayBetweenMotionEvents=3.0,
                           minFramesToTrigMotion=3,
                           motionThreshold=2,
@@ -395,16 +400,21 @@ class webcam_timelapse():
         if removeOldData is True:
             self.removeOldDayOfYearFolders()
 
-        # initialize the camera and grab a reference to the raw camera capture
-        camera = picamera.PiCamera()
-        camera.resolution = (3280, 2464) # (1024, 768)
-        camera.framerate = cameraFPS
-        camera.vflip = flipVert
-        camera.hflip = flipHorz
+        usePiCam = True
+        useOpenCv = False
 
-        # Create the in-memory stream
-        stream = io.BytesIO()
-        # camera.start_preview()
+        if usePiCam:
+            # initialize the camera and grab a reference to the raw camera capture
+            camera = picamera.PiCamera()
+            # camera.resolution =  (1024, 768) #(3280, 2464) #
+            camera.resolution = resolution
+            camera.framerate = cameraFPS
+            camera.vflip = flipVert
+            camera.hflip = flipHorz
+
+        if useOpenCv:
+            camera = cv2.VideoCapture(1)
+            # camera = cv2.VideoCapture('/home/graham/Downloads/demoSecurityCamera/sample.avi')
 
         currentMotionImage = 'currentMotion.jpg'
         currentTimelapse = 'currentTimelapse.jpg'
@@ -412,29 +422,55 @@ class webcam_timelapse():
         lastTimeLapseTime = datetime.now()
 
         # allow the camera to warmup, then initialize the average frame, last
-        # uploaded timestamp, and frame motion counter
 
         print("[INFO] warming up...")
         time.sleep(2.0)
 
+        # Average background image init.
         avg = None
-        lastUploaded = datetime.now()
-        motionCounter = 0
 
-        for frame in camera.capture_continuous(stream, format='jpeg'):
-            # Truncate the stream to the current position (in case
-            # prior iterations output a longer image)
-            stream.truncate()
-            stream.seek(0)
-            # if process(stream):
-            #     break
-            # camera.capture(stream, format='jpeg')
+        if usePiCam:
+            # rpi objects
+            # Create the in-memory stream
+            # stream = io.BytesIO()
+            # videoFeed = camera.capture_continuous(stream, format='jpeg')
+            rawCapture = PiRGBArray(camera, size=resolution)
 
-            print('Capturing image')
-            # Construct a numpy array from the stream
-            data = np.fromstring(stream.getvalue(), dtype=np.uint8)
-            # "Decode" the image from the array, preserving colour
-            frame = cv2.imdecode(data, 1)
+        if useOpenCv:
+            videoFeed = cv2.VideoCapture(1)
+
+        # while True:
+        for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+            image = frame.array
+
+
+            if False:
+                # for picamera
+                frame = frameObj
+                stream.truncate()
+                stream.seek(0)
+                data = np.fromstring(stream.getvalue(), dtype=np.uint8)
+                # "Decode" the image from the array, preserving colour
+                frame = cv2.imdecode(data, 1)
+                # Truncate the stream to the current position (in case
+                # prior iterations output a longer image)
+
+                # if process(stream):
+                #     break
+                # camera.capture(stream, format='jpeg')
+
+                print('Capturing image')
+                # Construct a numpy array from the stream
+
+
+            if True:
+                # for opencv capture.
+                ret, frame = camera.read()
+                # ret, frame = frameObj
+
+            # plt.imshow(frame)
+            # plt.show()
+            # exit(0)
 
             timestamp = datetime.now()
             text = "Unoccupied"
@@ -448,32 +484,56 @@ class webcam_timelapse():
             if avg is None:
                 print("[INFO] starting background model...")
                 avg = gray.copy().astype("float")
-                # rawCapture.truncate(0)
-                continue
+
+
+
+
+            if False:
+                plt.imshow(avg)
+                plt.show()
+                plt.close()
 
             # accumulate the weighted average between the current frame and
             # previous frames, then compute the difference between the current
             # frame and running average
-            cv2.accumulateWeighted(src=gray, dst=avg, alpha=0.5)
+            # accumulate the next frame low so that the objects are more clear.
+            bgndImageAccumuliationFactor = 0.03
+            cv2.accumulateWeighted(src=gray, dst=avg, alpha=bgndImageAccumuliationFactor)
             frameDelta = cv2.absdiff(src1=gray, src2=cv2.convertScaleAbs(avg))
 
             # threshold the delta image, dilate the thresholded image to fill
             # in holes, then find contours on thresholded image
-            thresh = cv2.threshold(src=frameDelta, thresh=motionThreshold, maxval=255, type=cv2.THRESH_BINARY)[1]
+            minMotionThreshold = 40
+            thresh = cv2.threshold(src=frameDelta, thresh=minMotionThreshold, maxval=255, type=cv2.THRESH_BINARY)[1]
 
-            thresh = cv2.dilate(thresh, None, iterations=2)
+            thresh = cv2.dilate(thresh, None, iterations=20)
+
+
+
             contours = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
             contours = imutils.grab_contours(contours)
             # loop over the contours
+            # print('num contours:', len(contours))
+            minMotionArea = 1
             for contour in contours:
                 # if the contour is too small, ignore it
-                print('num contours:', len(contours))
                 if cv2.contourArea(contour) > minMotionArea:
                     # compute the bounding box for the contour, draw it on the frame,
                     # and update the text
                     (x, y, w, h) = cv2.boundingRect(contour)
-                    cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+                    greenColor = (0, 255, 0)
+                    # adding some offset for some reason.
+                    frameWidth = frame.shape[1]
+                    stretchFactor = frameWidth/frame_small.shape[1]
+
+                    x = int(x*stretchFactor)
+                    y = int(y*stretchFactor)
+                    w = int(w*stretchFactor)
+                    h = int(h*stretchFactor)
+
+                    cv2.rectangle(frame, pt1=(x, y), pt2=(x + w, y + h), color=greenColor, thickness=2)
                     text = "Occupied"
+
 
 
             # draw the text and timestamp on the frame
@@ -482,66 +542,75 @@ class webcam_timelapse():
 
             # ts = timestamp.strftime("%A %d %B %Y %I:%M:%S%p")
             timeText = datetime.now().strftime('%d-%m-%Y %H:%M:%S\nStatus: {0}'.format(text))
-            cv2.putText(frame, "Room Status: {}".format(text), (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
-            cv2.putText(frame, timeText, (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
+            # cv2.putText(frame, "Room Status: {}".format(text), (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+            # cv2.putText(frame, timeText, (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
 
-            # check to see if the room is occupied
-            if False and text == "Occupied":
-                # check to see if enough time has passed between uploads
-                if (timestamp - lastUploaded).seconds >= delayBetweenMotionEvents:
-                    # increment the motion counter
-                    motionCounter += 1
-                    # check to see if the number of frames with consistent motion is
-                    # high enough
-                    if motionCounter >= minFramesToTrigMotion:
-                        # Here's where you've satisfied the conditions and will post an additional motion image.
-                        if True:
-                            # Save the image to currentMotion.jpg
 
-                            cv2.imwrite(filename=currentMotionImage, img=frame)
-                            print('Saving motion images...')
-                            # Archive the currentMotion.jpg with the _motion suffix to the remote directories.
 
+            if True:
+                # Display the resulting frame
+                cv2.imshow('', frame)
+                if cv2.waitKey(1) & 0xFF == ord('q'):
+                    break
+            time.sleep(0.1)
+            if False:
+                # check to see if the room is occupied
+                if False and text == "Occupied":
+                    # check to see if enough time has passed between uploads
+                    if (timestamp - lastUploaded).seconds >= delayBetweenMotionEvents:
+                        # increment the motion counter
+                        motionCounter += 1
+                        # check to see if the number of frames with consistent motion is
+                        # high enough
+                        if motionCounter >= minFramesToTrigMotion:
+                            # Here's where you've satisfied the conditions and will post an additional motion image.
+                            if True:
+                                # Save the image to currentMotion.jpg
+
+                                cv2.imwrite(filename=currentMotionImage, img=frame)
+                                print('Saving motion images...')
+                                # Archive the currentMotion.jpg with the _motion suffix to the remote directories.
+
+                                self.archiveImage(
+                                    currentImagePath_HQ=currentMotionImage,
+                                    remoteCopyLocation_LQ=remoteCopyLocation_LQ.replace('.jpg', '_motion.jpg'),
+                                    remoteCopyLocation_HQ=remoteCopyLocation_HQ.replace('.jpg', '_motion.jpg'),
+                                    remoteArchiveFolder=remoteArchiveFolder.replace('.jpg', '_motion.jpg'),
+                                )
+                                # update the last uploaded timestamp and reset the motion
+                                # counter
+                                print('Done.')
+                                lastUploaded = timestamp
+                                motionCounter = 0
+                # otherwise, the room is not occupied
+                else:
+                    motionCounter = 0
+
+                    # If the elapsed time is past the regular image interval time.
+                    # Archive the image without the _motion suffix.
+                    print('time since last timelapse img: ', (datetime.now() - lastTimeLapseTime).seconds)
+                    if (datetime.now() - lastTimeLapseTime).seconds > timelapseInterval:
+                        print('Saving timelapse image.')
+                        writeSuccess = cv2.imwrite(filename=currentTimelapse, img=frame)
+                        # Just wait half a second to finish writing the buffer.
+                        # Had several instances of 0b files.
+                        time.sleep(0.2)
+
+                        # cv2.imwrite(filename=currentTimelapse, img=thresh)
+                        if writeSuccess:
+                            print('Successfully saved:', currentTimelapse)
                             self.archiveImage(
-                                currentImagePath_HQ=currentMotionImage,
-                                remoteCopyLocation_LQ=remoteCopyLocation_LQ.replace('.jpg', '_motion.jpg'),
-                                remoteCopyLocation_HQ=remoteCopyLocation_HQ.replace('.jpg', '_motion.jpg'),
-                                remoteArchiveFolder=remoteArchiveFolder.replace('.jpg', '_motion.jpg'),
+                                currentImagePath_HQ=currentTimelapse,
+                                remoteCopyLocation_LQ=remoteCopyLocation_LQ,
+                                remoteCopyLocation_HQ=remoteCopyLocation_HQ,
+                                remoteArchiveFolder=remoteArchiveFolder,
                             )
-                            # update the last uploaded timestamp and reset the motion
-                            # counter
+                            lastTimeLapseTime = datetime.now()
                             print('Done.')
-                            lastUploaded = timestamp
-                            motionCounter = 0
-            # otherwise, the room is not occupied
-            else:
-                motionCounter = 0
-
-                # If the elapsed time is past the regular image interval time.
-                # Archive the image without the _motion suffix.
-                print('time since last timelapse img: ', (datetime.now() - lastTimeLapseTime).seconds)
-                if (datetime.now() - lastTimeLapseTime).seconds > timelapseInterval:
-                    print('Saving timelapse image.')
-                    writeSuccess = cv2.imwrite(filename=currentTimelapse, img=frame)
-                    # Just wait half a second to finish writing the buffer.
-                    # Had several instances of 0b files.
-                    time.sleep(0.2)
-
-                    # cv2.imwrite(filename=currentTimelapse, img=thresh)
-                    if writeSuccess:
-                        print('Successfully saved:', currentTimelapse)
-                        self.archiveImage(
-                            currentImagePath_HQ=currentTimelapse,
-                            remoteCopyLocation_LQ=remoteCopyLocation_LQ,
-                            remoteCopyLocation_HQ=remoteCopyLocation_HQ,
-                            remoteArchiveFolder=remoteArchiveFolder,
-                        )
-                        lastTimeLapseTime = datetime.now()
-                        print('Done.')
-                        print()
-                    else:
-                        print('Failed to save:', currentTimelapse)
-                        print()
+                            print()
+                        else:
+                            print('Failed to save:', currentTimelapse)
+                            print()
 
 
             # check to see if the frames should be displayed to screen
